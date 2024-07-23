@@ -1,0 +1,15 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Scan Result</title>
+</head>
+<body>
+    <h1>Scan Result</h1>
+    <p><strong>Name:</strong> {{ equipment.title }}</p>
+    <p><strong>Email:</strong> {{ equipment.responsible.email }}</p>
+    <p><strong>Barcode:</strong> <img src="{{ equipment.barcode.url }}" alt="Barcode Image"></p>
+    <p><strong>Image:</strong> <img src="{{ equipment.image.url }}" alt="Equipment Image"></p>
+</body>
+</html>
