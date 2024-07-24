@@ -5,7 +5,7 @@ from django.core.files import File
 import barcode
 from barcode.writer import ImageWriter
 from io import BytesIO
-
+from locations.models import Location
 # Create your models here.
 
 
@@ -17,16 +17,16 @@ class EquipmentType(models.Model):
 
 
 class Equipment(models.Model):
-    title = models.CharField(max_length=255)
+    title = models.CharField(max_length=255, verbose_name="Название")
     # image = models.ImageField(null=True, blank=True)
-    description = models.TextField()
-    category = models.ForeignKey(EquipmentType, on_delete=models.CASCADE, null=True, blank=True)
-    barcode = models.ImageField(upload_to='barcodes/', blank=True)
-    location = models.ForeignKey(Position, on_delete=models.CASCADE, null=True, blank=True)
-    date_last_invent = models.DateTimeField(blank=True, null=True)
-    date_last_check = models.DateTimeField(blank=True, null=True)
-    responsible = models.ForeignKey(User, on_delete=models.CASCADE, null=True, blank=True)
-    image = models.ImageField(upload_to='equipment_images/', null=True, blank=True)
+    description = models.TextField(verbose_name="Описание")
+    category = models.ForeignKey(EquipmentType, on_delete=models.CASCADE, null=True, blank=True, verbose_name="Категория")
+    barcode = models.ImageField(upload_to='barcodes/', blank=True, verbose_name="Штрих код")
+    location = models.ForeignKey(Location, on_delete=models.CASCADE, null=True, blank=True, verbose_name="Аудитория")
+    date_last_invent = models.DateTimeField(blank=True, null=True, verbose_name="Дата последней инвентаризации")
+    date_last_check = models.DateTimeField(blank=True, null=True, verbose_name="Дата последней проверки")
+    responsible = models.ForeignKey(User, on_delete=models.CASCADE, null=True, blank=True, verbose_name="Владелец")
+    image = models.ImageField(upload_to='equipment_images/', null=True, blank=True, verbose_name="Изображение")
 
     def __str__(self):
         return f"{self.title}"
