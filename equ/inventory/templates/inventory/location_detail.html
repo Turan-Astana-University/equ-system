@@ -1,0 +1,87 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <title>Position Detail</title>
+    <script src="https://code.jquery.com/jquery-3.6.0.min.js"></script>
+</head>
+<body>
+    <h1>{{ location.title }}</h1>
+    <h1>{{ location.description }}</h1>
+    <h1>{{ location.responsible }}</h1>
+
+    <h2>Найденное оборудование</h2>
+    <ul id="found-equipment-list">
+        <!-- Initially empty, will be populated by JavaScript -->
+    </ul>
+
+    <h2>Не найденное оборудование</h2>
+    <ul id="not-scanned-equipment-list">
+        {% for equ in equipments %}
+            <li id="equipment-{{ equ.id }}" data-equipment-id="{{ equ.id }}">{{ equ.title }}</li>
+        {% endfor %}
+    </ul>
+
+    <h2>Scan Barcode</h2>
+    <form id="scan-form" enctype="multipart/form-data">
+        {% csrf_token %}
+        <input type="file" name="barcode_image" id="barcode_image" required>
+        <button type="submit">Scan</button>
+    </form>
+
+    <script>
+        $(document).ready(function () {
+            $('#scan-form').on('submit', function (e) {
+                e.preventDefault();
+
+                var formData = new FormData(this);
+
+                $.ajax({
+                    url: '{% url "scan_barcode" %}',
+                    type: 'POST',
+                    data: formData,
+                    processData: false,
+                    contentType: false,
+                    success: function (response) {
+                        if (response.message) {
+                            alert(response.message);
+                            var equipmentId = response.id;
+                            var equipmentElement = $('#equipment-' + equipmentId);
+                            var locationId = '{{ location.id }}';
+
+                            // Перемещаем элемент из списка неотсканированного оборудования в список найденного оборудования
+                            if (equipmentElement.length) {
+                                $('#found-equipment-list').append(equipmentElement);
+                            }
+                                $.ajax({
+                                url: '{% url "equ_invent_find" %}',
+                                type: 'POST',
+                                data: {
+                                    'equipment_id': equipmentId,
+                                    'location_id': locationId,
+                                    'csrfmiddlewaretoken': '{{ csrf_token }}'  // Добавляем CSRF токен для защиты от CSRF атак
+                                },
+                                success: function (response) {
+                                    if (response.message) {
+                                        console.log(response.message);
+                                    } else if (response.error) {
+                                        console.error(response.error);
+                                    }
+                                },
+                                error: function (xhr, status, error) {
+                                    console.error('An error occurred: ' + error);
+                                }
+                            });
+                        } else if (response.error) {
+                            alert(response.error);
+                        }
+                    },
+                    error: function (xhr, status, error) {
+                        alert('An error occurred: ' + error);
+                    }
+                });
+            });
+        });
+    </script>
+</body>
+</html>
