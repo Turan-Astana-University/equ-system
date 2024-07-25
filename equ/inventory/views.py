@@ -4,6 +4,7 @@ from locations.models import Location
 from django.shortcuts import render, get_object_or_404
 from equipments.models import Equipment
 from datetime import datetime
+from operations.models import Operation
 # Create your views here.
 
 
@@ -25,8 +26,23 @@ def equ_invent_find(request):
         equipment_id = request.POST.get('equipment_id')
         equ = Equipment.objects.get(id=equipment_id)
         location = Location.objects.get(id=request.POST.get('location_id'))
-        print(equ.location, location)
+
+        if equ.location != location:
+            print('НЕ СОВПАДЕНИЕ')
+            return HttpResponse(status=200)
         equ.date_last_invent = datetime.now()
         equ.save()
         return HttpResponse(status=200)
     return HttpResponse(status=400)
+
+
+
+
+
+
+
+
+
+
+
+
