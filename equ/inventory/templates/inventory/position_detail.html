@@ -1,0 +1,17 @@
+<!-- templates/positions/position_detail.html -->
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <title>Position Detail</title>
+</head>
+<body>
+    <h1>{{ location.title }}</h1>
+    <h1>{{ location.description }}</h1>
+    <h1>{{ location.responsible }}</h1>
+
+    {% for equ in equipments %}
+        {{ equ }}
+    {% endfor %}
+</body>
+</html>

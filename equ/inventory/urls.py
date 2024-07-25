@@ -1,0 +1,7 @@
+from django.urls import path
+from .views import location_view, location_detail_view
+urlpatterns = [
+    # path('scan/', scan_barcode, name='scan_barcode'),
+    path("locations/", location_view, name="location"),
+    path("locations/<int:pk>/", location_detail_view, name="location_detail"),
+]

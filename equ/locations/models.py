@@ -8,6 +8,8 @@ class Location(models.Model):
     description = models.TextField()
     responsible = models.ForeignKey(User, on_delete=models.CASCADE, null=True, blank=True)
     # invent_code
+    # data last invent
 
     def __str__(self):
         return f"{self.title}"
+
