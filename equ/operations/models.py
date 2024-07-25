@@ -9,6 +9,9 @@ from users.models import User
 class OperationType(models.Model):
     title = models.CharField(max_length=255)
 
+    def __str__(self):
+        return f"{self.title}"
+
 
 class Operation(models.Model):
     operation_type = models.ForeignKey(OperationType, on_delete=models.CASCADE, null=True, blank=True)
@@ -19,4 +22,3 @@ class Operation(models.Model):
     location_new = models.ForeignKey(Location, on_delete=models.CASCADE, related_name="new_location")
     responsible_old = models.ForeignKey(User, on_delete=models.CASCADE, related_name="old_user")
     responsible_new = models.ForeignKey(User, on_delete=models.CASCADE, related_name="new_user")
-

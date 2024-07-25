@@ -29,7 +29,8 @@ def scan_barcode(request):
                     'id': equipment.id,
                     'name': equipment.title,
                     'user': equipment.responsible.email,
-                    'message': 'Equipment found'
+                    'message': 'Equipment found',
+                    'location_correct': True
                 })
             except (ValueError, Equipment.DoesNotExist):
                 return JsonResponse({'error': 'Invalid barcode or product not found'}, status=400)

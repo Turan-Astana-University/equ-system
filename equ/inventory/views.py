@@ -1,10 +1,10 @@
-from django.http import HttpResponse
+from django.http import HttpResponse, JsonResponse
 from django.shortcuts import render
 from locations.models import Location
 from django.shortcuts import render, get_object_or_404
 from equipments.models import Equipment
 from datetime import datetime
-from operations.models import Operation
+from operations.models import Operation, OperationType
 # Create your views here.
 
 
@@ -28,11 +28,23 @@ def equ_invent_find(request):
         location = Location.objects.get(id=request.POST.get('location_id'))
 
         if equ.location != location:
-            print('НЕ СОВПАДЕНИЕ')
-            return HttpResponse(status=200)
+            Operation(date=datetime.now(), operation_type=OperationType.objects.get(pk=1), user=request.user, equipment=equ, location_old=equ.location, location_new=location, responsible_old=equ.responsible,
+                      responsible_new=location.responsible).save()
+            equ.location = location
+            equ.responsible = location.responsible
+            equ.save()
+            return JsonResponse({
+                'message': 'Equipment found',
+                'equipment': equ.title,
+                'location_correct': False
+            })
+
         equ.date_last_invent = datetime.now()
         equ.save()
-        return HttpResponse(status=200)
+        return JsonResponse({
+            'message': 'Equipment found',
+            'location_correct': True
+        })
     return HttpResponse(status=400)
 
 
