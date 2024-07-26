@@ -42,6 +42,9 @@ def location_detail_view(request, pk):
     equipments_true = equipments.filter(is_true_position=True)
     equipments_false = equipments.filter(is_true_position=False)
     inventory = Inventory.objects.last()
+
+    equipment_non_date_last_invent = equipments.filter(date_last_invent__isnull=True)
+    print(equipment_non_date_last_invent)
     equipments_found = equipments_true.filter(date_last_invent__gte=inventory.date_start)
     equipments_non_found = equipments_true.filter(date_last_invent__lte=inventory.date_start)
     return render(request, 'inventory/location_detail.html', {'location': location, "equipments_non_found": equipments_non_found, "equipments_found": equipments_found, "equipments_false": equipments_false})
