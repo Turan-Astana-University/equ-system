@@ -10,8 +10,10 @@ from .models import Inventory
 
 
 def location_view(request):
-    loc = Location.objects.all()
-    return render(request, 'inventory/location_view.html', {"locations": loc})
+    if Inventory.objects.last().date_end:
+        loc = Location.objects.all()
+        return render(request, 'inventory/location_view.html', {"locations": loc})
+    return render(request, "inventory/invent.html")
 
 
 def create_invent(request):
