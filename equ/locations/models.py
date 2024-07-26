@@ -12,8 +12,8 @@ class Location(models.Model):
     # data last invent
 
     def save(self, *args, **kwargs):
-        related_equipments = self.equipment_set.all()
-        self.cnt = len(related_equipments)
+        # related_equipments = self.equipment_set.all()
+        # self.cnt = len(related_equipments)
         super().save(*args, **kwargs)
 
     def __str__(self):
