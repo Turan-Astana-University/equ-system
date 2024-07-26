@@ -38,6 +38,9 @@
         <h3>Найденное не на своем месте</h3>
         <ul>
             <!-- Initially empty, will be populated by JavaScript -->
+            {% for equ in equipments_false %}
+                <li id="equipment-{{ equ.id }}" data-equipment-id="{{ equ.id }}">{{ equ.title }}</li>
+            {% endfor %}
         </ul>
     </div>
 

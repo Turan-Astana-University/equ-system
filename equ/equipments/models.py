@@ -29,6 +29,10 @@ class Equipment(models.Model):
     image = models.ImageField(upload_to='equipment_images/', null=True, blank=True, verbose_name="Изображение")
     is_true_position = models.BooleanField(default=True, null=True, blank=True)
 
+    class Meta:
+        verbose_name = "Оборудование"
+        verbose_name_plural = "Оборудование"
+
     def __str__(self):
         return f"{self.title}"
 

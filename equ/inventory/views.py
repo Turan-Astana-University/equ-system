@@ -20,6 +20,16 @@ def create_invent(request):
     return HttpResponse(status=200)
 
 
+def end_invent(request):
+    inventory = Inventory.objects.last()
+    if inventory.date_end:
+        return HttpResponse(status=400)
+    inventory.date_end = datetime.now()
+    inventory.save()
+    equ = Equipment.objects.all().filter(is_true_position=False).update(is_true_position=True)
+    return HttpResponse(status=200)
+
+
 def invent(request):
     return render(request, template_name="inventory/invent.html")
 
@@ -27,11 +37,12 @@ def invent(request):
 def location_detail_view(request, pk):
     location = get_object_or_404(Location, pk=pk)
     equipments = Equipment.objects.filter(location=location)
+    equipments_true = equipments.filter(is_true_position=True)
+    equipments_false = equipments.filter(is_true_position=False)
     inventory = Inventory.objects.last()
-    equipments_found = equipments.filter(date_last_invent__gte=inventory.date_start)
-    equipments_non_found = equipments.filter(date_last_invent__lte=inventory.date_start)
-    print(equipments_non_found)
-    return render(request, 'inventory/location_detail.html', {'location': location, "equipments_non_found": equipments_non_found, "equipments_found": equipments_found})
+    equipments_found = equipments_true.filter(date_last_invent__gte=inventory.date_start)
+    equipments_non_found = equipments_true.filter(date_last_invent__lte=inventory.date_start)
+    return render(request, 'inventory/location_detail.html', {'location': location, "equipments_non_found": equipments_non_found, "equipments_found": equipments_found, "equipments_false": equipments_false})
 
 
 def equ_invent_find(request):
@@ -45,6 +56,7 @@ def equ_invent_find(request):
                       responsible_new=location.responsible).save()
             equ.location = location
             equ.responsible = location.responsible
+            equ.is_true_position = False
             equ.save()
             return JsonResponse({
                 'message': 'Equipment found',
