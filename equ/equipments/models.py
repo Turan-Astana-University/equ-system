@@ -27,6 +27,7 @@ class Equipment(models.Model):
     date_last_check = models.DateTimeField(blank=True, null=True, verbose_name="Дата последней проверки")
     responsible = models.ForeignKey(User, on_delete=models.CASCADE, null=True, blank=True, verbose_name="Ответственное лицо")
     image = models.ImageField(upload_to='equipment_images/', null=True, blank=True, verbose_name="Изображение")
+    is_true_position = models.BooleanField(default=True, null=True, blank=True)
 
     def __str__(self):
         return f"{self.title}"

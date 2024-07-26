@@ -6,7 +6,9 @@
 </head>
 <body>
     {% for loc in locations %}
-        <a href="{% url 'location_detail' loc.pk %}">{{ loc }}</a>
+        <h2>
+            <a href="{% url 'location_detail' loc.pk %}">{{ loc }}</a>
+        </h2>
     {% endfor %}
 </body>
 </html>

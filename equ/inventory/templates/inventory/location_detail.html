@@ -7,8 +7,8 @@
 </head>
 <body>
     <h1>{{ location.title }}</h1>
-    <h1>{{ location.description }}</h1>
-    <h1>{{ location.responsible }}</h1>
+    <h2>{{ location.description }}</h2>
+    <h2>{{ location.responsible }}</h2>
 
     <h2>Оборудование</h2>
     <button id="show-not-scanned">Не найденное оборудование</button>
@@ -18,7 +18,7 @@
     <div id="not-scanned-equipment-list" class="equipment-list">
         <h3>Не найденное оборудование</h3>
         <ul>
-            {% for equ in equipments %}
+            {% for equ in equipments_non_found %}
                 <li id="equipment-{{ equ.id }}" data-equipment-id="{{ equ.id }}">{{ equ.title }}</li>
             {% endfor %}
         </ul>
@@ -28,6 +28,9 @@
         <h3>Найденное оборудование</h3>
         <ul>
             <!-- Initially empty, will be populated by JavaScript -->
+            {% for equ in equipments_found %}
+                <li id="equipment-{{ equ.id }}" data-equipment-id="{{ equ.id }}">{{ equ.title }}</li>
+            {% endfor %}
         </ul>
     </div>
 
@@ -38,11 +41,11 @@
         </ul>
     </div>
 
-    <h2>Scan Barcode</h2>
+    <h2>Сканировать штрих код</h2>
     <form id="scan-form" enctype="multipart/form-data">
         {% csrf_token %}
         <input type="file" name="barcode_image" id="barcode_image" required>
-        <button type="submit">Scan</button>
+        <button type="submit">Сканировать</button>
     </form>
 
     <script>

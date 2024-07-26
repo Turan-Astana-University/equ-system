@@ -7,8 +7,14 @@ class Location(models.Model):
     title = models.CharField(max_length=255, null=True, blank=True)
     description = models.TextField()
     responsible = models.ForeignKey(User, on_delete=models.CASCADE, null=True, blank=True)
+    cnt = models.IntegerField(null=True, blank=True)
     # invent_code
     # data last invent
+
+    def save(self, *args, **kwargs):
+        related_equipments = self.equipment_set.all()
+        self.cnt = len(related_equipments)
+        super().save(*args, **kwargs)
 
     def __str__(self):
         return f"{self.title}"
