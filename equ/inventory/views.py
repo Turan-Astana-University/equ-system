@@ -29,7 +29,7 @@ def end_invent(request):
     inventory.date_end = datetime.now()
     inventory.save()
     equ = Equipment.objects.all().filter(is_true_position=False).update(is_true_position=True)
-    return render(request, template_name='inventory/invent.html')
+    return HttpResponse(status=200)
 
 
 def invent(request):
