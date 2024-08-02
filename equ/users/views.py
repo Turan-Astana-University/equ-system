@@ -4,6 +4,13 @@ from django.contrib.auth import authenticate, login
 # Create your views here.
 
 
+def index(request):
+    if request.method == "GET":
+        if request.user.is_authenticated:
+            return redirect("invent")
+        return redirect('login')
+
+
 def custom_login(request):
     if request.method == 'POST':
         form = CustomLoginForm(request.POST)
