@@ -17,7 +17,7 @@ def location_view(request):
 
 
 def create_invent(request):
-    if request.is_superuser:
+    if request.user.is_superuser:
         new = Inventory(date_start=datetime.now())
         new.save()
         return redirect("locations")
