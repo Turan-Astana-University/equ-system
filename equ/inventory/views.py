@@ -17,10 +17,13 @@ def location_view(request):
 
 
 def create_invent(request):
-    new = Inventory(date_start=datetime.now())
-    new.save()
-    return redirect("locations")
-    return render(request, "inventory/invent.html")
+    if request.is_superuser:
+        new = Inventory(date_start=datetime.now())
+        new.save()
+        return redirect("locations")
+        # return render(request, "inventory/invent.html")
+    else:
+        return HttpResponse("НЕТ ДОСТУПА")
 
 
 def end_invent(request):
