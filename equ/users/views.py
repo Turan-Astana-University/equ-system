@@ -12,6 +12,8 @@ def index(request):
 
 
 def custom_login(request):
+    if request.user.is_authenticated:
+        return redirect("invent")
     if request.method == 'POST':
         form = CustomLoginForm(request.POST)
         if form.is_valid():
@@ -26,3 +28,4 @@ def custom_login(request):
     else:
         form = CustomLoginForm()
     return render(request, 'users/login.html', {'form': form})
+

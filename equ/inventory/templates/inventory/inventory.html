@@ -1,0 +1,17 @@
+{% extends 'inventory/base.html' %} {% load static %} {% block css %}
+<link rel="stylesheet" href="{% static 'css/Инвентаризация.css' %}" media="screen">
+{% endblock %}
+<body data-path-to-root="./" data-include-products="true" class="u-body u-xl-mode" data-lang="ru">
+{% block continue %}
+
+  <section class="u-clearfix u-section-1" id="sec-093e">
+    <div class="u-clearfix u-sheet u-sheet-1">
+      <h1 class="u-align-center u-custom-font u-font-roboto-slab u-text u-text-default u-text-1"> СИСТЕМА УЧЕТА ОБОРУДОВАНИЯ</h1>
+      <a href="{% url 'create_invent' %}" class="u-align-center u-border-2 u-border-black u-btn u-button-style u-hover-black u-none u-text-hover-white u-btn-1">начать инвентаризацию </a>
+    </div>
+  </section>
+
+
+{% endblock %}
+</body>
+</html>

@@ -1,5 +1,5 @@
 from django.http import HttpResponse, JsonResponse
-from django.shortcuts import render
+from django.shortcuts import render, redirect
 from locations.models import Location
 from django.shortcuts import render, get_object_or_404
 from equipments.models import Equipment
@@ -12,14 +12,15 @@ from .models import Inventory
 def location_view(request):
     if not Inventory.objects.last().date_end:
         loc = Location.objects.all()
-        return render(request, 'inventory/location_view.html', {"locations": loc})
+        return render(request, 'inventory/locations_view.html', {"locations": loc})
     return render(request, "inventory/invent.html")
 
 
 def create_invent(request):
     new = Inventory(date_start=datetime.now())
     new.save()
-    return HttpResponse(status=200)
+    return redirect("locations")
+    return render(request, "inventory/invent.html")
 
 
 def end_invent(request):
@@ -33,7 +34,7 @@ def end_invent(request):
 
 
 def invent(request):
-    return render(request, template_name="inventory/invent.html")
+    return render(request, template_name="inventory/inventory.html")
 
 
 def location_detail_view(request, pk):

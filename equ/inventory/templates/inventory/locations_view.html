@@ -1,0 +1,72 @@
+{% extends 'inventory/base.html' %} {% load static %} {% block css %}
+    <link rel="stylesheet" href="{% static 'css/Инвентаризация-аудитория.css' %}" media="screen">
+{% endblock %}
+
+{% block continue %}
+    <section class="u-align-center u-clearfix u-grey-10 u-section-1" id="sec-c79d">
+      <div class="u-clearfix u-sheet u-sheet-1">
+        <a href="#" class="u-border-2 u-border-black u-btn u-button-style u-hover-black u-none u-text-hover-white u-btn-1">сканировать штрих-код </a>
+        <div class="u-expanded-width u-tabs u-tabs-1">
+          <ul class="u-tab-list u-unstyled u-white u-tab-list-1" role="tablist"><li class="u-tab-item" role="presentation"><a class="active u-active-grey-25 u-button-style u-tab-link u-white u-tab-link-1" id="link-tab-0da5" href="#tab-0da5" role="tab" aria-controls="tab-0da5" aria-selected="true">Не пройденное</a>
+</li><li class="u-tab-item" role="presentation"><a class="u-active-grey-25 u-button-style u-tab-link u-white u-tab-link-2" id="link-tab-28a7" href="#tab-28a7" role="tab" aria-controls="tab-28a7" aria-selected="false">Пройденное</a>
+</li></ul>
+          <div class="u-tab-content">
+            <div class="u-container-style u-tab-active u-tab-pane u-white u-tab-pane-1" id="tab-0da5" role="tabpanel" aria-labelledby="link-tab-0da5">
+              <div class="u-container-layout u-container-layout-1">
+                <div class="u-expanded-width u-table u-table-responsive u-table-1">
+                  <table class="u-table-entity">
+                    <colgroup>
+                      <col width="20%">
+                      <col width="20%">
+                      <col width="20%">
+                      <col width="20%">
+                      <col width="20%">
+                    </colgroup>
+                    <tbody class="u-table-body">
+                    <tr style="height: 87px;">
+                        <td class="u-align-center u-border-2 u-border-grey-90 u-custom-font u-first-column u-font-roboto-slab u-table-cell u-table-cell-1">
+                            ID</td>
+                        <td class="u-align-center u-border-2 u-border-grey-90 u-custom-font u-font-roboto-slab u-table-cell u-table-cell-2">
+                            Наименование</td>
+                        <td class="u-align-center u-border-2 u-border-grey-90 u-custom-font u-font-roboto-slab u-table-cell u-table-cell-3">
+                            Отв.сотрудник</td>
+                        <td class="u-align-center u-border-2 u-border-grey-90 u-custom-font u-font-roboto-slab u-table-cell u-table-cell-4">
+                            Тип</td>
+                        <td class="u-align-center u-border-2 u-border-grey-90 u-custom-font u-font-roboto-slab u-table-cell u-table-cell-5">% </td>
+                        <td class="u-align-center u-border-2 u-border-grey-90 u-custom-font u-font-roboto-slab u-table-cell u-table-cell-5">
+                            Активная ссылка
+                      </tr>
+                        {% for loc in locations %}
+<!--                            <h2>-->
+<!--                                <a href="{% url 'location_detail' loc.pk %}">{{ loc }}</a>-->
+<!--                            </h2>-->
+
+                      <tr style="height: 87px;">
+                        <td class="u-align-center u-border-2 u-border-grey-90 u-custom-font u-first-column u-font-roboto-slab u-table-cell u-table-cell-1">
+                            {{ loc.pk }}</td>
+                        <td class="u-align-center u-border-2 u-border-grey-90 u-custom-font u-font-roboto-slab u-table-cell u-table-cell-2">
+                            {{ loc.title }}</td>
+                        <td class="u-align-center u-border-2 u-border-grey-90 u-custom-font u-font-roboto-slab u-table-cell u-table-cell-3">
+                            {{ loc.responsible }}</td>
+                        <td class="u-align-center u-border-2 u-border-grey-90 u-custom-font u-font-roboto-slab u-table-cell u-table-cell-4">
+                            {{ loc.category }}</td>
+                        <td class="u-align-center u-border-2 u-border-grey-90 u-custom-font u-font-roboto-slab u-table-cell u-table-cell-5">% </td>
+                        <td class="u-align-center u-border-2 u-border-grey-90 u-custom-font u-font-roboto-slab u-table-cell u-table-cell-5">
+                            <a href="{% url 'location_detail' loc.pk %}">Перейти</a></td>
+                      </tr>
+                      {% endfor %}
+                    </tbody>
+                  </table>
+                </div>
+              </div>
+            </div>
+            <div class="u-container-style u-tab-pane u-white u-tab-pane-2" id="tab-28a7" role="tabpanel" aria-labelledby="link-tab-28a7">
+              <div class="u-container-layout u-container-layout-2"></div>
+            </div>
+          </div>
+        </div>
+      </div>
+    </section>
+
+
+{% endblock %}
