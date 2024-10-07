@@ -44,6 +44,8 @@ INSTALLED_APPS = [
     'users',
     'departments',
     'inventory',
+
+    'sslserver',
 ]
 
 MIDDLEWARE = [

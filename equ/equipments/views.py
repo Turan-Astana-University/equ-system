@@ -1,4 +1,6 @@
 from django.shortcuts import render
+from django.views.decorators.csrf import csrf_exempt
+import json
 
 # Create your views here.
 from django.shortcuts import render, get_object_or_404
@@ -38,3 +40,28 @@ def scan_barcode(request):
             return JsonResponse({'error': 'No barcode found'}, status=400)
 
     return render(request, 'equipments/index.html')
+
+
+@csrf_exempt
+def qr_code_view(request):
+    if request.method == 'POST':
+        try:
+            data = json.loads(request.body)
+            code = data.get('code', '')
+            # Здесь можно добавить логику обработки полученного QR-кода.
+            product_id = int(code[:-1])
+            equipment = get_object_or_404(Equipment, pk=product_id)
+            print(equipment)
+            print('Получен QR-код:', code)
+
+            # Вернуть ответ об успешном приеме данных.
+            return JsonResponse({
+                'id': equipment.id,
+                'name': equipment.title,
+                'user': equipment.responsible.email,
+                'message': 'Equipment found',
+                'location_correct': True
+            })
+        except json.JSONDecodeError:
+            return JsonResponse({'error': 'Неверный формат JSON'}, status=400)
+    return JsonResponse({'error': 'Метод не поддерживается'}, status=405)
