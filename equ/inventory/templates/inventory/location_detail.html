@@ -106,6 +106,13 @@
                                       <td class="u-align-center u-border-2 u-border-grey-90 u-custom-font u-font-roboto-slab u-table-cell u-table-cell-4">Тип</td>
                                       <td class="u-align-center u-border-2 u-border-grey-90 u-custom-font u-font-roboto-slab u-table-cell u-table-cell-5">Статус</td>
                                   </tr>
+                                  <tr style="height: 52px;">
+                                    <td class="u-align-left u-border-2 u-border-grey-70 u-custom-font u-first-column u-font-roboto-slab u-table-cell">sss{{ equ.pk }}</td>
+                                    <td class="u-align-left u-border-2 u-border-grey-70 u-custom-font u-font-roboto-slab u-table-cell">{{ equ.title }}</td>
+                                    <td class="u-align-left u-border-2 u-border-grey-70 u-custom-font u-font-roboto-slab u-table-cell">{{ equ.responsible }}</td>
+                                    <td class="u-align-left u-border-2 u-border-grey-70 u-custom-font u-font-roboto-slab u-table-cell">{{ equ.category }}</td>
+                                    <td class="u-align-left u-border-2 u-border-grey-70 u-custom-color-6 u-custom-font u-font-roboto-slab u-table-cell u-table-cell-10">Найдено</td>
+                                </tr>
                                   {% for equ in equipments_found %}
                                       <tr style="height: 52px;">
                                           <td class="u-align-left u-border-2 u-border-grey-70 u-custom-font u-first-column u-font-roboto-slab u-table-cell">{{ equ.pk }}</td>
@@ -259,15 +266,15 @@ function addRowToTable(tableId, data) {
     tableBody.appendChild(newRow);
 }
 
-function showTable(tableId) {
-    // Скрываем все таблицы
-    document.querySelectorAll('.equipment-table').forEach(table => {
-        table.style.display = 'none';
-    });
+// function showTable(tableId) {
+//     // Скрываем все таблицы
+//     document.querySelectorAll('.equipment-table').forEach(table => {
+//         table.style.display = 'none';
+//     });
 
-    // Показываем выбранную таблицу
-    document.getElementById(`${tableId}_table`).style.display = 'block';
-}
+//     // Показываем выбранную таблицу
+//     document.getElementById(`${tableId}_table`).style.display = 'block';
+// }
 function getCookie(name) {
     let cookieValue = null;
     if (document.cookie && document.cookie !== '') {
