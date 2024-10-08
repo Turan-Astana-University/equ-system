@@ -1,4 +1,3 @@
-
 {% extends 'inventory/base.html' %} {% load static %} {% block css %}
     <script src="{% static 'node_modules/html5-qrcode/html5-qrcode.min.js' %}"></script>
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
@@ -31,68 +30,134 @@
 {% endblock %}
 
 {% block continue %}
-    <section class="u-align-center u-clearfix u-grey-10 u-section-1" id="sec-c79d">
-      <div class="u-clearfix u-sheet u-sheet-1">
-    <main>
-      <!-- Сканер будет скрыт по умолчанию -->
-      <div id="reader" style="display: none;"></div>
-      <div id="result"></div>
+<section class="u-align-center u-clearfix u-grey-10 u-section-1" id="sec-c79d">
+  <div class="u-clearfix u-sheet u-sheet-1">
+      <main>
+          <div id="reader" style="display: none;"></div>
+          <div id="result"></div>
+          <a href="#" id="start-scan-btn" class="u-border-2 u-border-black u-btn u-button-style u-hover-black u-none u-text-hover-white u-btn-1">
+              Сканировать штрих-код
+          </a>
+      </main>
 
-      <!-- Кнопка для запуска сканирования -->
-      <a href="#" id="start-scan-btn" class="u-border-2 u-border-black u-btn u-button-style u-hover-black u-none u-text-hover-white u-btn-1">
-        Сканировать штрих-код
-      </a>
-    </main>
-
-        <div class="u-expanded-width u-tabs u-tabs-1">
-          <ul class="u-tab-list u-unstyled u-white u-tab-list-1" role="tablist"><li class="u-tab-item" role="presentation"><a class="active u-active-grey-25 u-button-style u-tab-link u-white u-tab-link-1" id="link-tab-0da5" href="#tab-0da5" role="tab" aria-controls="tab-0da5" aria-selected="true">Не найденное</a>
-</li><li class="u-tab-item" role="presentation"><a class="u-active-grey-25 u-button-style u-tab-link u-white u-tab-link-2" id="link-tab-14b7" href="#tab-14b7" role="tab" aria-controls="tab-14b7" aria-selected="false">Найденное</a>
-</li><li class="u-tab-item" role="presentation"><a class="u-active-grey-25 u-button-style u-tab-link u-white u-tab-link-3" id="link-tab-2917" href="#tab-2917" role="tab" aria-controls="tab-2917" aria-selected="false">Найденное не на своем месте</a>
-</li></ul>
+      <div class="u-expanded-width u-tabs u-tabs-1">
+          <ul class="u-tab-list u-unstyled u-white u-tab-list-1" role="tablist">
+              <li class="u-tab-item" role="presentation">
+                  <a class="active u-active-grey-25 u-button-style u-tab-link u-white u-tab-link-1" id="link-tab-0da5" href="#tab-0da5" role="tab" aria-controls="tab-0da5" aria-selected="true">Не найденное</a>
+              </li>
+              <li class="u-tab-item" role="presentation">
+                  <a class="u-active-grey-25 u-button-style u-tab-link u-white u-tab-link-2" id="link-tab-14b7" href="#tab-14b7" role="tab" aria-controls="tab-14b7" aria-selected="false">Найденное</a>
+              </li>
+              <li class="u-tab-item" role="presentation">
+                  <a class="u-active-grey-25 u-button-style u-tab-link u-white u-tab-link-3" id="link-tab-2917" href="#tab-2917" role="tab" aria-controls="tab-2917" aria-selected="false">Найденное не на своем месте</a>
+              </li>
+          </ul>
           <div class="u-tab-content">
-            <div class="u-container-style u-tab-active u-tab-pane u-white u-tab-pane-1" id="tab-0da5" role="tabpanel" aria-labelledby="link-tab-0da5">
-              <div class="u-container-layout u-container-layout-1">
-                <div class="u-expanded-width u-table u-table-responsive u-table-1">
-                  <table class="u-table-entity">
-                    <colgroup>
-                      <col width="20%">
-                      <col width="20%">
-                      <col width="20%">
-                      <col width="20%">
-                      <col width="20%">
-                    </colgroup>
-                    <tbody class="u-table-body">
-                      <tr style="height: 87px;">
-                        <td class="u-align-center u-border-2 u-border-grey-90 u-custom-font u-first-column u-font-roboto-slab u-table-cell u-table-cell-1">ID</td>
-                        <td class="u-align-center u-border-2 u-border-grey-90 u-custom-font u-font-roboto-slab u-table-cell u-table-cell-2">Наименование</td>
-                        <td class="u-align-center u-border-2 u-border-grey-90 u-custom-font u-font-roboto-slab u-table-cell u-table-cell-3">Отв.сотрудник</td>
-                        <td class="u-align-center u-border-2 u-border-grey-90 u-custom-font u-font-roboto-slab u-table-cell u-table-cell-4">Тип</td>
-                        <td class="u-align-center u-border-2 u-border-grey-90 u-custom-font u-font-roboto-slab u-table-cell u-table-cell-5">Статус</td>
-                      </tr>
-                    {% for equ in equipments_non_found %}
-
-
-                      <tr style="height: 52px;">
-                        <td class="u-align-left u-border-2 u-border-grey-70 u-custom-font u-first-column u-font-roboto-slab u-table-cell">
-                            {{ equ.pk}}</td>
-                        <td class="u-align-left u-border-2 u-border-grey-70 u-custom-font u-font-roboto-slab u-table-cell">
-                            {{ equ.title }}</td>
-                        <td class="u-align-left u-border-2 u-border-grey-70 u-custom-font u-font-roboto-slab u-table-cell">
-                            {{ equ.responsible }}</td>
-                        <td class="u-align-left u-border-2 u-border-grey-70 u-custom-font u-font-roboto-slab u-table-cell">{{ equ.category }}</td>
-                        <td class="u-align-left u-border-2 u-border-grey-70 u-custom-color-6 u-custom-font u-font-roboto-slab u-table-cell u-table-cell-10">Не найдено</td>
-                      </tr>
-<!--                                        <li id="equipment-{{ equ.id }}" data-equipment-id="{{ equ.id }}">{{ equ.title }}</li>-->
-                    {% endfor %}
-                    </tbody>
-                  </table>
-                </div>
+              <div class="u-container-style u-tab-active u-tab-pane u-white u-tab-pane-1" id="tab-0da5" role="tabpanel" aria-labelledby="link-tab-0da5">
+                  <div class="u-container-layout u-container-layout-1">
+                      <div class="u-expanded-width u-table u-table-responsive u-table-1">
+                          <table class="u-table-entity">
+                              <colgroup>
+                                  <col width="20%">
+                                  <col width="20%">
+                                  <col width="20%">
+                                  <col width="20%">
+                                  <col width="20%">
+                              </colgroup>
+                              <tbody class="u-table-body">
+                                  <tr style="height: 87px;">
+                                      <td class="u-align-center u-border-2 u-border-grey-90 u-custom-font u-first-column u-font-roboto-slab u-table-cell u-table-cell-1">ID</td>
+                                      <td class="u-align-center u-border-2 u-border-grey-90 u-custom-font u-font-roboto-slab u-table-cell u-table-cell-2">Наименование</td>
+                                      <td class="u-align-center u-border-2 u-border-grey-90 u-custom-font u-font-roboto-slab u-table-cell u-table-cell-3">Отв.сотрудник</td>
+                                      <td class="u-align-center u-border-2 u-border-grey-90 u-custom-font u-font-roboto-slab u-table-cell u-table-cell-4">Тип</td>
+                                      <td class="u-align-center u-border-2 u-border-grey-90 u-custom-font u-font-roboto-slab u-table-cell u-table-cell-5">Статус</td>
+                                  </tr>
+                                  {% for equ in equipments_non_found %}
+                                      <tr style="height: 52px;">
+                                          <td class="u-align-left u-border-2 u-border-grey-70 u-custom-font u-first-column u-font-roboto-slab u-table-cell">{{ equ.pk }}</td>
+                                          <td class="u-align-left u-border-2 u-border-grey-70 u-custom-font u-font-roboto-slab u-table-cell">{{ equ.title }}</td>
+                                          <td class="u-align-left u-border-2 u-border-grey-70 u-custom-font u-font-roboto-slab u-table-cell">{{ equ.responsible }}</td>
+                                          <td class="u-align-left u-border-2 u-border-grey-70 u-custom-font u-font-roboto-slab u-table-cell">{{ equ.category }}</td>
+                                          <td class="u-align-left u-border-2 u-border-grey-70 u-custom-color-6 u-custom-font u-font-roboto-slab u-table-cell u-table-cell-10">Не найдено</td>
+                                      </tr>
+                                  {% endfor %}
+                              </tbody>
+                          </table>
+                      </div>
+                  </div>
               </div>
-            </div>
+
+              <div class="u-container-style u-tab-pane u-white u-tab-pane-2" id="tab-14b7" role="tabpanel" aria-labelledby="link-tab-14b7">
+                  <div class="u-container-layout u-container-layout-2">
+                      <div class="u-expanded-width u-table u-table-responsive u-table-2">
+                          <table class="u-table-entity">
+                              <colgroup>
+                                  <col width="20%">
+                                  <col width="20%">
+                                  <col width="20%">
+                                  <col width="20%">
+                                  <col width="20%">
+                              </colgroup>
+                              <tbody class="u-table-body">
+                                  <tr style="height: 87px;">
+                                      <td class="u-align-center u-border-2 u-border-grey-90 u-custom-font u-first-column u-font-roboto-slab u-table-cell u-table-cell-1">ID</td>
+                                      <td class="u-align-center u-border-2 u-border-grey-90 u-custom-font u-font-roboto-slab u-table-cell u-table-cell-2">Наименование</td>
+                                      <td class="u-align-center u-border-2 u-border-grey-90 u-custom-font u-font-roboto-slab u-table-cell u-table-cell-3">Отв.сотрудник</td>
+                                      <td class="u-align-center u-border-2 u-border-grey-90 u-custom-font u-font-roboto-slab u-table-cell u-table-cell-4">Тип</td>
+                                      <td class="u-align-center u-border-2 u-border-grey-90 u-custom-font u-font-roboto-slab u-table-cell u-table-cell-5">Статус</td>
+                                  </tr>
+                                  {% for equ in equipments_found %}
+                                      <tr style="height: 52px;">
+                                          <td class="u-align-left u-border-2 u-border-grey-70 u-custom-font u-first-column u-font-roboto-slab u-table-cell">{{ equ.pk }}</td>
+                                          <td class="u-align-left u-border-2 u-border-grey-70 u-custom-font u-font-roboto-slab u-table-cell">{{ equ.title }}</td>
+                                          <td class="u-align-left u-border-2 u-border-grey-70 u-custom-font u-font-roboto-slab u-table-cell">{{ equ.responsible }}</td>
+                                          <td class="u-align-left u-border-2 u-border-grey-70 u-custom-font u-font-roboto-slab u-table-cell">{{ equ.category }}</td>
+                                          <td class="u-align-left u-border-2 u-border-grey-70 u-custom-color-6 u-custom-font u-font-roboto-slab u-table-cell u-table-cell-10">Найдено</td>
+                                      </tr>
+                                  {% endfor %}
+                              </tbody>
+                          </table>
+                      </div>
+                  </div>
+              </div>
+
+              <div class="u-container-style u-tab-pane u-white u-tab-pane-3" id="tab-2917" role="tabpanel" aria-labelledby="link-tab-2917">
+                  <div class="u-container-layout u-container-layout-3">
+                      <div class="u-expanded-width u-table u-table-responsive u-table-3">
+                          <table class="u-table-entity">
+                              <colgroup>
+                                  <col width="20%">
+                                  <col width="20%">
+                                  <col width="20%">
+                                  <col width="20%">
+                                  <col width="20%">
+                              </colgroup>
+                              <tbody class="u-table-body">
+                                  <tr style="height: 87px;">
+                                      <td class="u-align-center u-border-2 u-border-grey-90 u-custom-font u-first-column u-font-roboto-slab u-table-cell u-table-cell-1">ID</td>
+                                      <td class="u-align-center u-border-2 u-border-grey-90 u-custom-font u-font-roboto-slab u-table-cell u-table-cell-2">Наименование</td>
+                                      <td class="u-align-center u-border-2 u-border-grey-90 u-custom-font u-font-roboto-slab u-table-cell u-table-cell-3">Отв.сотрудник</td>
+                                      <td class="u-align-center u-border-2 u-border-grey-90 u-custom-font u-font-roboto-slab u-table-cell u-table-cell-4">Тип</td>
+                                      <td class="u-align-center u-border-2 u-border-grey-90 u-custom-font u-font-roboto-slab u-table-cell u-table-cell-5">Статус</td>
+                                  </tr>
+                                  {% for equ in equipments_false %}
+                                      <tr style="height: 52px;">
+                                          <td class="u-align-left u-border-2 u-border-grey-70 u-custom-font u-first-column u-font-roboto-slab u-table-cell">{{ equ.pk }}</td>
+                                          <td class="u-align-left u-border-2 u-border-grey-70 u-custom-font u-font-roboto-slab u-table-cell">{{ equ.title }}</td>
+                                          <td class="u-align-left u-border-2 u-border-grey-70 u-custom-font u-font-roboto-slab u-table-cell">{{ equ.responsible }}</td>
+                                          <td class="u-align-left u-border-2 u-border-grey-70 u-custom-font u-font-roboto-slab u-table-cell">{{ equ.category }}</td>
+                                          <td class="u-align-left u-border-2 u-border-grey-70 u-custom-color-6 u-custom-font u-font-roboto-slab u-table-cell u-table-cell-10">Не на месте</td>
+                                      </tr>
+                                  {% endfor %}
+                              </tbody>
+                          </table>
+                      </div>
+                  </div>
+              </div>
           </div>
-        </div>
       </div>
-    </section>
+  </div>
+</section>
 
 <script>
 document.getElementById('start-scan-btn').addEventListener('click', function(e) {
@@ -152,6 +217,15 @@ function success(decodedText, decodedResult) {
     .then(response => response.json())
     .then(data => {
         console.log('Ответ от сервера:', data);
+        console.log(data.message)
+        // Обновляем таблицу в зависимости от ответа сервера
+        if (data.message === "Equipment found" && data.location_correct) {
+            addRowToTable('found', data);
+        } else if (data.message === "Equipment found" && !data.location_correct) {
+            addRowToTable('wrong_location', data);
+        } else {
+            addRowToTable('not_found', data);
+        }
     })
     .catch(error => {
         console.error('Ошибка при отправке данных на сервер:', error);
@@ -165,6 +239,35 @@ function success(decodedText, decodedResult) {
     });
 }
 
+function addRowToTable(tableId, data) {
+    const tableBody = document.querySelector(`#${tableId} .u-table-body`);
+    
+    // Создаем новую строку и заполняем её данными
+    const newRow = document.createElement('tr');
+    newRow.style.height = '52px';
+    newRow.innerHTML = `
+        <td class="u-align-left u-border-2 u-border-grey-70 u-custom-font u-first-column u-font-roboto-slab u-table-cell">${data.id}</td>
+        <td class="u-align-left u-border-2 u-border-grey-70 u-custom-font u-font-roboto-slab u-table-cell">${data.name}</td>
+        <td class="u-align-left u-border-2 u-border-grey-70 u-custom-font u-font-roboto-slab u-table-cell">${data.user}</td>
+        <td class="u-align-left u-border-2 u-border-grey-70 u-custom-font u-font-roboto-slab u-table-cell">Оборудование</td>
+        <td class="u-align-left u-border-2 u-border-grey-70 u-custom-color-6 u-custom-font u-font-roboto-slab u-table-cell u-table-cell-10">
+            ${data.location_correct ? "Найдено" : "Не на месте"}
+        </td>
+    `;
+    
+    // Добавляем новую строку в тело таблицы
+    tableBody.appendChild(newRow);
+}
+
+function showTable(tableId) {
+    // Скрываем все таблицы
+    document.querySelectorAll('.equipment-table').forEach(table => {
+        table.style.display = 'none';
+    });
+
+    // Показываем выбранную таблицу
+    document.getElementById(`${tableId}_table`).style.display = 'block';
+}
 function getCookie(name) {
     let cookieValue = null;
     if (document.cookie && document.cookie !== '') {
@@ -184,7 +287,34 @@ function error(err) {
     console.error(err);
 }
 
-
+function scanQRCode() {
+    // Пример функции, которая выполняет запрос на бэкенд
+    fetch('/your-endpoint', {
+        method: 'POST',
+        headers: {
+            'Content-Type': 'application/json'
+        },
+        body: JSON.stringify({ qr_code: 'scanned_code_data' }) // Данные сканированного кода
+    })
+    .then(response => response.json())
+    .then(data => {
+        console.log(data); // Выводим ответ от бэкенда в консоль
+        document.getElementById('doresult').innerHTML = `
+    <h2>Успешно!</h2>
+    <p><a href="${decodedText}">${decodedText}</a></p>
+    `;
+        // Здесь можно добавить логику обновления таблиц
+        if (data.message === "Equipment found") {
+            // Логика для обновления таблицы с найденным оборудованием
+        } else if (!data.location_correct) {
+            // Логика для обновления таблицы с оборудованием, которое найдено не на месте
+        } else {
+            // Логика для обновления таблицы с не найденным оборудованием
+        }
+    })
+    .catch(error => {
+        console.error('Error:', error);
+    });
+}
 </script>
 {% endblock %}
-

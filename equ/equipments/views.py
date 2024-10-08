@@ -49,12 +49,11 @@ def qr_code_view(request):
             data = json.loads(request.body)
             code = data.get('code', '')
             # Здесь можно добавить логику обработки полученного QR-кода.
+            print(code)
             product_id = int(code[:-1])
             equipment = get_object_or_404(Equipment, pk=product_id)
             print(equipment)
             print('Получен QR-код:', code)
-
-            # Вернуть ответ об успешном приеме данных.
             return JsonResponse({
                 'id': equipment.id,
                 'name': equipment.title,
