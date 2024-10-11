@@ -3,5 +3,5 @@ from .views import scan_barcode, qr_code_view
 
 urlpatterns = [
     path('scan/', scan_barcode, name='scan_barcode'),
-    path('api/qr-code/', qr_code_view, name='qr_code_view'),
+    path('qr-code/', qr_code_view, name='qr_code_view'),
 ]

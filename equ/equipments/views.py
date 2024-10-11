@@ -1,3 +1,5 @@
+import datetime
+
 from django.shortcuts import render
 from django.views.decorators.csrf import csrf_exempt
 import json
@@ -7,6 +9,8 @@ from django.shortcuts import render, get_object_or_404
 from django.http import JsonResponse
 from pyzbar.pyzbar import decode
 from PIL import Image
+
+from locations.models import Location
 from .models import Equipment
 
 
@@ -46,12 +50,14 @@ def scan_barcode(request):
 def qr_code_view(request):
     if request.method == 'POST':
         try:
+            location = Location.objects.get(pk=request.headers['Location'])
             data = json.loads(request.body)
             code = data.get('code', '')
             # Здесь можно добавить логику обработки полученного QR-кода.
             print(code)
             product_id = int(code[:-1])
             equipment = get_object_or_404(Equipment, pk=product_id)
+            equipment.date_last_invent(datetime.datetime.now())
             print(equipment)
             print('Получен QR-код:', code)
             return JsonResponse({
@@ -59,7 +65,7 @@ def qr_code_view(request):
                 'name': equipment.title,
                 'user': equipment.responsible.email,
                 'message': 'Equipment found',
-                'location_correct': True
+                'location_correct': location == equipment.location
             })
         except json.JSONDecodeError:
             return JsonResponse({'error': 'Неверный формат JSON'}, status=400)

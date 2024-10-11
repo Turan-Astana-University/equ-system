@@ -38,6 +38,9 @@
           <a href="#" id="start-scan-btn" class="u-border-2 u-border-black u-btn u-button-style u-hover-black u-none u-text-hover-white u-btn-1">
               Сканировать штрих-код
           </a>
+          <a href="#" id="stop-scan-btn" class="u-border-2 u-border-black u-btn u-button-style u-hover-black u-none u-text-hover-white u-btn-2" style="display:none;">
+            Остановить сканер
+        </a>
       </main>
 
       <div class="u-expanded-width u-tabs u-tabs-1">
@@ -56,7 +59,7 @@
               <div class="u-container-style u-tab-active u-tab-pane u-white u-tab-pane-1" id="tab-0da5" role="tabpanel" aria-labelledby="link-tab-0da5">
                   <div class="u-container-layout u-container-layout-1">
                       <div class="u-expanded-width u-table u-table-responsive u-table-1">
-                          <table class="u-table-entity">
+                          <table id="1" class="u-table-entity">
                               <colgroup>
                                   <col width="20%">
                                   <col width="20%">
@@ -90,7 +93,7 @@
               <div class="u-container-style u-tab-pane u-white u-tab-pane-2" id="tab-14b7" role="tabpanel" aria-labelledby="link-tab-14b7">
                   <div class="u-container-layout u-container-layout-2">
                       <div class="u-expanded-width u-table u-table-responsive u-table-2">
-                          <table class="u-table-entity">
+                          <table id="found" class="u-table-entity">
                               <colgroup>
                                   <col width="20%">
                                   <col width="20%">
@@ -106,13 +109,6 @@
                                       <td class="u-align-center u-border-2 u-border-grey-90 u-custom-font u-font-roboto-slab u-table-cell u-table-cell-4">Тип</td>
                                       <td class="u-align-center u-border-2 u-border-grey-90 u-custom-font u-font-roboto-slab u-table-cell u-table-cell-5">Статус</td>
                                   </tr>
-                                  <tr style="height: 52px;">
-                                    <td class="u-align-left u-border-2 u-border-grey-70 u-custom-font u-first-column u-font-roboto-slab u-table-cell">sss{{ equ.pk }}</td>
-                                    <td class="u-align-left u-border-2 u-border-grey-70 u-custom-font u-font-roboto-slab u-table-cell">{{ equ.title }}</td>
-                                    <td class="u-align-left u-border-2 u-border-grey-70 u-custom-font u-font-roboto-slab u-table-cell">{{ equ.responsible }}</td>
-                                    <td class="u-align-left u-border-2 u-border-grey-70 u-custom-font u-font-roboto-slab u-table-cell">{{ equ.category }}</td>
-                                    <td class="u-align-left u-border-2 u-border-grey-70 u-custom-color-6 u-custom-font u-font-roboto-slab u-table-cell u-table-cell-10">Найдено</td>
-                                </tr>
                                   {% for equ in equipments_found %}
                                       <tr style="height: 52px;">
                                           <td class="u-align-left u-border-2 u-border-grey-70 u-custom-font u-first-column u-font-roboto-slab u-table-cell">{{ equ.pk }}</td>
@@ -131,7 +127,7 @@
               <div class="u-container-style u-tab-pane u-white u-tab-pane-3" id="tab-2917" role="tabpanel" aria-labelledby="link-tab-2917">
                   <div class="u-container-layout u-container-layout-3">
                       <div class="u-expanded-width u-table u-table-responsive u-table-3">
-                          <table class="u-table-entity">
+                          <table id="wrong_location" class="u-table-entity">
                               <colgroup>
                                   <col width="20%">
                                   <col width="20%">
@@ -167,11 +163,14 @@
 </section>
 
 <script>
+    
+// Старт сканера
 document.getElementById('start-scan-btn').addEventListener('click', function(e) {
-    e.preventDefault();  // Останавливаем стандартное действие кнопки
+    e.preventDefault();
 
     // Показываем элемент с id "reader", где будет отображаться сканер
     document.getElementById('reader').style.display = 'block';
+    document.getElementById('stop-scan-btn').style.display = 'inline-block'; // Показываем кнопку остановки
 
     // Инициализируем сканер
     const html5QrCode = new Html5Qrcode("reader");
@@ -179,30 +178,36 @@ document.getElementById('start-scan-btn').addEventListener('click', function(e) 
     // Запрашиваем камеры устройства
     Html5Qrcode.getCameras().then(devices => {
         if (devices && devices.length) {
-            // Найдем заднюю камеру. Задняя камера обычно имеет в названии 'back'.
             const backCamera = devices.find(device => device.label.toLowerCase().includes('back'));
-
-            // Выбираем заднюю камеру, если найдена, иначе используем первую камеру в списке
             const cameraId = backCamera ? backCamera.id : devices[0].id;
 
-            // Запускаем сканирование с выбранной камеры
+            // Запускаем сканирование с выбранной камеры и передаем функцию success для обработки декодированного текста
             html5QrCode.start(
                 cameraId,
                 {
-                    fps: 10,    // Частота кадров
-                    qrbox: { width: 250, height: 250 }  // Размер области для сканирования
+                    fps: 10,
+                    qrbox: { width: 250, height: 250 }
                 },
-                success, // Функция при успешном сканировании
-                error   // Функция при ошибке
-            ).catch(err => {
-                console.error(`Ошибка при запуске сканирования: ${err}`);
-            });
+                success // Передаем функцию success
+            ).catch(err => console.log(`Error: ${err}`));
         }
-    }).catch(err => {
-        console.error(`Ошибка при получении камер: ${err}`);
-    });
-});
+    }).catch(err => console.log(`Error fetching cameras: ${err}`));
 
+    // Сохраняем html5QrCode в глобальной переменной для доступа из кнопки остановки
+    window.html5QrCode = html5QrCode;
+});
+// Остановка сканера
+document.getElementById('stop-scan-btn').addEventListener('click', function(e) {
+    e.preventDefault();
+
+    if (window.html5QrCode) {
+        window.html5QrCode.stop().then(() => {
+            console.log('Сканер остановлен');
+            document.getElementById('reader').style.display = 'none';
+            document.getElementById('stop-scan-btn').style.display = 'none';
+        }).catch(err => console.log(`Error stopping scanner: ${err}`));
+    }
+});
 
 const qrCodeUrl = "{% url 'qr_code_view' %}";
 
@@ -217,6 +222,7 @@ function success(decodedText, decodedResult) {
         method: 'POST',
         headers: {
             'Content-Type': 'application/json',
+            'location': "{{ location.id }}",
             'X-CSRFToken': getCookie('csrftoken'),  // Если CSRF защита включена
         },
         body: JSON.stringify({ code: decodedText })
@@ -247,7 +253,7 @@ function success(decodedText, decodedResult) {
 }
 
 function addRowToTable(tableId, data) {
-    const tableBody = document.querySelector(`#${tableId} .u-table-body`);
+    const tableBody = document.querySelector(`#${tableId}`);
     
     // Создаем новую строку и заполняем её данными
     const newRow = document.createElement('tr');
@@ -266,15 +272,6 @@ function addRowToTable(tableId, data) {
     tableBody.appendChild(newRow);
 }
 
-// function showTable(tableId) {
-//     // Скрываем все таблицы
-//     document.querySelectorAll('.equipment-table').forEach(table => {
-//         table.style.display = 'none';
-//     });
-
-//     // Показываем выбранную таблицу
-//     document.getElementById(`${tableId}_table`).style.display = 'block';
-// }
 function getCookie(name) {
     let cookieValue = null;
     if (document.cookie && document.cookie !== '') {
@@ -323,5 +320,7 @@ function scanQRCode() {
         console.error('Error:', error);
     });
 }
+
+
 </script>
 {% endblock %}
