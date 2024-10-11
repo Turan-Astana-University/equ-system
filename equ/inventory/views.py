@@ -10,10 +10,18 @@ from .models import Inventory
 
 
 def location_view(request):
-    if not Inventory.objects.last().date_end:
-        loc = Location.objects.all()
-        return render(request, 'inventory/locations_view.html', {"locations": loc})
-    return render(request, "inventory/invent.html")
+    inventory = Inventory.objects.last()
+    loc = Location.objects.all()
+    location_found = loc.filter(date_last_invent__gte=inventory.date_start)
+    location_non_found = loc.filter(date_last_invent__lte=inventory.date_start)
+    return render(request, 'inventory/locations_view.html', {"location_found": location_found,
+    "location_non_found": location_non_found, "locations": loc})
+
+def end_invent_location(request, pk):
+    location = Location.objects.get(pk=pk)
+    location.date_last_invent = datetime.now()
+    location.save()
+    return redirect('locations')
 
 
 def create_invent(request):
@@ -80,9 +88,6 @@ def equ_invent_find(request):
             'location_correct': True
         })
     return HttpResponse(status=400)
-
-
-
 
 
 

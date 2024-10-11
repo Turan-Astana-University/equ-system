@@ -36,7 +36,7 @@
                         <td class="u-align-center u-border-2 u-border-grey-90 u-custom-font u-font-roboto-slab u-table-cell u-table-cell-5">
                             Активная ссылка
                       </tr>
-                        {% for loc in locations %}
+                        {% for loc in location_found %}
 <!--                            <h2>-->
 <!--                                <a href="{% url 'location_detail' loc.pk %}">{{ loc }}</a>-->
 <!--                            </h2>-->
@@ -50,7 +50,28 @@
                             {{ loc.responsible }}</td>
                         <td class="u-align-center u-border-2 u-border-grey-90 u-custom-font u-font-roboto-slab u-table-cell u-table-cell-4">
                             {{ loc.category }}</td>
-                        <td class="u-align-center u-border-2 u-border-grey-90 u-custom-font u-font-roboto-slab u-table-cell u-table-cell-5">% </td>
+                        <td class="u-align-center u-border-2 u-border-grey-90 u-custom-font u-font-roboto-slab u-table-cell u-table-cell-5">
+                          Пройдено </td>
+                        <td class="u-align-center u-border-2 u-border-grey-90 u-custom-font u-font-roboto-slab u-table-cell u-table-cell-5">
+                            <a href="{% url 'location_detail' loc.pk %}">Перейти</a></td>
+                      </tr>
+                      {% endfor %}
+                      {% for loc in location_non_found %}
+<!--                            <h2>-->
+<!--                                <a href="{% url 'location_detail' loc.pk %}">{{ loc }}</a>-->
+<!--                            </h2>-->
+
+                      <tr style="height: 87px;">
+                        <td class="u-align-center u-border-2 u-border-grey-90 u-custom-font u-first-column u-font-roboto-slab u-table-cell u-table-cell-1">
+                            {{ loc.pk }}</td>
+                        <td class="u-align-center u-border-2 u-border-grey-90 u-custom-font u-font-roboto-slab u-table-cell u-table-cell-2">
+                            {{ loc.title }}</td>
+                        <td class="u-align-center u-border-2 u-border-grey-90 u-custom-font u-font-roboto-slab u-table-cell u-table-cell-3">
+                            {{ loc.responsible }}</td>
+                        <td class="u-align-center u-border-2 u-border-grey-90 u-custom-font u-font-roboto-slab u-table-cell u-table-cell-4">
+                            {{ loc.category }}</td>
+                        <td class="u-align-center u-border-2 u-border-grey-90 u-custom-font u-font-roboto-slab u-table-cell u-table-cell-5">
+                          Не пройдено </td>
                         <td class="u-align-center u-border-2 u-border-grey-90 u-custom-font u-font-roboto-slab u-table-cell u-table-cell-5">
                             <a href="{% url 'location_detail' loc.pk %}">Перейти</a></td>
                       </tr>

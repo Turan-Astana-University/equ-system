@@ -38,8 +38,12 @@
           <a href="#" id="start-scan-btn" class="u-border-2 u-border-black u-btn u-button-style u-hover-black u-none u-text-hover-white u-btn-1">
               Сканировать штрих-код
           </a>
+         
           <a href="#" id="stop-scan-btn" class="u-border-2 u-border-black u-btn u-button-style u-hover-black u-none u-text-hover-white u-btn-2" style="display:none;">
             Остановить сканер
+        </a>
+        <a href="{% url 'end_invent_location' location.pk %}" class="u-border-2 u-border-black u-btn u-button-style u-hover-black u-none u-text-hover-white u-btn-1">
+            Завершить аудиторию
         </a>
       </main>
 

@@ -9,7 +9,7 @@ class Location(models.Model):
     responsible = models.ForeignKey(User, on_delete=models.CASCADE, null=True, blank=True)
     cnt = models.IntegerField(null=True, blank=True)
     # invent_code
-    # data last invent
+    date_last_invent = models.DateTimeField(blank=True, null=True, verbose_name="Дата последней инвентаризации")
 
     def save(self, *args, **kwargs):
         # related_equipments = self.equipment_set.all()
