@@ -39,27 +39,24 @@
         <div class="u-align-center u-form u-grey-5 u-form-1">
 
 
-          <form action="https://forms.nicepagesrv.com/v2/form/process" class="u-clearfix u-form-spacing-19 u-form-vertical u-inner-form" style="padding: 22px;" source="email" name="form">
+          <form method="POST" class="u-clearfix u-form-spacing-19 u-form-vertical u-inner-form" style="padding: 22px;" source="email" name="form">
+            {% csrf_token %}
             <p class="u-align-center u-custom-font u-font-roboto-slab u-form-group u-form-text u-text u-text-1"> Вход в систему</p>
             <div class="u-form-group u-form-name u-label-none u-form-group-2">
-              <label for="name-6797" class="u-label">Войти в систему</label>
-              <input type="text" placeholder="Логин" id="name-6797" name="name" class="u-custom-font u-font-roboto-slab u-input u-input-rectangle" required="">
-            </div>
-            <div class="u-form-email u-form-group u-label-none">
-              <label for="email-6797" class="u-label">Email</label>
-              <input type="email" placeholder="Пароль" id="email-6797" name="password" class="u-custom-font u-font-roboto-slab u-input u-input-rectangle" required="">
-            </div>
+            {{ form.as_p }}
+
+               </div>
+          
 
             <div class="u-align-right u-form-group u-form-submit u-label-none">
-              <a href="#" class="u-border-none u-btn u-btn-round u-btn-submit u-button-style u-custom-font u-font-roboto-slab u-grey-30 u-hover-grey-90 u-radius u-btn-1">Login</a>
+              <button>
+              <a href="#" class="u-border-none u-btn u-btn-round u-btn-submit u-button-style u-custom-font u-font-roboto-slab u-grey-30 u-hover-grey-90 u-radius u-btn-1">Войти</a>
               <input type="submit" value="submit" class="u-form-control-hidden">
+            </button>
+            {% if form.non_field_errors %}
+            <div style="color: red;">{{ form.non_field_errors }}</div>
+        {% endif %}
             </div>
-
-
-            <div class="u-form-send-message u-form-send-success">Thank you! Your message has been sent.</div>
-            <div class="u-form-send-error u-form-send-message">Unable to send your message. Please fix errors then try again.</div>
-            <input type="hidden" value="" name="recaptchaResponse">
-            <input type="hidden" name="formServices" value="3e50bbd0-8a8b-8868-e556-eb0fbcb2a007">
           </form>
 
 

@@ -1,6 +1,7 @@
 from django.shortcuts import render, redirect
 from .forms import CustomLoginForm
 from django.contrib.auth import authenticate, login
+from django.views import View
 # Create your views here.
 
 
@@ -11,21 +12,26 @@ def index(request):
         return redirect('login')
 
 
-def custom_login(request):
-    if request.user.is_authenticated:
-        return redirect("invent")
-    if request.method == 'POST':
-        form = CustomLoginForm(request.POST)
+class LoginView(View):
+    form_class = CustomLoginForm
+    template_name = 'users/login.html'
+
+    def get(self, request):
+        if request.user.is_authenticated:
+            return redirect("home")
+        form = self.form_class()
+        return render(request, self.template_name, {'form': form})
+
+    def post(self, request):
+        form = self.form_class(request.POST)
         if form.is_valid():
-            username = form.cleaned_data.get('username')
-            password = form.cleaned_data.get('password')
+            username = form.cleaned_data['username']
+            password = form.cleaned_data['password']
             user = authenticate(request, username=username, password=password)
             if user is not None:
                 login(request, user)
-                return redirect('home')  # Замените 'home' на имя вашей домашней страницы
+                return redirect('home')  # Замените на нужный URL
             else:
-                form.add_error(None, 'Invalid username or password')
-    else:
-        form = CustomLoginForm()
-    return render(request, 'users/login.html', {'form': form})
+                form.add_error(None, 'Неверное имя пользователя или пароль.')
+        return render(request, self.template_name, {'form': form})
 
