@@ -57,7 +57,7 @@ def qr_code_view(request):
             print(code)
             product_id = int(code[:-1])
             equipment = get_object_or_404(Equipment, pk=product_id)
-            equipment.date_last_invent(datetime.datetime.now())
+            equipment.date_last_invent= datetime.datetime.now()
             print(equipment)
             print('Получен QR-код:', code)
             return JsonResponse({
