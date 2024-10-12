@@ -1,9 +1,14 @@
 from django.shortcuts import render, redirect
 from .forms import CustomLoginForm
-from django.contrib.auth import authenticate, login
+from django.contrib.auth import authenticate, login, logout
 from django.views import View
+from django.urls import reverse
+
 # Create your views here.
 
+def custom_logout_view(request):
+    logout(request)
+    return redirect(reverse('login')) 
 
 def index(request):
     if request.method == "GET":
