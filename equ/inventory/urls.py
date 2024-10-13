@@ -1,14 +1,13 @@
 from django.urls import path
-from .views import location_view, location_detail_view, equ_invent_find, invent, create_invent, end_invent, end_invent_location
+from .views import LocationInventoryView, LocationDetailView, IndexInventView, CreateInventView, EndInventView, EndInventLocationView
 
 
 urlpatterns = [
-    path("", invent, name="invent"),
-    # path('scan/', scan_barcode, name='scan_barcode'),
-    path("locations/", location_view, name="locations"),
-    path("locations/<int:pk>/", location_detail_view, name="location_detail"),
-    path("invent_find", equ_invent_find, name="equ_invent_find"),
-    path("create_invent/", create_invent, name="create_invent"),
-    path("end_ivent", end_invent, name="end_invent"),
-    path("end_invent_location/<int:pk>", end_invent_location, name="end_invent_location")
+    path("", IndexInventView.as_view(), name="invent"),
+    path("locations/", LocationInventoryView.as_view(), name="locations"),
+    path("locations/<int:pk>/", LocationDetailView.as_view(), name="location_detail"),
+    # path("invent_find/", equ_invent_find, name="equ_invent_find"), # Не нужное
+    path("create_invent/", CreateInventView.as_view(), name="create_invent"),
+    path("end_invent/", EndInventView.as_view(), name="end_invent"),
+    path("end_invent_location/<int:pk>", EndInventLocationView.as_view(), name="end_invent_location")
 ]
