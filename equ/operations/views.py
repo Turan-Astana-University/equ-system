@@ -1,8 +1,4 @@
 import datetime
-from logging import LogRecord
-
-from django.shortcuts import render
-
 from operations.models import Operation, OperationType
 
 
