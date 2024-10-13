@@ -45,6 +45,9 @@ def end_invent(request):
 
 
 def invent(request):
+    inventory = Inventory.objects.last()
+    if inventory and not inventory.date_end:
+        return render(request, template_name="inventory/inventory.html", context={"inventory": inventory})
     return render(request, template_name="inventory/inventory.html")
 
 
