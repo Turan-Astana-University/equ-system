@@ -1,5 +1,4 @@
 from django.db import models
-from users.models import User
 from equipments.models import Equipment
 from locations.models import Location
 from users.models import User

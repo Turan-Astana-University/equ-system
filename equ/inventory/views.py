@@ -52,6 +52,9 @@ class EndInventView(View):
 
         inventory.date_end = datetime.now()
         inventory.save()
+        for equipment in Equipment.objects.all():
+            equipment.is_true_position = True
+            equipment.save()
         return redirect("home")
 
 
