@@ -20,13 +20,16 @@ class LocationInventoryView(SuperuserRequiredMixin, View):
         inventory = Inventory.objects.last()
         loc = Location.objects.all()
         location_found = loc.filter(date_last_invent__gte=inventory.date_start)
-        location_non_found = loc.filter(date_last_invent__lte=inventory.date_start)
+        location_non_found = loc.filter(
+    date_last_invent__lte=inventory.date_start
+) | loc.filter(date_last_invent__isnull=True)
 
         context = {
             "location_found": location_found,
             "location_non_found": location_non_found,
             "locations": loc
         }
+        print(context)
         return render(request, self.template_name, context)
 
 class EndInventLocationView(SuperuserRequiredMixin, View):

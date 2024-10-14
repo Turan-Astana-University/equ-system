@@ -11,7 +11,6 @@ from .models import Equipment
 # Create your views here.
 
 
-
 @method_decorator(csrf_exempt, name='dispatch')
 class QRCodeView(View):
     def post(self, request, *args, **kwargs):
