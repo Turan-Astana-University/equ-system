@@ -3,7 +3,7 @@ from django.views import View
 from django.views.decorators.csrf import csrf_exempt
 import json
 from django.utils.decorators import method_decorator
-from django.shortcuts import get_object_or_404
+from django.shortcuts import get_object_or_404, render
 from django.http import JsonResponse
 from locations.models import Location
 from operations.views import create_operation_log
@@ -45,3 +45,7 @@ class QRCodeView(View):
             return JsonResponse({'error': 'Неверный формат JSON'}, status=400)
         except KeyError:
             return JsonResponse({'error': 'Location header отсутствует'}, status=400)
+
+
+def release_equipments(request):
+    return render(request, template_name="equipments/release.html")
