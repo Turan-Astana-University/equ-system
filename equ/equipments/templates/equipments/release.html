@@ -1,68 +1,66 @@
 {% extends 'inventory/base.html' %}
 {% load static %}
 {% block css %}
-
-    <style>
-        container-content {
-            max-height: 1000px;
-        }
-        h2 {
-            display: flex;
-            flex-direction: column;
-            align-items: center; /* Центрирует строки по вертикали */
-        }
-        .equipment-row {
-            display: flex;
-            justify-content: center; /* Центрирует поля ввода по горизонтали */
-            gap: 10px;               /* Задает промежуток между полями */
-            margin-bottom: 10px;     /* Отступ между строками */
-        }
-        button {
-            display: flex;
-            flex-direction: column;
-            align-items: center; /* Центрирует строки по вертикали */
-        }
-        .equipment-container {
-            display: flex;
-            flex-direction: column;
-            align-items: center; /* Центрирует строки по вертикали */
-        }
-        .equipment-row {
-            display: flex;
-            gap: 10px;
-            margin-bottom: 10px;
-        }
-        select {
-            padding: 5px;
-            width: 210px;
-        }
-        .add-button {
-            margin-top: 15px;
-            padding: 10px 20px;
-            display: flex;
-            flex-direction: column;
-            align-items: center; /* Центрирует строки по вертикали */
-            margin-left: 44%;
-        }
-        .request-button {
-            margin-top: 15px;
-            padding: 10px 20px;
-            display: flex;
-            flex-direction: column;
-            align-items: center; /* Центрирует строки по вертикали */
-            margin-left: 47%;
-            margin-bottom: 480px;
-        }
-    </style>
+<style>
+    .container-content {
+        max-height: 1000px;
+    }
+    h2 {
+        display: flex;
+        flex-direction: column;
+        align-items: center; /* Центрирует строки по вертикали */
+    }
+    .equipment-row {
+        display: flex;
+        justify-content: center; /* Центрирует поля ввода по горизонтали */
+        gap: 10px;               /* Задает промежуток между полями */
+        margin-bottom: 10px;     /* Отступ между строками */
+    }
+    button {
+        display: flex;
+        flex-direction: column;
+        align-items: center; /* Центрирует строки по вертикали */
+    }
+    .equipment-container {
+        display: flex;
+        flex-direction: column;
+        align-items: center; /* Центрирует строки по вертикали */
+    }
+    .equipment-row {
+        display: flex;
+        gap: 10px;
+        margin-bottom: 10px;
+    }
+    select {
+        padding: 5px;
+        width: 210px;
+    }
+    .add-button {
+        margin-top: 15px;
+        padding: 10px 20px;
+        display: flex;
+        flex-direction: column;
+        align-items: center; /* Центрирует строки по вертикали */
+        margin-left: 44%;
+    }
+    .request-button {
+        margin-top: 15px;
+        padding: 10px 20px;
+        display: flex;
+        flex-direction: column;
+        align-items: center; /* Центрирует строки по вертикали */
+        margin-left: 47%;
+        margin-bottom: 480px;
+    }
+</style>
 {% endblock %}
 
 {% block continue %}
-
 <div class="container">
     <h2>Выдача Оборудования</h2>
 
     <!-- Форма для отправки данных -->
-    <form id="equipment-form" action="{% url 'release_equipments' %}" method="post">
+    <form id="equipment-form" action="{% url 'release_equipments' %}" method="post" onsubmit="return validateForm()">
         {% csrf_token %}
 
         <div id="equipment-container">
@@ -77,14 +75,14 @@
                 <select name="location[]">
                     <option value="" disabled selected>Местонахождение</option>
                     {% for loc in locations %}
-                        <option value="{{ loc }}">{{ loc }}</option>
+                        <option value="{{ loc.pk }}">{{ loc }}</option>
                     {% endfor %}
                 </select>
 
                 <select name="responsible_person[]">
                     <option value="" disabled selected>Отв. лицо</option>
                     {% for user in users %}
-                        <option value="{{ user.id }}">{{ user.first_name }} {{ user.last_name }}</option>
+                        <option value="{{ user.id }}">{{ user }} - {{ user.first_name }} {{ user.last_name }}</option>
                     {% endfor %}
                 </select>
             </div>
@@ -98,7 +96,6 @@
     </form>
 </div>
 
-</div>
 <script>
     function addEquipmentRow() {
         const container = document.getElementById("equipment-container");
@@ -109,27 +106,51 @@
         newRow.innerHTML = `
             <select name="name[]">
                 <option value="" disabled selected>Название</option>
-                    {% for equ in equipments %}
-                        <option value="{{ equ.pk }}">{{ equ }}</option>
-                    {% endfor %}
+                {% for equ in equipments %}
+                    <option value="{{ equ.pk }}">{{ equ }}</option>
+                {% endfor %}
             </select>
 
             <select name="location[]">
-            <option value="" disabled selected>Местонахождение</option>
+                <option value="" disabled selected>Местонахождение</option>
                 {% for loc in locations %}
-                        <option value="{{ loc }}">{{ loc }}</option>
-                    {% endfor %}
+                    <option value="{{ loc }}">{{ loc }}</option>
+                {% endfor %}
             </select>
 
             <select name="responsible_person[]">
                 <option value="" disabled selected>Отв. лицо</option>
-                    {% for user in users %}
-                        <option value="{{ user.id }}">{{ user.first_name }} {{ user.last_name }}</option>
-                    {% endfor %}
+                {% for user in users %}
+                    <option value="{{ user.id }}">{{ user.first_name }} {{ user.last_name }}</option>
+                {% endfor %}
             </select>
         `;
 
         container.appendChild(newRow);
+    }
+
+    function validateForm() {
+        const rows = document.querySelectorAll('.equipment-row');
+        let allFilled = true;
+
+        rows.forEach(row => {
+            const selects = row.querySelectorAll('select');
+
+            selects.forEach(select => {
+                if (select.value === "") {
+                    allFilled = false;
+                    select.style.border = '1px solid red'; // Добавляем красную рамку к пустым полям
+                } else {
+                    select.style.border = ''; // Убираем рамку, если поле заполнено
+                }
+            });
+        });
+
+        if (!allFilled) {
+            alert("Пожалуйста, заполните все поля!");
+            return false; // Отменяет отправку формы
+        }
+        return true; // Позволяет отправить форму
     }
 </script>
 {% endblock %}

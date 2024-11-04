@@ -6,11 +6,10 @@ from django.utils.decorators import method_decorator
 from django.shortcuts import get_object_or_404, render, redirect
 from django.http import JsonResponse
 from locations.models import Location
-from operations.views import create_operation_log
 from .models import Equipment
 from locations.models import Location
 from users.models import User
-from inventory.mixins import SuperuserRequiredMixin
+from operations.views import create_operation_log
 # Create your views here.
 
 
@@ -68,13 +67,17 @@ class ReleaseEquipmentsView(View):
 
     def post(self, request):
         # Обработка POST-запроса для освобождения оборудования
-        name_pks = request.POST.getlist('name[]')
-        name_pks = list(map(int, name_pks))
-        equipments = Equipment.objects.filter(pk__in=name_pks)
+        for i in range(len(request.POST.getlist("name[]"))):
+            equipment = Equipment.objects.get(pk=request.POST.getlist("name[]")[i])
 
-        # Здесь вы можете добавить логику для обработки освобождения оборудования, например:
-        # for equipment in equipments:
-        #     equipment.release()  # Пример метода освобождения оборудования
+            location_old = equipment.location
+            location_new = Location.objects.get(pk=request.POST.getlist("location[]")[i])
 
-        print(equipments)  # Вывод для отладки
+            responsible_old = equipment.responsible
+            responsible_new = User.objects.get(pk=request.POST.getlist("responsible_person[]")[i])
+            equipment.location = location_new
+            equipment.responsible = responsible_new
+            create_operation_log(request, 2, equipment, location_old, location_new, responsible_old, responsible_new)
+            equipment.save()
+
         return redirect("home")
