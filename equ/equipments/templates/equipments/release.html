@@ -1,7 +1,135 @@
 {% extends 'inventory/base.html' %}
 {% load static %}
-{% block css %}{% endblock %}
+{% block css %}
+
+    <style>
+        container-content {
+            max-height: 1000px;
+        }
+        h2 {
+            display: flex;
+            flex-direction: column;
+            align-items: center; /* Центрирует строки по вертикали */
+        }
+        .equipment-row {
+            display: flex;
+            justify-content: center; /* Центрирует поля ввода по горизонтали */
+            gap: 10px;               /* Задает промежуток между полями */
+            margin-bottom: 10px;     /* Отступ между строками */
+        }
+        button {
+            display: flex;
+            flex-direction: column;
+            align-items: center; /* Центрирует строки по вертикали */
+        }
+        .equipment-container {
+            display: flex;
+            flex-direction: column;
+            align-items: center; /* Центрирует строки по вертикали */
+        }
+        .equipment-row {
+            display: flex;
+            gap: 10px;
+            margin-bottom: 10px;
+        }
+        select {
+            padding: 5px;
+            width: 210px;
+        }
+        .add-button {
+            margin-top: 15px;
+            padding: 10px 20px;
+            display: flex;
+            flex-direction: column;
+            align-items: center; /* Центрирует строки по вертикали */
+            margin-left: 44%;
+        }
+        .request-button {
+            margin-top: 15px;
+            padding: 10px 20px;
+            display: flex;
+            flex-direction: column;
+            align-items: center; /* Центрирует строки по вертикали */
+            margin-left: 47%;
+            margin-bottom: 480px;
+        }
+    </style>
+{% endblock %}
 
 {% block continue %}
-ssssss
+
+<div class="container">
+    <h2>Выдача Оборудования</h2>
+
+    <!-- Форма для отправки данных -->
+    <form id="equipment-form" action="{% url 'release_equipments' %}" method="post">
+        {% csrf_token %}
+
+        <div id="equipment-container">
+            <div class="equipment-row">
+                <select name="name[]">
+                    <option value="" disabled selected>Название</option>
+                    {% for equ in equipments %}
+                        <option value="{{ equ.pk }}">{{ equ }}</option>
+                    {% endfor %}
+                </select>
+
+                <select name="location[]">
+                    <option value="" disabled selected>Местонахождение</option>
+                    {% for loc in locations %}
+                        <option value="{{ loc }}">{{ loc }}</option>
+                    {% endfor %}
+                </select>
+
+                <select name="responsible_person[]">
+                    <option value="" disabled selected>Отв. лицо</option>
+                    {% for user in users %}
+                        <option value="{{ user.id }}">{{ user.first_name }} {{ user.last_name }}</option>
+                    {% endfor %}
+                </select>
+            </div>
+        </div>
+
+        <!-- Кнопка добавления нового ряда -->
+        <button type="button" class="add-button" onclick="addEquipmentRow()">Добавить оборудование</button>
+
+        <!-- Кнопка для отправки данных на сервер -->
+        <button type="submit" class="request-button">Выдать</button>
+    </form>
+</div>
+
+</div>
+<script>
+    function addEquipmentRow() {
+        const container = document.getElementById("equipment-container");
+
+        const newRow = document.createElement("div");
+        newRow.className = "equipment-row";
+
+        newRow.innerHTML = `
+            <select name="name[]">
+                <option value="" disabled selected>Название</option>
+                    {% for equ in equipments %}
+                        <option value="{{ equ.pk }}">{{ equ }}</option>
+                    {% endfor %}
+            </select>
+
+            <select name="location[]">
+            <option value="" disabled selected>Местонахождение</option>
+                {% for loc in locations %}
+                        <option value="{{ loc }}">{{ loc }}</option>
+                    {% endfor %}
+            </select>
+
+            <select name="responsible_person[]">
+                <option value="" disabled selected>Отв. лицо</option>
+                    {% for user in users %}
+                        <option value="{{ user.id }}">{{ user.first_name }} {{ user.last_name }}</option>
+                    {% endfor %}
+            </select>
+        `;
+
+        container.appendChild(newRow);
+    }
+</script>
 {% endblock %}
