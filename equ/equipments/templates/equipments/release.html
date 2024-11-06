@@ -53,10 +53,51 @@
         margin-bottom: 480px;
     }
 </style>
+<script src="{% static 'node_modules/html5-qrcode/html5-qrcode.min.js' %}"></script>
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <meta charset="utf-8">
+    <meta name="keywords" content="">
+    <meta name="description" content="">
+    <title>Страница 1</title>
+    <link rel="stylesheet" href="{% static 'css/nicepage.css' %}" media="screen">
+    <link rel="stylesheet" href="{% static 'css/Страница-1.css' %}" media="screen">
+    <script class="u-script" type="text/javascript" src="{% static 'js/jquery.js' %}" defer=""></script>
+    <script class="u-script" type="text/javascript" src="{% static 'js/nicepage.js' %}" defer=""></script>
+    <meta name="generator" content="Nicepage 6.15.2, nicepage.com">
+    <link id="u-theme-google-font" rel="stylesheet" href="https://fonts.googleapis.com/css?family=Roboto:100,100i,300,300i,400,400i,500,500i,700,700i,900,900i|Open+Sans:300,300i,400,400i,500,500i,600,600i,700,700i,800,800i">
+    <link id="u-page-google-font" rel="stylesheet" href="https://fonts.googleapis.com/css?family=Roboto+Slab:100,200,300,400,500,600,700,800,900">
+
+
+
+    <script type="application/ld+json">{
+		"@context": "http://schema.org",
+		"@type": "Organization",
+		"name": "",
+		"logo": "images/image1.png"
+}</script>
+    <meta name="theme-color" content="#478ac9">
+    <meta property="og:title" content="Страница 1">
+    <meta property="og:type" content="website">
+  <meta data-intl-tel-input-cdn-path="intlTelInput/">
 {% endblock %}
 
 {% block continue %}
-<div class="container">
+<section class="u-align-center u-clearfix u-grey-10 u-section-1" id="sec-c79d">
+<!--    <div class="u-clearfix u-sheet u-sheet-1">-->
+      <main>
+
+            <div class="container">
+              <div id="reader" style="display: none;"></div>
+              <div id="result"></div>
+              <a href="#" id="start-scan-btn" class="u-border-2 u-border-black u-btn u-button-style u-hover-black u-none u-text-hover-white u-btn-1">
+                Сканировать штрих-код
+              </a>
+              <a href="#" id="stop-scan-btn" class="u-border-2 u-border-black u-btn u-button-style u-hover-black u-none u-text-hover-white u-btn-2" style="display:none;">
+                Остановить сканер
+            </a>
+            </div>
+        </main>
+<!--    </div>-->
     <h2>Выдача Оборудования</h2>
 
     <!-- Форма для отправки данных -->
@@ -95,6 +136,8 @@
         <button type="submit" class="request-button">Выдать</button>
     </form>
 </div>
+
+</section>
 
 <script>
     function addEquipmentRow() {
