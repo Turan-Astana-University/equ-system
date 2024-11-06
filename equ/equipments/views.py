@@ -15,7 +15,29 @@ from operations.views import create_operation_log
 
 @method_decorator(csrf_exempt, name='dispatch')
 class QRCodeView(View):
-    def post(self, request, *args, **kwargs):
+    def equipment_release_qr_scan(self, request, *args, **kwargs):
+        print(request.headers.get('equipment-type'))
+        try:
+            data = json.loads(request.body)
+            code = data.get('code', '')
+            product_id = int(code[:-1])
+            equipment = get_object_or_404(Equipment, pk=product_id)
+            print(code)
+
+            return JsonResponse({
+                'id': equipment.id,
+                'name': equipment.title,
+                'user': equipment.responsible.email,
+                'message': 'Equipment found',
+                'location_correct': 1,
+            })
+        except json.JSONDecodeError:
+            return JsonResponse({'error': 'Неверный формат JSON'}, status=400)
+
+        except KeyError:
+            return JsonResponse({'error': 'Location header отсутствует'}, status=400)
+
+    def equipment_inventory_qr_scan(self, request, *args, **kwargs):
         try:
             location = get_object_or_404(Location, pk=request.headers.get('Location'))
             data = json.loads(request.body)
@@ -26,13 +48,20 @@ class QRCodeView(View):
             equipment_true_position = location == equipment.location
 
             equipment.is_true_position = equipment_true_position
-            create_operation_log(request, operation_type=1,
-                                 equipment=equipment,
-                                 location_old=equipment.location,
-                                 location_new=location,
-                                 responsible_old=equipment.responsible,
-                                 responsible_new=location.responsible)
-            if not equipment_true_position:
+            if equipment_true_position:
+                create_operation_log(request, operation_type=1,
+                                     equipment=equipment,
+                                     location_old=equipment.location,
+                                     location_new=location,
+                                     responsible_old=equipment.responsible,
+                                     responsible_new=location.responsible)
+            else:
+                create_operation_log(request, operation_type=3,
+                                     equipment=equipment,
+                                     location_old=equipment.location,
+                                     location_new=location,
+                                     responsible_old=equipment.responsible,
+                                     responsible_new=location.responsible)
                 equipment.location = location
             equipment.save()
 
@@ -47,6 +76,12 @@ class QRCodeView(View):
             return JsonResponse({'error': 'Неверный формат JSON'}, status=400)
         except KeyError:
             return JsonResponse({'error': 'Location header отсутствует'}, status=400)
+
+    def post(self, request, *args, **kwargs):
+        if request.headers.get('equipment-type') == "release":
+            return self.equipment_release_qr_scan(request, *args, **kwargs)
+        else:
+            return self.equipment_inventory_qr_scan(request, *args, **kwargs)
 
 
 class ReleaseEquipmentsView(View):

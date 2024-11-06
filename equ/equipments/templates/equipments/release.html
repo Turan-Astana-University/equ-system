@@ -195,5 +195,107 @@
         }
         return true; // Позволяет отправить форму
     }
+
+
+// Старт сканера
+document.getElementById('start-scan-btn').addEventListener('click', function(e) {
+    e.preventDefault();
+
+    // Показываем элемент с id "reader", где будет отображаться сканер
+    document.getElementById('reader').style.display = 'block';
+    document.getElementById('stop-scan-btn').style.display = 'inline-block'; // Показываем кнопку остановки
+
+    // Инициализируем сканер
+    const html5QrCode = new Html5Qrcode("reader");
+
+    // Запрашиваем камеры устройства
+    Html5Qrcode.getCameras().then(devices => {
+        if (devices && devices.length) {
+            const backCamera = devices.find(device => device.label.toLowerCase().includes('back'));
+            const cameraId = backCamera ? backCamera.id : devices[0].id;
+
+            // Запускаем сканирование с выбранной камеры и передаем функцию success для обработки декодированного текста
+            html5QrCode.start(
+                cameraId,
+                {
+                    fps: 10,
+                    qrbox: { width: 250, height: 250 }
+                },
+                success // Передаем функцию success
+            ).catch(err => console.log(`Error: ${err}`));
+        }
+    }).catch(err => console.log(`Error fetching cameras: ${err}`));
+
+    // Сохраняем html5QrCode в глобальной переменной для доступа из кнопки остановки
+    window.html5QrCode = html5QrCode;
+});
+// Остановка сканера
+document.getElementById('stop-scan-btn').addEventListener('click', function(e) {
+    e.preventDefault();
+
+    if (window.html5QrCode) {
+        window.html5QrCode.stop().then(() => {
+            console.log('Сканер остановлен');
+            document.getElementById('reader').style.display = 'none';
+            document.getElementById('stop-scan-btn').style.display = 'none';
+        }).catch(err => console.log(`Error stopping scanner: ${err}`));
+    }
+});
+
+const qrCodeUrl = "{% url 'qr_code_view' %}";
+
+function success(decodedText, decodedResult) {
+
+    // Отправляем декодированный текст на бэкенд
+    fetch(qrCodeUrl, {
+        method: 'POST',
+        headers: {
+            'Content-Type': 'application/json',
+            'equipment-type': "release",
+            'X-CSRFToken': getCookie('csrftoken'),  // Если CSRF защита включена
+        },
+        body: JSON.stringify({ code: decodedText })
+    })
+    .then(response => response.json())
+    .then(data => {
+        console.log('Ответ от сервера:', data);
+        console.log(data.message)
+        // Обновляем таблицу в зависимости от ответа сервера
+        document.getElementById('result').innerHTML = `
+        <h2>Успешно!</h2>
+        <p>${data.name}, Позиция: ${data.name}</p>
+        `;
+    })
+    .catch(error => {
+        console.error('Ошибка при отправке данных на сервер:', error);
+    });
+
+
+    // Останавливаем сканирование после успешного сканирования
+    html5QrCode.stop().then(() => {
+        document.getElementById('reader').style.display = 'none';
+    }).catch(err => {
+        console.error(`Ошибка при остановке сканера: ${err}`);
+    });
+}
+
+function getCookie(name) {
+    let cookieValue = null;
+    if (document.cookie && document.cookie !== '') {
+        const cookies = document.cookie.split(';');
+        for (let i = 0; i < cookies.length; i++) {
+            const cookie = cookies[i].trim();
+            if (cookie.startsWith(name + '=')) {
+                cookieValue = decodeURIComponent(cookie.substring(name.length + 1));
+                break;
+            }
+        }
+    }
+    return cookieValue;
+}
+
+function error(err) {
+    console.error(err);
+}
 </script>
 {% endblock %}
