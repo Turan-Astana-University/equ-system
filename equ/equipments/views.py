@@ -102,12 +102,15 @@ class ReleaseEquipmentsView(View):
 
     def post(self, request):
         # Обработка POST-запроса для освобождения оборудования
+        print(request.POST.getlist("name[]"))
         for i in range(len(request.POST.getlist("name[]"))):
             equipment = Equipment.objects.get(pk=request.POST.getlist("name[]")[i])
-
+            print(equipment)
             location_old = equipment.location
+            print(location_old)
             location_new = Location.objects.get(pk=request.POST.getlist("location[]")[i])
-
+            print(request.POST.getlist("location[]"))
+            print(location_new)
             responsible_old = equipment.responsible
             responsible_new = User.objects.get(pk=request.POST.getlist("responsible_person[]")[i])
             equipment.location = location_new

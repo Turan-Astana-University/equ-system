@@ -126,6 +126,7 @@
                         <option value="{{ user.id }}">{{ user }} - {{ user.first_name }} {{ user.last_name }}</option>
                     {% endfor %}
                 </select>
+                 <button type="button" onclick="removeEquipmentRow(this)">Удалить</button>
             </div>
         </div>
 
@@ -140,6 +141,43 @@
 </section>
 
 <script>
+    function addEquipmentRow() {
+    const container = document.getElementById("equipment-container");
+
+    const newRow = document.createElement("div");
+    newRow.className = "equipment-row";
+
+    newRow.innerHTML = `
+        <select name="name[]">
+            <option value="" disabled selected>Название</option>
+            {% for equ in equipments %}
+                <option value="{{ equ.pk }}">{{ equ }}</option>
+            {% endfor %}
+        </select>
+
+        <select name="location[]">
+            <option value="" disabled selected>Местонахождение</option>
+            {% for loc in locations %}
+                <option value="{{ loc.pk }}">{{ loc }}</option>
+            {% endfor %}
+        </select>
+
+        <select name="responsible_person[]">
+            <option value="" disabled selected>Отв. лицо</option>
+            {% for user in users %}
+                <option value="{{ user.id }}">{{ user.first_name }} {{ user.last_name }}</option>
+            {% endfor %}
+        </select>
+
+        <button type="button" onclick="removeEquipmentRow(this)">Удалить</button>
+    `;
+
+    container.appendChild(newRow);
+}
+function removeEquipmentRow(button) {
+    const row = button.parentElement; // Найдите родительский элемент строки
+    row.remove(); // Удалите строку
+}
     function addEquipmentRow() {
         const container = document.getElementById("equipment-container");
 
@@ -157,7 +195,7 @@
             <select name="location[]">
                 <option value="" disabled selected>Местонахождение</option>
                 {% for loc in locations %}
-                    <option value="{{ loc }}">{{ loc }}</option>
+                    <option value="{{ loc.pk }}">{{ loc }}</option>
                 {% endfor %}
             </select>
 
@@ -167,6 +205,10 @@
                     <option value="{{ user.id }}">{{ user.first_name }} {{ user.last_name }}</option>
                 {% endfor %}
             </select>
+            <button type="button" onclick="removeEquipmentRow(this)">Удалить</button>
+            </div>
+        </div>
+
         `;
 
         container.appendChild(newRow);
@@ -274,6 +316,9 @@ function addEquipmentRowScan(data) {
                 <option value="{{ user.id }}">{{ user.first_name }} {{ user.last_name }}</option>
             {% endfor %}
         </select>
+            <button type="button" onclick="removeEquipmentRow(this)">Удалить</button>
+            </div>
+        </div>
     `;
 
     container.appendChild(newRow);
