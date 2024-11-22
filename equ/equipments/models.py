@@ -55,9 +55,18 @@ class Equipment(models.Model):
         self.barcode.save(file_name, File(buffer), save=False)
 
 
+class CartridgeTypes(models.Model):
+    title = models.CharField(max_length=255, null=True, blank=True)
+
+    class Meta:
+        verbose_name = "Картридж"
+        verbose_name_plural = "Картриджи"
+
+
 class Cartridge(Equipment):
     color = models.CharField(max_length=50, verbose_name="Цвет", null=True, blank=True,)
     filled = models.BooleanField(null=True, blank=True)
+    cartridge_type = models.ForeignKey(CartridgeTypes, on_delete=models.CASCADE, null=True, blank=True, verbose_name="Тип катриджа")
 
     class Meta:
         verbose_name = "Картридж"

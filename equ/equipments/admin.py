@@ -1,5 +1,5 @@
 from django.contrib import admin
-from .models import Equipment, EquipmentType, Cartridge
+from .models import Equipment, EquipmentType, Cartridge, CartridgeTypes
 # Register your models here.
 
 
@@ -18,3 +18,4 @@ class CartridgeAdmin(admin.ModelAdmin):
 
 
 admin.site.register(Cartridge, CartridgeAdmin)
+admin.site.register(CartridgeTypes)

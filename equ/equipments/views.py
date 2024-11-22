@@ -152,7 +152,7 @@ class CartridgeRelease(View):
             responsible_new = User.objects.get(pk=request.POST.getlist("responsible_person[]")[i])
             cartridge.location = location_new
             cartridge.responsible = responsible_new
-            create_operation_log(request, 3, cartridge, location_old, location_new, responsible_old,
+            create_operation_log(request, 4, cartridge, location_old, location_new, responsible_old,
                                  responsible_new)
             cartridge.save()
 
