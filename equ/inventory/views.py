@@ -129,6 +129,7 @@ def generate_word(request):
             'Новое местоположение': row.location_new.title,
             'Прошлый ответственный сотрудник': f"{row.responsible_old.first_name} {row.responsible_old.last_name} - {row.responsible_old}",
             'Новый ответственный сотрудник': rf"{row.responsible_new.first_name} {row.responsible_new.last_name} - {row.responsible_new}",
+
         })
     df = pd.concat([df, pd.DataFrame(rows)], ignore_index=True)
     output = BytesIO()

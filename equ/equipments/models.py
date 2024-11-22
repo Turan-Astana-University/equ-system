@@ -57,6 +57,7 @@ class Equipment(models.Model):
 
 class Cartridge(Equipment):
     color = models.CharField(max_length=50, verbose_name="Цвет", null=True, blank=True,)
+    filled = models.BooleanField(null=True, blank=True)
 
     class Meta:
         verbose_name = "Картридж"

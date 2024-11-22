@@ -1,5 +1,5 @@
 from django.contrib import admin
-from .models import Equipment, EquipmentType
+from .models import Equipment, EquipmentType, Cartridge
 # Register your models here.
 
 
@@ -10,3 +10,11 @@ class EquipmentAdmin(admin.ModelAdmin):
 
 admin.site.register(Equipment, EquipmentAdmin)
 admin.site.register(EquipmentType)
+
+
+class CartridgeAdmin(admin.ModelAdmin):
+    list_display = ['title']
+    readonly_fields = ('barcode', 'date_last_check', 'date_last_invent')
+
+
+admin.site.register(Cartridge, CartridgeAdmin)

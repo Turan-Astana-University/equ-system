@@ -6,7 +6,7 @@ from django.utils.decorators import method_decorator
 from django.shortcuts import get_object_or_404, render, redirect
 from django.http import JsonResponse
 from locations.models import Location
-from .models import Equipment
+from .models import Equipment, Cartridge
 from locations.models import Location
 from users.models import User
 from operations.views import create_operation_log
@@ -117,5 +117,43 @@ class ReleaseEquipmentsView(View):
             equipment.responsible = responsible_new
             create_operation_log(request, 2, equipment, location_old, location_new, responsible_old, responsible_new)
             equipment.save()
+
+        return redirect("home")
+
+
+class CartridgeRelease(View):
+    template_name = "equipments/cartridge_release.html"
+
+    def get(self, request):
+        if request.user.is_anonymous:
+            return redirect("login")
+        # Получение оборудования, которое в ответе, местонахождений и пользователей
+        result = Cartridge.objects.filter(responsible=request.user)
+        locations = Location.objects.all()
+        users = User.objects.all()
+        return render(request, self.template_name, context={
+            "cartridges": result,
+            "locations": locations,
+            "users": users,
+        })
+
+    def post(self, request):
+        # Обработка POST-запроса для освобождения оборудования
+        print(request.POST.getlist("name[]"))
+        for i in range(len(request.POST.getlist("name[]"))):
+            cartridge = Cartridge.objects.get(pk=request.POST.getlist("name[]")[i])
+            print(cartridge)
+            location_old = cartridge.location
+            print(location_old)
+            location_new = Location.objects.get(pk=request.POST.getlist("location[]")[i])
+            print(request.POST.getlist("location[]"))
+            print(location_new)
+            responsible_old = cartridge.responsible
+            responsible_new = User.objects.get(pk=request.POST.getlist("responsible_person[]")[i])
+            cartridge.location = location_new
+            cartridge.responsible = responsible_new
+            create_operation_log(request, 3, cartridge, location_old, location_new, responsible_old,
+                                 responsible_new)
+            cartridge.save()
 
         return redirect("home")
