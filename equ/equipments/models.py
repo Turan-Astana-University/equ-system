@@ -54,3 +54,10 @@ class Equipment(models.Model):
         file_name = f'{self.pk}.png'
         self.barcode.save(file_name, File(buffer), save=False)
 
+
+class Cartridge(Equipment):
+    color = models.CharField(max_length=50, verbose_name="Цвет", null=True, blank=True,)
+
+    class Meta:
+        verbose_name = "Картридж"
+        verbose_name_plural = "Картриджи"
