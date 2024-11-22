@@ -7,7 +7,6 @@ from datetime import datetime
 from .models import Inventory
 from django.views import View
 from .mixins import SuperuserRequiredMixin
-from docx import Document
 from operations.models import Operation
 import pandas as pd
 from io import BytesIO

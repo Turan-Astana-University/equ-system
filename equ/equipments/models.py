@@ -59,13 +59,25 @@ class CartridgeTypes(models.Model):
     title = models.CharField(max_length=255, null=True, blank=True)
 
     class Meta:
-        verbose_name = "Картридж"
-        verbose_name_plural = "Картриджи"
+        verbose_name = "type Картридж"
+        verbose_name_plural = "type Картриджи"
+
+
+class CategoryChoices(models.TextChoices):
+    FILLED = 'filled', ('Filled')
+    NEW = 'new', ('new')
+    EMPTY = 'empty', ('empty')
+    DEFECTIVE = 'defective', ('defective')
 
 
 class Cartridge(Equipment):
     color = models.CharField(max_length=50, verbose_name="Цвет", null=True, blank=True,)
     filled = models.BooleanField(null=True, blank=True)
+    status = models.CharField(
+        max_length=50,
+        choices=CategoryChoices.choices,
+        default=CategoryChoices.NEW
+    )
     cartridge_type = models.ForeignKey(CartridgeTypes, on_delete=models.CASCADE, null=True, blank=True, verbose_name="Тип катриджа")
 
     class Meta:
