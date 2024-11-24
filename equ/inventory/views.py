@@ -10,8 +10,6 @@ from .mixins import SuperuserRequiredMixin
 from operations.models import Operation
 import pandas as pd
 from io import BytesIO
-from django.utils.decorators import method_decorator
-from django.contrib.auth.decorators import user_passes_test
 # Create your views here.
 
 
@@ -21,6 +19,7 @@ class LocationInventoryView(SuperuserRequiredMixin, View):
     def get(self, request, *args, **kwargs):
         inventory = Inventory.objects.last()
         loc = Location.objects.all()
+        print(inventory.date_start)
         location_found = loc.filter(date_last_invent__gte=inventory.date_start)
         location_non_found = loc.filter(
     date_last_invent__lte=inventory.date_start
@@ -31,7 +30,6 @@ class LocationInventoryView(SuperuserRequiredMixin, View):
             "location_non_found": location_non_found,
             "locations": loc
         }
-        print(context)
         return render(request, self.template_name, context)
 
 class EndInventLocationView(SuperuserRequiredMixin, View):
@@ -117,7 +115,6 @@ def generate_word(request):
         date__gte=inventory.date_start,
         date__lte=inventory.date_end
     )
-    print(filtered_data)
     rows = []
     for row in filtered_data:
         rows.append({
@@ -132,16 +129,13 @@ def generate_word(request):
         })
     df = pd.concat([df, pd.DataFrame(rows)], ignore_index=True)
     output = BytesIO()
-    # Сохраняем DataFrame в формате Excel в BytesIO
     df.to_excel(output, index=False, engine='openpyxl')
-    output.seek(0)  # Перемещаем курсор в начало файла
+    output.seek(0)
 
-    # Создаём HTTP ответ с файлом
     response = HttpResponse(
         output,
         content_type="application/vnd.openxmlformats-officedocument.spreadsheetml.sheet"
     )
     response['Content-Disposition'] = 'attachment; filename="inventory_operations.xlsx"'
 
-    # Возвращаем файл пользователю
     return response

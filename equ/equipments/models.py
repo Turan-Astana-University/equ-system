@@ -1,5 +1,4 @@
 from django.db import models
-from positions.models import Position
 from users.models import User
 from django.core.files import File
 import barcode
@@ -72,7 +71,6 @@ class CategoryChoices(models.TextChoices):
 
 class Cartridge(Equipment):
     color = models.CharField(max_length=50, verbose_name="Цвет", null=True, blank=True,)
-    filled = models.BooleanField(null=True, blank=True)
     status = models.CharField(
         max_length=50,
         choices=CategoryChoices.choices,
