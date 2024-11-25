@@ -16,43 +16,42 @@ admin.site.register(EquipmentType)
 admin.site.register(Barcode)
 
 
-@admin.register(Cartridge)
-class CartridgeAdmin(admin.ModelAdmin):
-    list_display = ['title', 'color', 'status', 'cartridge_type']
+def bulk_create_view(self, request):
+    if request.method == 'POST':
+        form = BulkCreateCartridgeForm(request.POST)
+        if form.is_valid():
+            data = form.cleaned_data
+            cartridges = []
 
-    def get_urls(self):
-        urls = super().get_urls()
-        custom_urls = [
-            path('bulk-create/', self.admin_site.admin_view(self.bulk_create_view), name='bulk_create_cartridges'),
-        ]
-        return custom_urls + urls
+            for _ in range(data['count']):
+                # Создаем новый объект Barcode
+                barcode = Barcode()
+                barcode.generate_barcode()  # Генерируем штрих-код
+                barcode.save()  # Сохраняем штрих-код
 
-    def bulk_create_view(self, request):
-        if request.method == 'POST':
-            form = BulkCreateCartridgeForm(request.POST)
-            if form.is_valid():
-                data = form.cleaned_data
-                cartridges = [
-                    Cartridge(
-                        title=data['title'],
-                        color=data['color'],
-                        status=data['status'],
-                        cartridge_type=data['cartridge_type']
-                    )
-                    for _ in range(data['count'])
-                ]
-                Cartridge.objects.bulk_create(cartridges)
-                self.message_user(request, f"{len(cartridges)} новых картриджей успешно созданы.")
-                return redirect("../")  # Возвращаемся в админку
-        else:
-            form = BulkCreateCartridgeForm()
+                # Создаем новый картридж с добавленным штрих-кодом
+                cartridge = Cartridge(
+                    title=data['title'],
+                    color=data['color'],
+                    status=data['status'],
+                    cartridge_type=data['cartridge_type'],
+                    barcode=barcode  # Добавляем сгенерированный штрих-код
+                )
+                cartridges.append(cartridge)
 
-        context = {
-            'form': form,
-            'title': "Массовое создание картриджей"
-        }
-        return render(request, 'equipments/bulk_create_cartridges.html', context)
+            # Массово сохраняем картриджи
+            Cartridge.objects.bulk_create(cartridges)
 
+            self.message_user(request, f"{len(cartridges)} новых картриджей успешно созданы.")
+            return redirect("../")  # Возвращаемся в админку
+    else:
+        form = BulkCreateCartridgeForm()
+
+    context = {
+        'form': form,
+        'title': "Массовое создание картриджей"
+    }
+    return render(request, 'equipments/bulk_create_cartridges.html', context)
 
 admin.site.register(CartridgeTypes)
 # admin.site.register(Cartridge)
