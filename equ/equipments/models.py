@@ -20,6 +20,7 @@ class Barcode(models.Model):
 
     def generate_barcode(self):
         # Генерация штрих-кода используя python-barcode
+        super().save()
         EAN = barcode.get_barcode_class('ean13')
         ean = EAN(f'{self.id:012}', writer=ImageWriter())  # Используем self.id, так как он будет определен после сохранения
 

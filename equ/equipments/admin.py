@@ -46,7 +46,7 @@ class CartridgeAdmin(admin.ModelAdmin):
                         color=data['color'],
                         status=data['status'],
                         cartridge_type=data['cartridge_type'],
-                        barcode=barcode  # Добавляем сгенерированный штрих-код
+                        cartridge_barcode=barcode  # Добавляем сгенерированный штрих-код
                     )
                     cartridges.append(cartridge)
 
