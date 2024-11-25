@@ -1,5 +1,8 @@
 from django.contrib import admin
 from .models import Equipment, EquipmentType, Cartridge, CartridgeTypes, CategoryChoices
+from .forms import BulkCreateCartridgeForm
+from django.urls import path
+from django.shortcuts import render, redirect
 # Register your models here.
 
 
@@ -10,38 +13,44 @@ class EquipmentAdmin(admin.ModelAdmin):
 
 admin.site.register(Equipment, EquipmentAdmin)
 admin.site.register(EquipmentType)
-#
-#
-# class CartridgeAdmin(admin.ModelAdmin):
-#     list_display = ['title']
-#     readonly_fields = ('barcode', 'date_last_check', 'date_last_invent')
-#
 
 
 @admin.register(Cartridge)
 class CartridgeAdmin(admin.ModelAdmin):
     list_display = ['color', 'status', 'cartridge_type']
 
-    # Кастомное действие
-    actions = ['create_multiple_cartridges']
-
-    def create_multiple_cartridges(self, request, queryset):
-        # Создать 10 новых картриджей с одинаковым параметром
-        cartridge_type = CartridgeTypes.objects.first()  # Замените на нужный тип
-        cartridges = [
-            Cartridge(
-                color="Black",
-                status=CategoryChoices.NEW,
-                cartridge_type=cartridge_type
-            )
-            for _ in range(10)  # Укажите количество записей
+    def get_urls(self):
+        urls = super().get_urls()
+        custom_urls = [
+            path('bulk-create/', self.admin_site.admin_view(self.bulk_create_view), name='bulk_create_cartridges'),
         ]
-        Cartridge.objects.bulk_create(cartridges)
-        self.message_user(request, f"{len(cartridges)} новых картриджей успешно созданы.")
+        return custom_urls + urls
 
-    create_multiple_cartridges.short_description = "Создать 10 новых картриджей"
+    def bulk_create_view(self, request):
+        if request.method == 'POST':
+            form = BulkCreateCartridgeForm(request.POST)
+            if form.is_valid():
+                data = form.cleaned_data
+                cartridges = [
+                    Cartridge(
+                        title=data['title'],
+                        color=data['color'],
+                        status=data['status'],
+                        cartridge_type=data['cartridge_type']
+                    )
+                    for _ in range(data['count'])
+                ]
+                Cartridge.objects.bulk_create(cartridges)
+                self.message_user(request, f"{len(cartridges)} новых картриджей успешно созданы.")
+                return redirect("../")  # Возвращаемся в админку
+        else:
+            form = BulkCreateCartridgeForm()
+
+        context = {
+            'form': form,
+            'title': "Массовое создание картриджей"
+        }
+        return render(request, 'equipments/bulk_create_cartridges.html', context)
 
 
-admin.site.unregister(Cartridge)
-admin.site.register(Cartridge, CartridgeAdmin)
 admin.site.register(CartridgeTypes)
