@@ -5,11 +5,12 @@ import json
 from django.utils.decorators import method_decorator
 from django.shortcuts import get_object_or_404, render, redirect
 from django.http import JsonResponse
-from .models import Equipment, Cartridge, Barcode
+from .models import Equipment, Cartridge, Barcode, CategoryChoices
 from locations.models import Location
 from users.models import User
 from operations.models import OperationCategoryChoices
 from operations.views import create_operation_log
+from django.db.models import Count
 # Create your views here.
 
 
@@ -121,17 +122,31 @@ class CartridgeRelease(View):
         if request.user.is_anonymous:
             return redirect("login")
         result = Cartridge.objects.filter(responsible=request.user)
+        cartridges = (
+            Cartridge.objects.filter(responsible=request.user)
+            .values('title')
+            .annotate(count=Count('title'))
+            .order_by('title')
+            .filter(status__in=[CategoryChoices.NEW, CategoryChoices.FILLED])
+        )
+
         locations = Location.objects.all()
         users = User.objects.all()
         return render(request, self.template_name, context={
-            "cartridges": result,
+            "cartridges": cartridges,
             "locations": locations,
             "users": users,
         })
 
     def post(self, request):
+        print(request.POST)
         for i in range(len(request.POST.getlist("name[]"))):
-            cartridge = Cartridge.objects.get(pk=request.POST.getlist("name[]")[i])
+            print(request.POST.getlist("name[]")[i])
+
+            cartridge = Cartridge.objects.filter(title=request.POST.getlist("name[]")[i])
+            if cartridge:
+                cartridge = cartridge[0]
+            cartridge.status = CategoryChoices.RELEASE
             location_old = cartridge.location
             location_new = Location.objects.get(pk=request.POST.getlist("location[]")[i])
             responsible_old = cartridge.responsible

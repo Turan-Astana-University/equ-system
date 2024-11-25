@@ -76,6 +76,7 @@ class CategoryChoices(models.TextChoices):
     NEW = 'new', ('new')
     EMPTY = 'empty', ('empty')
     DEFECTIVE = 'defective', ('defective')
+    RELEASE = 'release', ('release')
 
 
 class Cartridge(models.Model):

@@ -101,15 +101,15 @@
     <h2>Выдача картриджа</h2>
 
     <!-- Форма для отправки данных -->
-    <form id="equipment-form" action="{% url 'release_equipments' %}" method="post" onsubmit="return validateForm()">
+    <form id="equipment-form" action="{% url 'cartridge_release' %}" method="post" onsubmit="return validateForm()">
         {% csrf_token %}
 
         <div id="equipment-container">
             <div class="equipment-row">
                 <select name="name[]">
                     <option value="" disabled selected>Название</option>
-                    {% for cart in cartridges %}
-                        <option value="{{ cart.pk }}">{{ cart }}</option>
+                    {% for equ in cartridges %}
+                        <option value="{{ equ.title }}">{{ equ.title }}({{ equ.count }})</option>
                     {% endfor %}
                 </select>
 
@@ -131,7 +131,7 @@
         </div>
 
         <!-- Кнопка добавления нового ряда -->
-        <button type="button" class="add-button" onclick="addEquipmentRow()">Добавить картридж</button>
+        <button type="button" class="add-button" onclick="addEquipmentRow()">Добавить оборудование</button>
 
         <!-- Кнопка для отправки данных на сервер -->
         <button type="submit" class="request-button">Выдать</button>
@@ -150,8 +150,8 @@
     newRow.innerHTML = `
         <select name="name[]">
             <option value="" disabled selected>Название</option>
-            {% for cart in cartridges %}
-                <option value="{{ cart.pk }}">{{ cart }}</option>
+            {% for equ in cartridges %}
+                <option value="{{ equ.pk }}">{{ equ }}</option>
             {% endfor %}
         </select>
 
@@ -187,8 +187,8 @@ function removeEquipmentRow(button) {
         newRow.innerHTML = `
             <select name="name[]">
                 <option value="" disabled selected>Название</option>
-                {% for cart in cartridges %}
-                    <option value="{{ cart.pk }}">{{ cart }}</option>
+                {% for equ in cartridges %}
+                    <option value="{{ equ.pk }}">{{ equ }}</option>
                 {% endfor %}
             </select>
 
@@ -298,8 +298,8 @@ function addEquipmentRowScan(data) {
     newRow.innerHTML = `
         <select name="name[]">
             <option value="" disabled>Название</option>
-            {% for cart in cartridges %}
-                <option value="{{ cart.pk }}" ${data && data.id === {{ cart.pk }} ? 'selected' : ''}>{{ cart }}</option>
+            {% for equ in equipments %}
+                <option value="{{ equ.pk }}" ${data && data.id === {{ equ.pk }} ? 'selected' : ''}>{{ equ }}</option>
             {% endfor %}
         </select>
 
