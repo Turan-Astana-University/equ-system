@@ -8,7 +8,7 @@ from operations.models import Operation, OperationType
 def create_operation_log(request, operation_type, equipment,
                          location_old, location_new,
                          responsible_old, responsible_new):
-    Operation(operation_type=OperationType.objects.get(pk=operation_type),
+    Operation(operation_type=operation_type,
               date=datetime.datetime.now(),
               user=request.user,
               equipment=equipment,

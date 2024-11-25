@@ -5,7 +5,7 @@ import json
 from django.utils.decorators import method_decorator
 from django.shortcuts import get_object_or_404, render, redirect
 from django.http import JsonResponse
-from .models import Equipment, Cartridge
+from .models import Equipment, Cartridge, Barcode
 from locations.models import Location
 from users.models import User
 from operations.models import OperationCategoryChoices
@@ -19,8 +19,9 @@ class QRCodeView(View):
         try:
             data = json.loads(request.body)
             code = data.get('code', '')
-            product_id = int(code[:-1])
-            equipment = get_object_or_404(Equipment, pk=product_id)
+            barcode_id = int(code[:-1])
+
+            equipment = get_object_or_404(Equipment, equipment_barcode=get_object_or_404(Barcode, pk=barcode_id))
 
             return JsonResponse({
                 'id': equipment.id,
@@ -40,21 +41,22 @@ class QRCodeView(View):
             location = get_object_or_404(Location, pk=request.headers.get('Location'))
             data = json.loads(request.body)
             code = data.get('code', '')
-            product_id = int(code[:-1])
-            equipment = get_object_or_404(Equipment, pk=product_id)
+            barcode_id = int(code[:-1])
+            equipment = get_object_or_404(Equipment, equipment_barcode=get_object_or_404(Barcode, pk=barcode_id))
+            print(equipment)
             equipment.date_last_invent = datetime.datetime.now()
             equipment_true_position = location == equipment.location
 
             equipment.is_true_position = equipment_true_position
             if equipment_true_position:
-                create_operation_log(request, operation_type=1,
+                create_operation_log(request, operation_type=OperationCategoryChoices.INVENTORY,
                                      equipment=equipment,
                                      location_old=equipment.location,
                                      location_new=location,
                                      responsible_old=equipment.responsible,
                                      responsible_new=location.responsible)
             else:
-                create_operation_log(request, operation_type=3,
+                create_operation_log(request, operation_type=OperationCategoryChoices.MOVED_WITHOUT_NOTICE,
                                      equipment=equipment,
                                      location_old=equipment.location,
                                      location_new=location,
