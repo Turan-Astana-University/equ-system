@@ -17,7 +17,7 @@ admin.site.register(EquipmentType)
 
 @admin.register(Cartridge)
 class CartridgeAdmin(admin.ModelAdmin):
-    list_display = ['color', 'status', 'cartridge_type']
+    list_display = ['title', 'color', 'status', 'cartridge_type']
 
     def get_urls(self):
         urls = super().get_urls()
