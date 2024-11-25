@@ -66,6 +66,9 @@ class CartridgeTypes(models.Model):
         verbose_name = "type Картридж"
         verbose_name_plural = "type Картриджи"
 
+    def __str__(self):
+        return self.title
+
 
 class CategoryChoices(models.TextChoices):
     FILLED = 'filled', ('Filled')
