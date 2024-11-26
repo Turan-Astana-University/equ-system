@@ -4,6 +4,7 @@ from django.core.files import File
 import barcode
 from barcode.writer import ImageWriter
 from io import BytesIO
+from PIL import Image, ImageDraw, ImageFont
 from locations.models import Location
 # Create your models here.
 
@@ -18,18 +19,53 @@ class EquipmentType(models.Model):
 class Barcode(models.Model):
     barcode = models.ImageField(upload_to='barcodes/', blank=True, verbose_name="Штрих код")
 
-    def generate_barcode(self):
+    def generate_barcode(self, title=None):
         # Генерация штрих-кода используя python-barcode
         super().save()
         EAN = barcode.get_barcode_class('ean13')
-        ean = EAN(f'{self.id:012}', writer=ImageWriter())  # Используем self.id, так как он будет определен после сохранения
+        ean = EAN(f'{self.id:012}', writer=ImageWriter())
 
         buffer = BytesIO()
         ean.write(buffer)
 
-        # Сохранение штрих-кода в поле barcode
+        # Загружаем сгенерированное изображение штрих-кода
+        buffer.seek(0)
+        barcode_image = Image.open(buffer)
+
+        # Создаём новое изображение с дополнительным местом под текст
+        new_height = barcode_image.height + 80  # Увеличиваем высоту для текста
+        new_image = Image.new("RGB", (barcode_image.width, new_height), "white")
+        new_image.paste(barcode_image, (0, 0))  # Вставляем штрих-код в верхнюю часть
+
+        # Добавляем текст (title) под штрих-код
+        if title:
+            draw = ImageDraw.Draw(new_image)
+
+            # Используем крупный шрифт
+            try:
+                font = ImageFont.truetype("arial.ttf", size=36)  # Крупный шрифт
+            except IOError:
+                font = ImageFont.load_default()  # Резервный шрифт, если кастомный не доступен
+
+            # Расчёт координат текста (по центру под штрих-кодом, ближе к нему)
+            text_bbox = draw.textbbox((0, 0), title, font=font)  # Вычисляем размеры текста
+            text_width = text_bbox[2] - text_bbox[0]
+            text_height = text_bbox[3] - text_bbox[1]
+
+            x = (new_image.width - text_width) // 2
+            y = barcode_image.height - text_height - 10  # Поднимаем текст выше (отступ всего 10 пикселей)
+
+            draw.text((x, y), title, font=font, fill="black")
+
+        # Сохраняем итоговое изображение
+        final_buffer = BytesIO()
+        new_image.save(final_buffer, format='PNG')
+        final_buffer.seek(0)
+
         file_name = f'{self.id}.png'
-        self.barcode.save(file_name, File(buffer), save=False)
+        self.barcode.save(file_name, File(final_buffer), save=False)
+        super().save()
+
 
 
 class Equipment(models.Model):
@@ -54,7 +90,7 @@ class Equipment(models.Model):
     def save(self, *args, **kwargs):
         if not self.equipment_barcode:  # Проверка на существование штрих-кода
             bc = Barcode.objects.create()  # Создаем новый Barcode
-            bc.generate_barcode()  # Генерируем штрих-код
+            bc.generate_barcode(self.title)  # Генерируем штрих-код
             bc.save()
             self.equipment_barcode = bc  # Присваиваем штрих-код
         super().save(*args, **kwargs)  # Сохраняем объект Equipment
@@ -104,6 +140,6 @@ class Cartridge(models.Model):
     def save(self, *args, **kwargs):
         if not self.cartridge_barcode:  # Проверка на существование штрих-кода
             bc = Barcode.objects.create()  # Создаем новый Barcode
-            bc.generate_barcode()  # Генерируем штрих-код
+            bc.generate_barcode(self.title)  # Генерируем штрих-код
             self.cartridge_barcode = bc  # Присваиваем штрих-код
         super().save(*args, **kwargs)  # Сохраняем объект Cartridge
