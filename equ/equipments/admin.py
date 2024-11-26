@@ -45,6 +45,7 @@ class CartridgeAdmin(admin.ModelAdmin):
                         title=data['title'],
                         color=data['color'],
                         status=data['status'],
+                        responsible=data['responsible'],
                         cartridge_type=data['cartridge_type'],
                         cartridge_barcode=barcode  # Добавляем сгенерированный штрих-код
                     )
