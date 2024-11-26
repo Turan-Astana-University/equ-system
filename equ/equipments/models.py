@@ -80,6 +80,8 @@ class CategoryChoices(models.TextChoices):
 
 
 class Cartridge(models.Model):
+    title = models.CharField(max_length=255, verbose_name="Название", null=True, blank=True)
+
     color = models.CharField(max_length=50, verbose_name="Цвет", null=True, blank=True)
     status = models.CharField(
         max_length=50,
@@ -87,7 +89,6 @@ class Cartridge(models.Model):
         default=CategoryChoices.NEW
     )
     cartridge_type = models.ForeignKey(CartridgeTypes, on_delete=models.CASCADE, null=True, blank=True, verbose_name="Тип картриджа")
-    title = models.CharField(max_length=255, verbose_name="Название", null=True, blank=True)
     cartridge_barcode = models.ForeignKey(Barcode, on_delete=models.CASCADE, null=True, blank=True)  # Переименовано
     location = models.ForeignKey(Location, on_delete=models.CASCADE, null=True, blank=True, verbose_name="Местонахождение")
     responsible = models.ForeignKey(User, on_delete=models.CASCADE, null=True, blank=True, verbose_name="Ответственное лицо")

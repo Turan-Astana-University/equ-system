@@ -1,5 +1,5 @@
 from django.db import models
-from equipments.models import Equipment
+from equipments.models import Equipment, Cartridge
 from locations.models import Location
 from users.models import User
 # Create your models here.
@@ -27,8 +27,10 @@ class Operation(models.Model):
     )
     date = models.DateTimeField()
     user = models.ForeignKey(User, on_delete=models.CASCADE)
-    equipment = models.ForeignKey(Equipment, on_delete=models.CASCADE)
-    location_old = models.ForeignKey(Location, on_delete=models.CASCADE, related_name="old_location")
+    equipment = models.ForeignKey(Equipment, on_delete=models.CASCADE, null=True, blank=True)
+    cartridge = models.ForeignKey(Cartridge, on_delete=models.CASCADE, null=True, blank=True)
+    location_old = models.ForeignKey(Location, on_delete=models.CASCADE, related_name="old_location", null=True, blank=True)
     location_new = models.ForeignKey(Location, on_delete=models.CASCADE, related_name="new_location")
     responsible_old = models.ForeignKey(User, on_delete=models.CASCADE, related_name="old_user")
     responsible_new = models.ForeignKey(User, on_delete=models.CASCADE, related_name="new_user")
+

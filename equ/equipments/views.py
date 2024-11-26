@@ -153,8 +153,9 @@ class CartridgeRelease(View):
             responsible_new = User.objects.get(pk=request.POST.getlist("responsible_person[]")[i])
             cartridge.location = location_new
             cartridge.responsible = responsible_new
-            create_operation_log(request, OperationCategoryChoices.RELEASE_CARTRIDGE, cartridge, location_old, location_new, responsible_old,
-                                 responsible_new)
+            create_operation_log(request, operation_type=OperationCategoryChoices.RELEASE_CARTRIDGE, cartridge=cartridge,
+                                 location_old=location_old, location_new=location_new, responsible_old=responsible_old,
+                                 responsible_new=responsible_new)
             cartridge.save()
 
         return redirect("home")
