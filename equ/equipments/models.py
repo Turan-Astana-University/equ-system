@@ -32,8 +32,12 @@ class Barcode(models.Model):
         buffer.seek(0)
         barcode_image = Image.open(buffer)
 
+        # Определяем отступ между штрих-кодом и текстом
+        barcode_height = barcode_image.height
+        padding = 20  # Отступ для текста сверху
+
         # Создаём новое изображение с дополнительным местом под текст
-        new_height = barcode_image.height + 80  # Увеличиваем высоту для текста
+        new_height = barcode_height + padding + 100  # Увеличиваем высоту для нескольких строк текста
         new_image = Image.new("RGB", (barcode_image.width, new_height), "white")
         new_image.paste(barcode_image, (0, 0))  # Вставляем штрих-код в верхнюю часть
 
@@ -41,21 +45,26 @@ class Barcode(models.Model):
         if title:
             draw = ImageDraw.Draw(new_image)
 
-            # Используем крупный шрифт
+            # Используем шрифт
             try:
-                font = ImageFont.truetype("arial.ttf", size=36)  # Крупный шрифт
+                font = ImageFont.truetype("arial.ttf", size=24)  # Размер шрифта
             except IOError:
-                font = ImageFont.load_default()  # Резервный шрифт, если кастомный не доступен
+                font = ImageFont.load_default()  # Резервный шрифт
 
-            # Расчёт координат текста (по центру под штрих-кодом, ближе к нему)
-            text_bbox = draw.textbbox((0, 0), title, font=font)  # Вычисляем размеры текста
-            text_width = text_bbox[2] - text_bbox[0]
-            text_height = text_bbox[3] - text_bbox[1]
+            # Разбиваем текст на строки по 20 символов
+            max_length = 20  # Максимальное количество символов в строке
+            lines = [title[i:i + max_length] for i in range(0, len(title), max_length)]
 
-            x = (new_image.width - text_width) // 2
-            y = barcode_image.height - text_height - 10  # Поднимаем текст выше (отступ всего 10 пикселей)
+            # Вычисляем начальную позицию для текста
+            line_height = draw.textbbox((0, 0), "A", font=font)[3]  # Высота строки
+            y_start = barcode_height + padding  # Начальная позиция для текста, после отступа
 
-            draw.text((x, y), title, font=font, fill="black")
+            for i, line in enumerate(lines):
+                text_bbox = draw.textbbox((0, 0), line, font=font)
+                text_width = text_bbox[2] - text_bbox[0]
+                x = (new_image.width - text_width) // 2  # Центровка текста
+                y = y_start + i * line_height  # Вертикальная позиция каждой строки
+                draw.text((x, y), line, font=font, fill="black")
 
         # Сохраняем итоговое изображение
         final_buffer = BytesIO()
@@ -65,7 +74,6 @@ class Barcode(models.Model):
         file_name = f'{self.id}.png'
         self.barcode.save(file_name, File(final_buffer), save=False)
         super().save()
-
 
 
 class Equipment(models.Model):
