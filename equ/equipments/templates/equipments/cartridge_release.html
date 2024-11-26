@@ -109,7 +109,7 @@
                 <select name="name[]">
                     <option value="" disabled selected>Название</option>
                     {% for equ in cartridges %}
-                        <option value="{{ equ.title }}">{{ equ.title }}({{ equ.count }})</option>
+                        <option value="{{ equ.title }}">{{ equ.title }} - {{ equ.status }}({{ equ.count }})</option>
                     {% endfor %}
                 </select>
 

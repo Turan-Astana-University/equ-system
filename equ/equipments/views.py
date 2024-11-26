@@ -124,7 +124,7 @@ class CartridgeRelease(View):
         result = Cartridge.objects.filter(responsible=request.user)
         cartridges = (
             Cartridge.objects.filter(responsible=request.user)
-            .values('title')
+            .values('title', 'status')
             .annotate(count=Count('title'))
             .order_by('title')
             .filter(status__in=[CategoryChoices.NEW, CategoryChoices.FILLED])
