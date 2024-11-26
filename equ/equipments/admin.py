@@ -19,6 +19,7 @@ admin.site.register(Barcode)
 @admin.register(Cartridge)
 class CartridgeAdmin(admin.ModelAdmin):
     list_display = ['title', 'color', 'status', 'cartridge_type']
+    fields = ['title', 'color', 'status', 'cartridge_type', 'location', 'responsible', 'is_true_position']
 
     def get_urls(self):
         urls = super().get_urls()
