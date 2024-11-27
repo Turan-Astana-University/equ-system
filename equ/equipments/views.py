@@ -143,7 +143,10 @@ class CartridgeRelease(View):
         for i in range(len(request.POST.getlist("name[]"))):
             print(request.POST.getlist("name[]")[i])
 
-            cartridge = Cartridge.objects.filter(title=request.POST.getlist("name[]")[i])
+            cartridge = Cartridge.objects.filter(
+                title=request.POST.getlist("name[]")[i],
+                status__in=[CategoryChoices.FILLED, CategoryChoices.NEW]
+            )
             if cartridge:
                 cartridge = cartridge[0]
             cartridge.status = CategoryChoices.RELEASE
