@@ -1,0 +1,18 @@
+{% extends 'inventory/base.html' %}
+{% block continue %}
+    <!DOCTYPE html>
+    <html lang="en">
+    <head>
+        <meta charset="UTF-8">
+        <title>Title</title>
+    </head>
+    <body>
+
+        Модуль отчетов
+        <br>
+    {% for equipment in equipments %}
+        {{ equipment.title}} - {{ equipment.responsible }} {{ equipment.location }} {{ equipment.category}} <br>
+    {% endfor %}
+    </body>
+    </html>
+{% endblock %}

@@ -46,6 +46,7 @@ INSTALLED_APPS = [
     'inventory',
 
     'sslserver',
+    'reports'
 ]
 
 MIDDLEWARE = [
