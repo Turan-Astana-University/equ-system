@@ -102,14 +102,17 @@ class ReleaseEquipmentsView(View):
 
     def post(self, request):
         for i in range(len(request.POST.getlist("name[]"))):
-            equipment = Equipment.objects.get(pk=request.POST.getlist("name[]")[i])
+            equipment = Equipment.objects.get(pk=request.POST.getlist("name[]")[i], responsible=request.user)
             location_old = equipment.location
             location_new = Location.objects.get(pk=request.POST.getlist("location[]")[i])
             responsible_old = equipment.responsible
             responsible_new = User.objects.get(pk=request.POST.getlist("responsible_person[]")[i])
             equipment.location = location_new
             equipment.responsible = responsible_new
-            create_operation_log(request, OperationCategoryChoices.RELEASE_EQUIPMENT, equipment, location_old, location_new, responsible_old, responsible_new)
+            create_operation_log(request, operation_type=OperationCategoryChoices.RELEASE_EQUIPMENT, equipment=equipment,
+                                 location_old=location_old, location_new=location_new,
+                                 responsible_old=responsible_old,
+                                 responsible_new=responsible_new)
             equipment.save()
 
         return redirect("home")
@@ -139,13 +142,12 @@ class CartridgeRelease(View):
         })
 
     def post(self, request):
-        print(request.POST)
         for i in range(len(request.POST.getlist("name[]"))):
-            print(request.POST.getlist("name[]")[i])
 
             cartridge = Cartridge.objects.filter(
                 title=request.POST.getlist("name[]")[i],
-                status__in=[CategoryChoices.FILLED, CategoryChoices.NEW]
+                status__in=[CategoryChoices.FILLED, CategoryChoices.NEW],
+                responsible=request.user,
             )
             if cartridge:
                 cartridge = cartridge[0]
