@@ -10,8 +10,8 @@
 
         Модуль отчетов
         <br>
-    {% for equipment in equipments %}
-        {{ equipment.title}} - {{ equipment.responsible }} {{ equipment.location }} {{ equipment.category}} <br>
+    {% for obj in objects %}
+        {{ obj.title}} - {{ obj.responsible }} {{ obj.location }} {{ obj.category}} <br>
     {% endfor %}
     </body>
     </html>

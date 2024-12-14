@@ -1,5 +1,5 @@
 from django.contrib import admin
-from .models import Equipment, EquipmentType, Cartridge, CartridgeTypes, CategoryChoices, Barcode
+from .models import Equipment, EquipmentType, Cartridge, CartridgeTypes, CategoryChoices, Barcode, Printer
 from .forms import BulkCreateCartridgeForm
 from django.urls import path
 from django.shortcuts import render, redirect
@@ -67,4 +67,5 @@ class CartridgeAdmin(admin.ModelAdmin):
         return render(request, 'equipments/bulk_create_cartridges.html', context)
 
 admin.site.register(CartridgeTypes)
+admin.site.register(Printer)
 # admin.site.register(Cartridge)

@@ -1,6 +1,6 @@
 from django.http import HttpResponse
 from django.shortcuts import render
-from equipments.models import Equipment
+from equipments.models import Equipment, Printer
 import pandas as pd
 from datetime import datetime
 from .models import Report
@@ -34,4 +34,9 @@ def get_report(request):
     )
     report.result_file.save(output_file_name, File(output_buffer))
     output_buffer.close()
-    return render(request, 'reports/index.html', context={"equipments": equipments})
+    return render(request, 'reports/index.html', context={"objects": equipments})
+
+
+def get_report_printer(request):
+    printers = Printer.objects.all()
+    return render(request, "reports/index.html", context={"objects": printers})

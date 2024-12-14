@@ -104,12 +104,20 @@ class Equipment(models.Model):
         super().save(*args, **kwargs)  # Сохраняем объект Equipment
 
 
+
 class CartridgeTypes(models.Model):
     title = models.CharField(max_length=255, null=True, blank=True)
 
     class Meta:
         verbose_name = "type Картридж"
         verbose_name_plural = "type Картриджи"
+
+    def __str__(self):
+        return self.title
+
+
+class Printer(Equipment):
+    cartridge_types = models.ManyToManyField(CartridgeTypes)
 
     def __str__(self):
         return self.title
