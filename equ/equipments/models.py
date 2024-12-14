@@ -122,6 +122,19 @@ class Printer(Equipment):
     def __str__(self):
         return self.title
 
+    def get_count_related_cartridges(self):
+        cartridge_types = self.cartridge_types.all()
+
+        # Находим все Cartridge, связанные с этими cartridge_types
+        related_cartridges = Cartridge.objects.filter(cartridge_type__in=cartridge_types)
+        print(related_cartridges)
+        return len(related_cartridges)
+
+
+    def get_cartridge_types(self):
+        cartridge_types = self.cartridge_types.all()
+        result = ", ".join(str(cartridge_type) for cartridge_type in cartridge_types)
+        return result
 
 class CategoryChoices(models.TextChoices):
     FILLED = 'filled', ('Filled')

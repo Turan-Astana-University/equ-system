@@ -1,0 +1,57 @@
+{% extends 'inventory/base.html' %}
+{% block continue %}
+    <!DOCTYPE html>
+    <html lang="en">
+    <head>
+        <meta charset="UTF-8">
+        <title>Title</title>
+    </head>
+    <body>
+        <section class="u-align-center u-clearfix u-grey-10 u-section-1" id="sec-c79d">
+  <div class="u-clearfix u-sheet u-sheet-1">
+
+      <div class="u-expanded-width u-tabs u-tabs-1">
+          <br>
+          <div class="u-tab-content">
+              <div class="u-container-style u-tab-active u-tab-pane u-white u-tab-pane-1" id="tab-0da5" role="tabpanel" aria-labelledby="link-tab-0da5">
+                  <div class="u-container-layout u-container-layout-1">
+                      <div class="u-expanded-width u-table u-table-responsive u-table-1">
+                          <table id="nonfound" class="u-table-entity">
+                              <colgroup>
+                                  <col width="20%">
+                                  <col width="20%">
+                                  <col width="20%">
+                                  <col width="20%">
+                                  <col width="20%">
+                              </colgroup>
+                              <tbody class="u-table-body">
+                                  <tr style="height: 87px;">
+                                      <td class="u-align-center u-border-2 u-border-grey-90 u-custom-font u-first-column u-font-roboto-slab u-table-cell u-table-cell-1">ID</td>
+                                      <td class="u-align-center u-border-2 u-border-grey-90 u-custom-font u-font-roboto-slab u-table-cell u-table-cell-2">Наименование</td>
+                                      <td class="u-align-center u-border-2 u-border-grey-90 u-custom-font u-font-roboto-slab u-table-cell u-table-cell-2">Местоположение</td>
+                                      <td class="u-align-center u-border-2 u-border-grey-90 u-custom-font u-font-roboto-slab u-table-cell u-table-cell-3">Отв.сотрудник</td>
+                                      <td class="u-align-center u-border-2 u-border-grey-90 u-custom-font u-font-roboto-slab u-table-cell u-table-cell-4">Тип</td>
+                                      <td class="u-align-center u-border-2 u-border-grey-90 u-custom-font u-font-roboto-slab u-table-cell u-table-cell-5">Кол.картриджей в запасе</td>
+                                  </tr>
+                                  {% for equ in objects %}
+                                      <tr style="height: 52px;">
+                                          <td class="u-align-left u-border-2 u-border-grey-70 u-custom-font u-first-column u-font-roboto-slab u-table-cell">{{ equ.pk }}</td>
+                                          <td class="u-align-left u-border-2 u-border-grey-70 u-custom-font u-font-roboto-slab u-table-cell">{{ equ.title }}</td>
+                                          <td class="u-align-left u-border-2 u-border-grey-70 u-custom-font u-font-roboto-slab u-table-cell">{{ equ.location }}</td>
+                                          <td class="u-align-left u-border-2 u-border-grey-70 u-custom-font u-font-roboto-slab u-table-cell">{{ equ.responsible }} - {{ equ.responsible.first_name }} {{ equ.responsible.last_name }}</td>
+                                          <td class="u-align-left u-border-2 u-border-grey-70 u-custom-font u-font-roboto-slab u-table-cell">{{ equ.category }}</td>
+                                          <td class="u-align-left u-border-2 u-border-grey-70 u-custom-font u-font-roboto-slab u-table-cell u-table-cell-10">{{ equ.get_count_related_cartridges }}</td>
+                                      </tr>
+                                  {% endfor %}
+                              </tbody>
+                          </table>
+                      </div>
+                  </div>
+              </div>
+                      </div>
+                  </div>
+              </div>
+</section>
+
+<script>
+{% endblock %}
