@@ -31,7 +31,6 @@
                                       <td class="u-align-center u-border-2 u-border-grey-90 u-custom-font u-font-roboto-slab u-table-cell u-table-cell-2">Местоположение</td>
                                       <td class="u-align-center u-border-2 u-border-grey-90 u-custom-font u-font-roboto-slab u-table-cell u-table-cell-3">Отв.сотрудник</td>
                                       <td class="u-align-center u-border-2 u-border-grey-90 u-custom-font u-font-roboto-slab u-table-cell u-table-cell-4">Тип</td>
-                                      <td class="u-align-center u-border-2 u-border-grey-90 u-custom-font u-font-roboto-slab u-table-cell u-table-cell-5">Кол.картриджей в запасе</td>
                                   </tr>
                                   {% for equ in objects %}
                                       <tr style="height: 52px;">
@@ -40,7 +39,6 @@
                                           <td class="u-align-left u-border-2 u-border-grey-70 u-custom-font u-font-roboto-slab u-table-cell">{{ equ.location }}</td>
                                           <td class="u-align-left u-border-2 u-border-grey-70 u-custom-font u-font-roboto-slab u-table-cell">{{ equ.responsible }} - {{ equ.responsible.first_name }} {{ equ.responsible.last_name }}</td>
                                           <td class="u-align-left u-border-2 u-border-grey-70 u-custom-font u-font-roboto-slab u-table-cell">{{ equ.category }}</td>
-                                          <td class="u-align-left u-border-2 u-border-grey-70 u-custom-font u-font-roboto-slab u-table-cell u-table-cell-10">{{ equ.get_count_related_cartridges }}</td>
                                       </tr>
                                   {% endfor %}
                               </tbody>
@@ -51,6 +49,23 @@
                       </div>
                   </div>
               </div>
+            <div class="pagination">
+    <span class="step-links">
+        {% if objects.has_previous %}
+
+            <a href="?page={{ objects.previous_page_number }}">Предыдущая</a>
+        {% endif %}
+
+        <span class="current">
+            Страница {{ objects.number }} из {{ objects.paginator.num_pages }}.
+        </span>
+
+        {% if objects.has_next %}
+            <a href="?page={{ objects.next_page_number }}">Следующая</a>
+
+        {% endif %}
+    </span>
+</div>
 </section>
 
 <script>

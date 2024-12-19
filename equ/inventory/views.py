@@ -32,6 +32,7 @@ class LocationInventoryView(SuperuserRequiredMixin, View):
         }
         return render(request, self.template_name, context)
 
+
 class EndInventLocationView(SuperuserRequiredMixin, View):
     def get(self, request, pk, *args, **kwargs):
         location = get_object_or_404(Location, pk=pk)
@@ -61,7 +62,8 @@ class EndInventView(SuperuserRequiredMixin, View):
         for equipment in Equipment.objects.all():
             equipment.is_true_position = True
             equipment.save()
-        return generate_word(request)
+        # return generate_word(request)
+        return HttpResponse("Инвентаризация завершена")
 
 
 class IndexInventView(SuperuserRequiredMixin, View):
@@ -97,45 +99,3 @@ class LocationDetailView(SuperuserRequiredMixin, View):
 
         return render(request, self.template_name, context)
 
-
-def generate_word(request):
-    inventory = Inventory.objects.last()
-    df = pd.DataFrame(
-        {
-            'Операция',
-            'Оборудование',
-            'Дата',
-            'Прошлое местоположение',
-            'Новое местоположение',
-            'Прошлый ответственный сотрудник',
-            'Новый ответственный сотрудник'
-        }
-    )
-    filtered_data = Operation.objects.filter(
-        date__gte=inventory.date_start,
-        date__lte=inventory.date_end
-    )
-    rows = []
-    for row in filtered_data:
-        rows.append({
-            'Операция': row.operation_type,
-            'Оборудование': row.equipment.title,
-            'Дата': row.date.replace(tzinfo=None),
-            'Прошлое местоположение': row.location_old.title,
-            'Новое местоположение': row.location_new.title,
-            'Прошлый ответственный сотрудник': f"{row.responsible_old.first_name} {row.responsible_old.last_name} - {row.responsible_old}",
-            'Новый ответственный сотрудник': rf"{row.responsible_new.first_name} {row.responsible_new.last_name} - {row.responsible_new}",
-
-        })
-    df = pd.concat([df, pd.DataFrame(rows)], ignore_index=True)
-    output = BytesIO()
-    df.to_excel(output, index=False, engine='openpyxl')
-    output.seek(0)
-
-    response = HttpResponse(
-        output,
-        content_type="application/vnd.openxmlformats-officedocument.spreadsheetml.sheet"
-    )
-    response['Content-Disposition'] = 'attachment; filename="inventory_operations.xlsx"'
-
-    return response
