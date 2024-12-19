@@ -7,9 +7,7 @@ from datetime import datetime
 from .models import Inventory
 from django.views import View
 from .mixins import SuperuserRequiredMixin
-from operations.models import Operation
-import pandas as pd
-from io import BytesIO
+from .func import create_file
 # Create your views here.
 
 
@@ -19,7 +17,6 @@ class LocationInventoryView(SuperuserRequiredMixin, View):
     def get(self, request, *args, **kwargs):
         inventory = Inventory.objects.last()
         loc = Location.objects.all()
-        print(inventory.date_start)
         location_found = loc.filter(date_last_invent__gte=inventory.date_start)
         location_non_found = loc.filter(
     date_last_invent__lte=inventory.date_start
@@ -45,6 +42,7 @@ class CreateInventView(SuperuserRequiredMixin, View):
     def get(self, request, *args, **kwargs):
         if request.user.is_superuser:
             new_inventory = Inventory(date_start=datetime.now())
+            new_inventory.responsible = request.user
             new_inventory.save()
             return redirect("locations")
         else:
@@ -59,10 +57,10 @@ class EndInventView(SuperuserRequiredMixin, View):
 
         inventory.date_end = datetime.now()
         inventory.save()
+        create_file(request, inventory)
         for equipment in Equipment.objects.all():
             equipment.is_true_position = True
             equipment.save()
-        # return generate_word(request)
         return HttpResponse("Инвентаризация завершена")
 
 

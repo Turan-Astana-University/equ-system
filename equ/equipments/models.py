@@ -104,7 +104,6 @@ class Equipment(models.Model):
         super().save(*args, **kwargs)  # Сохраняем объект Equipment
 
 
-
 class CartridgeTypes(models.Model):
     title = models.CharField(max_length=255, null=True, blank=True)
 
@@ -135,6 +134,7 @@ class Printer(Equipment):
         cartridge_types = self.cartridge_types.all()
         result = ", ".join(str(cartridge_type) for cartridge_type in cartridge_types)
         return result
+
 
 class CategoryChoices(models.TextChoices):
     FILLED = 'filled', ('Filled')
