@@ -11,6 +11,7 @@ from users.models import User, CategoryChoicesUser
 from operations.models import OperationCategoryChoices
 from operations.views import create_operation_log
 from django.db.models import Count
+from django.http import HttpResponse
 # Create your views here.
 
 
@@ -181,6 +182,8 @@ class MovingEquipmentsView(View):
                 "locations": locations,
                 "users": users,
             })
+        else:
+            return HttpResponse("НЕТ ДОСТУПА")
 
     def post(self, request):
         for i in range(len(request.POST.getlist("name[]"))):
