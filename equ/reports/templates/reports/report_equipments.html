@@ -8,6 +8,7 @@
     </head>
     <body>
         <section class="u-align-center u-clearfix u-grey-10 u-section-1" id="sec-c79d">
+
   <div class="u-clearfix u-sheet u-sheet-1">
 
       <div class="u-expanded-width u-tabs u-tabs-1">
@@ -49,24 +50,28 @@
                       </div>
                   </div>
               </div>
-            <div class="pagination">
-    <span class="step-links">
+<div class="pagination">
+    <span>Страница {{ objects.number }} из {{ objects.paginator.num_pages }}</span>
+    <div>
         {% if objects.has_previous %}
-
-            <a href="?page={{ objects.previous_page_number }}">Предыдущая</a>
+            <a href="?page=1"><<</a>
+            <a href="?page={{ objects.previous_page_number }}"><</a>
         {% endif %}
 
-        <span class="current">
-            Страница {{ objects.number }} из {{ objects.paginator.num_pages }}.
-        </span>
+        {% for page_num in objects.paginator.page_range %}
+            {% if page_num == objects.number %}
+                <strong>{{ page_num }}</strong>
+            {% else %}
+                <a href="?page={{ page_num }}">{{ page_num }}</a>
+            {% endif %}
+        {% endfor %}
 
         {% if objects.has_next %}
-            <a href="?page={{ objects.next_page_number }}">Следующая</a>
-
+            <a href="?page={{ objects.next_page_number }}">> </a>
+            <a href="?page={{ objects.paginator.num_pages }}"> >> </a>
         {% endif %}
-    </span>
+    </div>
 </div>
 </section>
 
-<script>
 {% endblock %}

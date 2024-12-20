@@ -1,8 +1,8 @@
 from django.urls import path
-from .views import get_report, get_report_printer, report_inventorys
+from .views import EquipmentReportView, PrinterReportView, InventoryReportView
 
 urlpatterns = [
-    path("report/equipments", get_report, name="report_equipments"),
-    path("report_printers/", get_report_printer, name="report_printers"),
-    path("report_inventorys/", report_inventorys, name="report_inventorys"),
+    path("report_equipments/", EquipmentReportView.as_view(), name="report_equipments"),
+    path("report_printers/", PrinterReportView.as_view(), name="report_printers"),
+    path("report_inventorys/", InventoryReportView.as_view(), name="report_inventorys"),
 ]
