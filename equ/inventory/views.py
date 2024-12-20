@@ -60,11 +60,10 @@ class EndInventView(SuperuserRequiredMixin, View):
         inventory.report = report
         inventory.save()
 
-
         for equipment in Equipment.objects.all():
             equipment.is_true_position = True
             equipment.save()
-        return HttpResponse("Инвентаризация завершена")
+        return redirect('home')
 
 
 class IndexInventView(SuperuserRequiredMixin, View):
