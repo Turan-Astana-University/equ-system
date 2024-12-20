@@ -12,6 +12,8 @@ from operations.models import OperationCategoryChoices
 from operations.views import create_operation_log
 from django.db.models import Count
 from django.http import HttpResponse
+from django.core.paginator import Paginator
+from django.views.generic import ListView
 # Create your views here.
 
 
@@ -202,3 +204,16 @@ class MovingEquipmentsView(View):
 
         return redirect("home")
 
+
+class MyEquipments(ListView):
+    template_name = "equipments/my_equipments_list.html"
+    model = Equipment
+    context_object_name = 'objects'
+    paginate_by = 5
+
+    def get_queryset(self):
+        """
+          Фильтруем оборудование, которое принадлежит текущему пользователю.
+          Предполагается, что в модели Equipment есть поле 'responsible', которое связано с пользователем.
+        """
+        return Equipment.objects.filter(responsible=self.request.user)
