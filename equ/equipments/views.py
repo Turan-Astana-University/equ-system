@@ -183,7 +183,7 @@ class MovingEquipmentsView(View):
                 "users": users,
             })
         else:
-            return HttpResponse("НЕТ ДОСТУПА")
+            return render(request, '404.html', {'error_message': "У вас нет доступа к этому ресурсу."})
 
     def post(self, request):
         for i in range(len(request.POST.getlist("name[]"))):
