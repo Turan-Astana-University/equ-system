@@ -20,7 +20,7 @@ from django.views.generic import ListView
 
 # Класс для списка оборудования
 
-class EquipmentReportView(ListView):
+class EquipmentReportView(LoginRequiredMixin, AccountingUserRequiredMixin, ListView):
     model = Equipment
     template_name = 'reports/report_equipments.html'
     context_object_name = 'objects'  # Соответствует вашему шаблону
