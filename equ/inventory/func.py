@@ -53,4 +53,4 @@ def create_file(request, inventory):
     report.result_file.save(f"inventory_report_{now().strftime('%Y%m%d_%H%M%S')}.xlsx", ContentFile(output.read()))
     output.close()
 
-    return HttpResponse("Report created and saved to database.", status=201)
+    return report

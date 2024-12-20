@@ -1,0 +1,383 @@
+{% extends 'inventory/base.html' %}
+{% load static %}
+{% block css %}
+<style>
+    .container-content {
+        max-height: 1000px;
+    }
+    h2 {
+        display: flex;
+        flex-direction: column;
+        align-items: center; /* Центрирует строки по вертикали */
+    }
+    .equipment-row {
+        display: flex;
+        justify-content: center; /* Центрирует поля ввода по горизонтали */
+        gap: 10px;               /* Задает промежуток между полями */
+        margin-bottom: 10px;     /* Отступ между строками */
+    }
+    button {
+        display: flex;
+        flex-direction: column;
+        align-items: center; /* Центрирует строки по вертикали */
+    }
+    .equipment-container {
+        display: flex;
+        flex-direction: column;
+        align-items: center; /* Центрирует строки по вертикали */
+    }
+    .equipment-row {
+        display: flex;
+        gap: 10px;
+        margin-bottom: 10px;
+    }
+    select {
+        padding: 5px;
+        width: 210px;
+    }
+    .add-button {
+        margin-top: 15px;
+        padding: 10px 20px;
+        display: flex;
+        flex-direction: column;
+        align-items: center; /* Центрирует строки по вертикали */
+        margin-left: 44%;
+    }
+    .request-button {
+        margin-top: 15px;
+        padding: 10px 20px;
+        display: flex;
+        flex-direction: column;
+        align-items: center; /* Центрирует строки по вертикали */
+        margin-left: 47%;
+        margin-bottom: 480px;
+    }
+</style>
+<script src="{% static 'node_modules/html5-qrcode/html5-qrcode.min.js' %}"></script>
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <meta charset="utf-8">
+    <meta name="keywords" content="">
+    <meta name="description" content="">
+    <title>Страница 1</title>
+    <link rel="stylesheet" href="{% static 'css/nicepage.css' %}" media="screen">
+    <link rel="stylesheet" href="{% static 'css/Страница-1.css' %}" media="screen">
+    <script class="u-script" type="text/javascript" src="{% static 'js/jquery.js' %}" defer=""></script>
+    <script class="u-script" type="text/javascript" src="{% static 'js/nicepage.js' %}" defer=""></script>
+    <meta name="generator" content="Nicepage 6.15.2, nicepage.com">
+    <link id="u-theme-google-font" rel="stylesheet" href="https://fonts.googleapis.com/css?family=Roboto:100,100i,300,300i,400,400i,500,500i,700,700i,900,900i|Open+Sans:300,300i,400,400i,500,500i,600,600i,700,700i,800,800i">
+    <link id="u-page-google-font" rel="stylesheet" href="https://fonts.googleapis.com/css?family=Roboto+Slab:100,200,300,400,500,600,700,800,900">
+
+
+
+    <script type="application/ld+json">{
+		"@context": "http://schema.org",
+		"@type": "Organization",
+		"name": "",
+		"logo": "images/image1.png"
+}</script>
+    <meta name="theme-color" content="#478ac9">
+    <meta property="og:title" content="Страница 1">
+    <meta property="og:type" content="website">
+  <meta data-intl-tel-input-cdn-path="intlTelInput/">
+{% endblock %}
+
+{% block continue %}
+<section class="u-align-center u-clearfix u-grey-10 u-section-1" id="sec-c79d">
+<!--    <div class="u-clearfix u-sheet u-sheet-1">-->
+      <main>
+
+            <div class="container">
+              <div id="reader" style="display: none;"></div>
+              <div id="result"></div>
+              <a href="#" id="start-scan-btn" class="u-border-2 u-border-black u-btn u-button-style u-hover-black u-none u-text-hover-white u-btn-1">
+                Сканировать штрих-код
+              </a>
+              <a href="#" id="stop-scan-btn" class="u-border-2 u-border-black u-btn u-button-style u-hover-black u-none u-text-hover-white u-btn-2" style="display:none;">
+                Остановить сканер
+            </a>
+            </div>
+        </main>
+<!--    </div>-->
+    <h2>Перемещение Оборудования</h2>
+
+    <!-- Форма для отправки данных -->
+    <form id="equipment-form" action="{% url 'release_equipments' %}" method="post" onsubmit="return validateForm()">
+        {% csrf_token %}
+
+        <div id="equipment-container">
+            <div class="equipment-row">
+                <select name="name[]">
+                    <option value="" disabled selected>Название</option>
+                    {% for equ in equipments %}
+                        <option value="{{ equ.pk }}">{{ equ }}</option>
+                    {% endfor %}
+                </select>
+
+                <select name="location[]">
+                    <option value="" disabled selected>Местонахождение</option>
+                    {% for loc in locations %}
+                        <option value="{{ loc.pk }}">{{ loc }}</option>
+                    {% endfor %}
+                </select>
+
+                <select name="responsible_person[]">
+                    <option value="" disabled selected>Отв. лицо</option>
+                    {% for user in users %}
+                        <option value="{{ user.id }}">{{ user }} - {{ user.first_name }} {{ user.last_name }}</option>
+                    {% endfor %}
+                </select>
+                 <button type="button" onclick="removeEquipmentRow(this)">Удалить</button>
+            </div>
+        </div>
+
+        <!-- Кнопка добавления нового ряда -->
+        <button type="button" class="add-button" onclick="addEquipmentRow()">Добавить оборудование</button>
+
+        <!-- Кнопка для отправки данных на сервер -->
+        <button type="submit" class="request-button">Выдать</button>
+    </form>
+</div>
+
+</section>
+
+<script>
+    function addEquipmentRow() {
+    const container = document.getElementById("equipment-container");
+
+    const newRow = document.createElement("div");
+    newRow.className = "equipment-row";
+
+    newRow.innerHTML = `
+        <select name="name[]">
+            <option value="" disabled selected>Название</option>
+            {% for equ in equipments %}
+                <option value="{{ equ.pk }}">{{ equ }}</option>
+            {% endfor %}
+        </select>
+
+        <select name="location[]">
+            <option value="" disabled selected>Местонахождение</option>
+            {% for loc in locations %}
+                <option value="{{ loc.pk }}">{{ loc }}</option>
+            {% endfor %}
+        </select>
+
+        <select name="responsible_person[]">
+            <option value="" disabled selected>Отв. лицо</option>
+            {% for user in users %}
+                <option value="{{ user.id }}">{{ user.first_name }} {{ user.last_name }}</option>
+            {% endfor %}
+        </select>
+
+        <button type="button" onclick="removeEquipmentRow(this)">Удалить</button>
+    `;
+
+    container.appendChild(newRow);
+}
+function removeEquipmentRow(button) {
+    const row = button.parentElement; // Найдите родительский элемент строки
+    row.remove(); // Удалите строку
+}
+    function addEquipmentRow() {
+        const container = document.getElementById("equipment-container");
+
+        const newRow = document.createElement("div");
+        newRow.className = "equipment-row";
+
+        newRow.innerHTML = `
+            <select name="name[]">
+                <option value="" disabled selected>Название</option>
+                {% for equ in equipments %}
+                    <option value="{{ equ.pk }}">{{ equ }}</option>
+                {% endfor %}
+            </select>
+
+            <select name="location[]">
+                <option value="" disabled selected>Местонахождение</option>
+                {% for loc in locations %}
+                    <option value="{{ loc.pk }}">{{ loc }}</option>
+                {% endfor %}
+            </select>
+
+            <select name="responsible_person[]">
+                <option value="" disabled selected>Отв. лицо</option>
+                {% for user in users %}
+                    <option value="{{ user.id }}">{{ user.first_name }} {{ user.last_name }}</option>
+                {% endfor %}
+            </select>
+            <button type="button" onclick="removeEquipmentRow(this)">Удалить</button>
+            </div>
+        </div>
+
+        `;
+
+        container.appendChild(newRow);
+    }
+
+    function validateForm() {
+        const rows = document.querySelectorAll('.equipment-row');
+        let allFilled = true;
+
+        rows.forEach(row => {
+            const selects = row.querySelectorAll('select');
+
+            selects.forEach(select => {
+                if (select.value === "") {
+                    allFilled = false;
+                    select.style.border = '1px solid red'; // Добавляем красную рамку к пустым полям
+                } else {
+                    select.style.border = ''; // Убираем рамку, если поле заполнено
+                }
+            });
+        });
+
+        if (!allFilled) {
+            alert("Пожалуйста, заполните все поля!");
+            return false; // Отменяет отправку формы
+        }
+        return true; // Позволяет отправить форму
+    }
+
+
+// Старт сканера
+document.getElementById('start-scan-btn').addEventListener('click', function(e) {
+    e.preventDefault();
+
+    // Показываем элемент с id "reader", где будет отображаться сканер
+    document.getElementById('reader').style.display = 'block';
+    document.getElementById('stop-scan-btn').style.display = 'inline-block'; // Показываем кнопку остановки
+
+    // Инициализируем сканер
+    const html5QrCode = new Html5Qrcode("reader");
+
+    // Запрашиваем камеры устройства
+    Html5Qrcode.getCameras().then(devices => {
+        if (devices && devices.length) {
+            const backCamera = devices.find(device => device.label.toLowerCase().includes('back'));
+            const cameraId = backCamera ? backCamera.id : devices[0].id;
+
+            // Запускаем сканирование с выбранной камеры и передаем функцию success для обработки декодированного текста
+            html5QrCode.start(
+                cameraId,
+                {
+                    fps: 10,
+                    qrbox: { width: 450, height: 250 }
+                },
+                success // Передаем функцию success
+            ).catch(err => console.log(`Error: ${err}`));
+        }
+    }).catch(err => console.log(`Error fetching cameras: ${err}`));
+
+    // Сохраняем html5QrCode в глобальной переменной для доступа из кнопки остановки
+    window.html5QrCode = html5QrCode;
+});
+// Остановка сканера
+document.getElementById('stop-scan-btn').addEventListener('click', function(e) {
+    e.preventDefault();
+
+    if (window.html5QrCode) {
+        window.html5QrCode.stop().then(() => {
+            console.log('Сканер остановлен');
+            document.getElementById('reader').style.display = 'none';
+            document.getElementById('stop-scan-btn').style.display = 'none';
+        }).catch(err => console.log(`Error stopping scanner: ${err}`));
+    }
+});
+
+const qrCodeUrl = "{% url 'qr_code_view' %}";
+
+
+function addEquipmentRowScan(data) {
+    const container = document.getElementById("equipment-container");
+
+    // Создаем новую строку для оборудования
+    const newRow = document.createElement("div");
+    newRow.className = "equipment-row";
+
+    // Заполняем строку с данными об оборудовании, если оно было получено от бэкенда
+    newRow.innerHTML = `
+        <select name="name[]">
+            <option value="" disabled>Название</option>
+            {% for equ in equipments %}
+                <option value="{{ equ.pk }}" ${data && data.id === {{ equ.pk }} ? 'selected' : ''}>{{ equ }}</option>
+            {% endfor %}
+        </select>
+
+        <select name="location[]">
+            <option value="" disabled selected>Местонахождение</option>
+            {% for loc in locations %}
+                <option value="{{ loc.pk }}">{{ loc }}</option>
+            {% endfor %}
+        </select>
+
+        <select name="responsible_person[]">
+            <option value="" disabled selected>Отв. лицо</option>
+            {% for user in users %}
+                <option value="{{ user.id }}">{{ user.first_name }} {{ user.last_name }}</option>
+            {% endfor %}
+        </select>
+            <button type="button" onclick="removeEquipmentRow(this)">Удалить</button>
+            </div>
+        </div>
+    `;
+
+    container.appendChild(newRow);
+<!--    removeSelectedOptions(data.id);-->
+}
+
+// Убираем выбранное оборудование из других списков
+function removeSelectedOptions(selectedId) {
+    document.querySelectorAll('select[name="name[]"]').forEach(select => {
+        const optionToRemove = select.querySelector(`option[value="${selectedId}"]`);
+        if (optionToRemove) optionToRemove.style.display = 'none';
+    });
+}
+
+// Изменяем success, чтобы добавить строку или выбрать уже существующее оборудование
+function success(decodedText, decodedResult) {
+    fetch(qrCodeUrl, {
+        method: 'POST',
+        headers: {
+            'Content-Type': 'application/json',
+            'equipment-type': "release",
+            'X-CSRFToken': getCookie('csrftoken'),
+        },
+        body: JSON.stringify({ code: decodedText })
+    })
+    .then(response => response.json())
+    .then(data => {
+        const existingSelect = document.querySelector(`select[name="name[]"] option[value="${data.id}"]`);
+        addEquipmentRowScan(data); // Добавляем новую строку
+    })
+    .catch(error => {
+        console.error('Ошибка при отправке данных на сервер:', error);
+    });
+
+    html5QrCode.stop().then(() => {
+        document.getElementById('reader').style.display = 'none';
+    }).catch(err => {
+        console.error(`Ошибка при остановке сканера: ${err}`);
+    });
+}
+
+
+function getCookie(name) {
+    let cookieValue = null;
+    if (document.cookie && document.cookie !== '') {
+        const cookies = document.cookie.split(';');
+        for (let i = 0; i < cookies.length; i++) {
+            const cookie = cookies[i].trim();
+            if (cookie.startsWith(name + '=')) {
+                cookieValue = decodeURIComponent(cookie.substring(name.length + 1));
+                break;
+            }
+        }
+    }
+    return cookieValue;
+}
+
+function error(err) {
+    console.error(err);
+}
+</script>
+{% endblock %}

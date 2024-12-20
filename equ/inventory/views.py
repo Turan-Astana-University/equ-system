@@ -56,8 +56,11 @@ class EndInventView(SuperuserRequiredMixin, View):
             return HttpResponse(status=400)
 
         inventory.date_end = datetime.now()
+        report = create_file(request, inventory)
+        inventory.report = report
         inventory.save()
-        create_file(request, inventory)
+
+
         for equipment in Equipment.objects.all():
             equipment.is_true_position = True
             equipment.save()

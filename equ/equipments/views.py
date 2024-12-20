@@ -7,7 +7,7 @@ from django.shortcuts import get_object_or_404, render, redirect
 from django.http import JsonResponse
 from .models import Equipment, Cartridge, Barcode, CategoryChoices
 from locations.models import Location
-from users.models import User
+from users.models import User, CategoryChoicesUser
 from operations.models import OperationCategoryChoices
 from operations.views import create_operation_log
 from django.db.models import Count
@@ -164,3 +164,38 @@ class CartridgeRelease(View):
             cartridge.save()
 
         return redirect("home")
+
+
+class MovingEquipmentsView(View):
+    template_name = "equipments/moving.html"
+
+    def get(self, request):
+        if request.user.is_anonymous:
+            return redirect("login")
+        if request.user.staff == CategoryChoicesUser.ACCOUNTING:
+            result = Equipment.objects.all()
+            locations = Location.objects.all()
+            users = User.objects.all()
+            return render(request, self.template_name, context={
+                "equipments": result,
+                "locations": locations,
+                "users": users,
+            })
+
+    def post(self, request):
+        for i in range(len(request.POST.getlist("name[]"))):
+            equipment = Equipment.objects.get(pk=request.POST.getlist("name[]")[i])
+            location_old = equipment.location
+            location_new = Location.objects.get(pk=request.POST.getlist("location[]")[i])
+            responsible_old = equipment.responsible
+            responsible_new = User.objects.get(pk=request.POST.getlist("responsible_person[]")[i])
+            equipment.location = location_new
+            equipment.responsible = responsible_new
+            create_operation_log(request, operation_type=OperationCategoryChoices.RELEASE_EQUIPMENT, equipment=equipment,
+                                 location_old=location_old, location_new=location_new,
+                                 responsible_old=responsible_old,
+                                 responsible_new=responsible_new)
+            equipment.save()
+
+        return redirect("home")
+

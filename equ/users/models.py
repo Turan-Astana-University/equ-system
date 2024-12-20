@@ -6,8 +6,9 @@ from departments.models import Department
 from positions.models import Position
 
 
-class UserType(models.Model):
-    title = models.CharField(max_length=265)
+class CategoryChoicesUser(models.TextChoices):
+    ACCOUNTING = 'accounting', ('Accounting')
+    ADMINISTRATION = "administration", ("Administration")
 
 
 class User(AbstractUser):
@@ -20,8 +21,7 @@ class User(AbstractUser):
     #
     department = models.ForeignKey(Department, on_delete=models.CASCADE, null=True, blank=True)
     position = models.ForeignKey(Position, on_delete=models.CASCADE, null=True, blank=True)
-    user_type = models.ForeignKey(UserType, on_delete=models.CASCADE, null=True, blank=True)
-    #
+    staff = models.CharField(max_length=255, choices=CategoryChoicesUser.choices, null=True, blank=True)
     # USERNAME_FIELD = 'email'
     # REQUIRED_FIELDS = []
 
