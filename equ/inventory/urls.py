@@ -3,7 +3,7 @@ from .views import LocationInventoryView, LocationDetailView, IndexInventView, C
 
 
 urlpatterns = [
-    path("", IndexInventView.as_view(), name="invent"),
+    path("invent/", IndexInventView.as_view(), name="invent"),
     path("locations/", LocationInventoryView.as_view(), name="locations"),
     path("locations/<int:pk>/", LocationDetailView.as_view(), name="location_detail"),
     path("create_invent/", CreateInventView.as_view(), name="create_invent"),

@@ -6,14 +6,16 @@ from django.urls import reverse
 
 # Create your views here.
 
+
 def custom_logout_view(request):
     logout(request)
     return redirect(reverse('login')) 
 
+
 def index(request):
     if request.method == "GET":
         if request.user.is_authenticated:
-            return redirect("invent")
+            return redirect("my_equipments")
         return redirect('login')
 
 

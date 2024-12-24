@@ -45,6 +45,7 @@ class EquipmentReportView(LoginRequiredMixin, AccountingUserRequiredMixin, ListV
         }
         return render(request, self.template_name, context)
 
+
 # Класс для списка принтеров
 class PrinterReportView(LoginRequiredMixin, AccountingUserRequiredMixin, ListView):
     model = Printer
