@@ -209,7 +209,7 @@ class MyEquipments(ListView):
     template_name = "equipments/my_equipments_list.html"
     model = Equipment
     context_object_name = 'objects'
-    paginate_by = 15
+    paginate_by = 10
 
     def get_queryset(self):
         """
