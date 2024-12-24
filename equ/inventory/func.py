@@ -1,3 +1,6 @@
+from datetime import datetime
+from django.db.models import Q
+from equipments.models import Equipment
 from inventory.models import Inventory
 from operations.models import Operation
 import pandas as pd
@@ -27,7 +30,10 @@ def create_file(request, inventory):
         date__gte=inventory.date_start,
         date__lte=inventory.date_end
     )
-
+    equipments_non_found = Equipment.objects.filter(
+    Q(date_last_invent__lte=inventory.date_start) | Q(date_last_invent__isnull=True)
+)
+    print(equipments_non_found)
     # Наполняем таблицу данными
     rows = []
     for row in filtered_data:
@@ -39,6 +45,18 @@ def create_file(request, inventory):
             'Новое местоположение': row.location_new.title,
             'Прошлый ответственный сотрудник': f"{row.responsible_old.first_name} {row.responsible_old.last_name} - {row.responsible_old}",
             'Новый ответственный сотрудник': f"{row.responsible_new.first_name} {row.responsible_new.last_name} - {row.responsible_new}",
+        })
+    df = pd.concat([df, pd.DataFrame(rows)], ignore_index=True)
+
+    for row in equipments_non_found:
+        rows.append({
+            'Операция': "Не найдено",
+            'Оборудование': row.title,
+            'Дата': "",
+            'Прошлое местоположение': row.location,
+            'Новое местоположение': row.location,
+            'Прошлый ответственный сотрудник': f"{row.responsible.first_name} {row.responsible.last_name} - {row.responsible}",
+            'Новый ответственный сотрудник': f"{row.responsible.first_name} {row.responsible.last_name} - {row.responsible}",
         })
     df = pd.concat([df, pd.DataFrame(rows)], ignore_index=True)
 
