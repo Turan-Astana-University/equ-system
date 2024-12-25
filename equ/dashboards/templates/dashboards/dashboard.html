@@ -1,0 +1,25 @@
+{% extends 'inventory/base.html' %} {% load static %}
+
+{% block continue %}
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Интерактивный дашборд</title>
+    <script src="https://cdn.plot.ly/plotly-latest.min.js"></script>
+</head>
+<body>
+    <h1>Интерактивный дашборд</h1>
+    <div id="plotly-graph"></div>
+
+    <script>
+        // Получаем данные графика из контекста Django
+        const graphData = JSON.parse('{{ graph_json|safe }}');
+
+        // Рендеринг графика Plotly
+        Plotly.react('plotly-graph', graphData.data, graphData.layout);
+    </script>
+</body>
+</html>
+{% endblock %}
