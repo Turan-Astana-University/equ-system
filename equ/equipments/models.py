@@ -129,7 +129,6 @@ class Printer(Equipment):
         print(related_cartridges)
         return len(related_cartridges)
 
-
     def get_cartridge_types(self):
         cartridge_types = self.cartridge_types.all()
         result = ", ".join(str(cartridge_type) for cartridge_type in cartridge_types)
