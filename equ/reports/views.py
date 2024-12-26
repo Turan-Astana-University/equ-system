@@ -58,3 +58,4 @@ class InventoryReportView(LoginRequiredMixin, AccountingUserRequiredMixin, ListV
     model = Inventory
     template_name = 'reports/report_inventorys.html'
     context_object_name = 'objects'
+

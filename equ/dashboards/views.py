@@ -23,6 +23,7 @@ def dashboard_view(request):
     fig.update_traces(textinfo='percent+label')
 
     # Отображение диаграммы
+
     graph_json = fig.to_json()  # Конвертируем график в JSON
 
     # Передача в шаблон
