@@ -2,6 +2,32 @@
 {% load static %}
 {% block css %}
 <style>
+        body {
+        font-family: 'Roboto', Arial, sans-serif;
+        line-height: 1.6;
+        margin: 0;
+        padding: 0;
+        background-color: #f9f9f9;
+        display: flex;
+        flex-direction: column;
+        min-height: 100vh;
+    }
+
+    section {
+        padding: 50px;
+        flex-grow: 1;
+    }
+
+    footer {
+        background-color: #333;
+        color: white;
+        text-align: center;
+        padding: 10px;
+        position: relative;
+        bottom: 0;
+        width: 100%;
+        margin-top: auto;
+    }
   /* заголовок*/
   .equipment-heading {
     font-size: 32px !important;  /* Увеличенный размер шрифта */
@@ -69,6 +95,7 @@
 /* заголовок*/
 /* кнопка */
 #start-scan-btn {
+    margin-top: 20px;
     display: inline-block !important;
     padding: 10px 20px !important;
     font-size: 16px !important;
@@ -424,9 +451,9 @@ button.add-button {
     display: inline-block;
     margin-top: 15px;
     padding: 10px 20px;
-    font-size: 14px !important;
+
     font-family: 'Roboto', Arial, sans-serif;
-    font-weight: bold !important;
+
     color: #fff !important;
     background-color: rgba(114,20,56,0.9411764705882353) !important; /* Зеленый цвет */
     border: none !important;
@@ -452,9 +479,7 @@ button.request-button {
     margin-top: 15px;
     margin-left: 10px; /* Отступ от кнопки добавления */
     padding: 10px 20px;
-    font-size: 14px !important;
     font-family: 'Roboto', Arial, sans-serif;
-    font-weight: bold !important;
     color: #fff !important;
     background-color: rgba(114,20,56,0.9411764705882353) !important; /* Синий цвет */
     border: none !important;

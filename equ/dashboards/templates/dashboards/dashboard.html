@@ -36,14 +36,24 @@ footer {
     margin-top: auto; /* автоматически перемещает футер вниз */
 }
 
-.u-text-center {
-    font-size: 2.5rem;
-    text-align: center;
-    color: rgba(114, 20, 56, 0.941);
-    margin-bottom: 20px;
-    position: relative;
-    animation: fadeInDown 1s ease-in-out;
-}
+h1.u-text-center {
+            font-size: 2.5rem;
+            text-align: center;
+            color: rgba(114, 20, 56, 0.941);
+            margin-bottom: 20px;
+            position: relative;
+            animation: fadeInDown 1s ease-in-out;
+        }
+
+        h1.u-text-center::after {
+            content: '';
+            display: block;
+            width: 60px;
+            height: 4px;
+            background-color: rgba(114, 20, 56, 0.941);
+            margin: 10px auto 0;
+            animation: slideIn 1.5s ease-in-out;
+        }
 
 /* Добавьте футер на ваше усмотрение */
    
@@ -51,7 +61,7 @@ footer {
 </head>
 <body>
 <section class="u-align-center u-clearfixu-section-1" id="sec-c79d">
-    <h1>Интерактивный дашборд</h1>
+    <h1 class = "u-text-center">Интерактивный дашборд</h1>
     <div id="plotly-graph"></div>
 
     <script>
