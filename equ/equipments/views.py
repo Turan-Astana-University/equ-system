@@ -104,6 +104,7 @@ class ReleaseEquipmentsView(View):
         })
 
     def post(self, request):
+        print(request.POST)
         for i in range(len(request.POST.getlist("name[]"))):
             equipment = Equipment.objects.get(pk=request.POST.getlist("name[]")[i], responsible=request.user)
             location_old = equipment.location

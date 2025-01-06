@@ -1,0 +1,74 @@
+{% load static %}
+
+<!DOCTYPE html>
+<html style="font-size: 16px;" lang="ru"><head>
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <meta charset="utf-8">
+    <meta name="keywords" content="СИСТЕМА УЧЕТА ОБОРУДОВАНИЯ">
+    <meta name="description" content="">
+    <title>Авторизация</title>
+    <link rel="stylesheet" href="{% static 'css/nicepage.css' %}" media="screen">
+<link rel="stylesheet" href="{% static 'css/login.css' %}" media="screen">
+    <script class="u-script" type="text/javascript" src="jquery.js" defer=""></script>
+    <script class="u-script" type="text/javascript" src="nicepage.js" defer=""></script>
+    <meta name="generator" content="Nicepage 6.15.2, nicepage.com">
+    <meta name="referrer" content="origin">
+    <link id="u-theme-google-font" rel="stylesheet" href="https://fonts.googleapis.com/css?family=Roboto:100,100i,300,300i,400,400i,500,500i,700,700i,900,900i|Open+Sans:300,300i,400,400i,500,500i,600,600i,700,700i,800,800i">
+    <link id="u-page-google-font" rel="stylesheet" href="https://fonts.googleapis.com/css?family=Roboto+Slab:100,200,300,400,500,600,700,800,900">
+    
+    
+    
+    
+    <script type="application/ld+json">{
+		"@context": "http://schema.org",
+		"@type": "Organization",
+		"name": ""
+}</script>
+    <meta name="theme-color" content="#478ac9">
+    <meta property="og:title" content="Авторизация">
+    <meta property="og:type" content="website">
+  <meta data-intl-tel-input-cdn-path="intlTelInput/"></head>
+  <body data-home-page="Авторизация.html" data-home-page-title="Авторизация" data-path-to-root="./" data-include-products="true" class="u-body u-xl-mode" data-lang="ru">
+    <section class="u-clearfix u-section-1" id="sec-cafd">
+      <div class="u-clearfix u-sheet u-sheet-1">
+        <h2 class="u-align-center u-custom-font u-font-roboto-slab u-text u-text-custom-color-1 u-text-default u-text-1"> СИСТЕМА УЧЕТА ОБОРУДОВАНИЯ</h2>
+      </div>
+    </section>
+    <section class="u-clearfix u-white u-section-2" id="sec-6f6e">
+      <div class="u-clearfix u-sheet u-sheet-1">
+        <div class="u-align-center u-form u-grey-5 u-form-1">
+
+
+          <form method="POST" class="u-clearfix u-form-spacing-19 u-form-vertical u-inner-form" style="padding: 22px;" source="email" name="form">
+            {% csrf_token %}
+            <p class="u-align-center u-custom-font u-font-roboto-slab u-form-group u-form-text u-text u-text-1"> Вход в систему</p>
+            <div class="u-form-group u-form-name u-label-none u-form-group-2">
+            {{ form.as_p }}
+
+               </div>
+          
+
+            <div class="u-align-right u-form-group u-form-submit u-label-none">
+              <button>
+              <a href="#" class="u-border-none u-btn u-btn-round u-btn-submit u-button-style u-custom-font u-font-roboto-slab u-grey-30 u-hover-grey-90 u-radius u-btn-1">Войти</a>
+              <input type="submit" value="submit" class="u-form-control-hidden">
+            </button>
+            {% if form.non_field_errors %}
+            <div style="color: red;">{{ form.non_field_errors }}</div>
+        {% endif %}
+            </div>
+          </form>
+
+
+        </div>
+        <p class="u-align-center u-custom-font u-font-roboto-slab u-text u-text-default u-text-2">Забыли пароль?</p>
+      </div>
+    </section>
+    
+    
+    
+    <footer class="u-align-center u-clearfix u-custom-color-3 u-footer u-footer" id="sec-8659"><div class="u-clearfix u-sheet u-sheet-1">
+        <p class="u-align-center u-custom-font u-font-roboto-slab u-text u-text-default u-text-1">Copyright (C) 2024. Университет «Туран-Астана»​. Департамент цифровой трансформации&nbsp;</p>
+      </div></footer>
+  
+</body></html>

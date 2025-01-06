@@ -1,21 +1,94 @@
-{% extends 'inventory/base.html' %} {% load static %} {% block css %}
+{% extends 'inventory/base.html' %}
+{% load static %}
+{% block css %}
 <link rel="stylesheet" href="{% static 'css/Инвентаризация.css' %}" media="screen">
+<style>
+
+
+.u-section-inventory {
+    display: flex !important;
+    justify-content: center !important;
+    align-items: center !important;
+    min-height: 100vh !important;
+    padding: 20px !important;
+    background: linear-gradient(135deg, #721438) !important;
+
+}
+
+.u-sheet-inventory {
+    background-color: rgba(255, 255, 255, 0.9) !important;
+    padding: 40px !important;
+    border-radius: 10px !important;
+    box-shadow: 0 4px 15px rgba(0, 0, 0, 0.2) !important;
+    text-align: center !important;
+}
+
+h1 {
+    font-size: 2.5rem !important;
+    margin-bottom: 20px !important;
+    text-transform: uppercase !important;
+    letter-spacing: 2px !important;
+}
+
+.u-btn {
+    display: inline-block !important;
+    padding: 12px 30px !important;
+    font-size: 1.2rem !important;
+    font-weight: bold !important;
+    color: #fff !important;
+    text-decoration: none !important;
+    border-radius: 50px !important;
+    background: #721438 !important;
+    border: 2px solid #721438 !important;
+    transition: all 0.3s ease !important;
+}
+
+.u-btn:hover {
+    background: #fff !important;
+    color: #721438 !important;
+    border-color: #721438 !important;
+}
+
+.u-btn:focus {
+    outline: none !important;
+    box-shadow: 0 0 8px rgba(114, 20, 56, 0.5) !important;
+}
+
+h1.u-text-center {
+            font-size: 2.5rem;
+            text-align: center;
+            color: rgba(114, 20, 56, 0.941);
+            margin-bottom: 20px;
+            position: relative;
+            animation: fadeInDown 1s ease-in-out;
+        }
+
+        h1.u-text-center::after {
+            content: '';
+            display: block;
+            width: 60px;
+            height: 4px;
+            background-color: rgba(114, 20, 56, 0.941);
+            margin: 10px auto 0;
+            animation: slideIn 1.5s ease-in-out;
+        }
+
+
+</style>
 {% endblock %}
+
 <body data-path-to-root="./" data-include-products="true" class="u-body u-xl-mode" data-lang="ru">
-{% block continue %}
-
-  <section class="u-clearfix u-section-1" id="sec-093e">
-    <div class="u-clearfix u-sheet u-sheet-1">
-      <h1 class="u-align-center u-custom-font u-font-roboto-slab u-text u-text-default u-text-1"> СИСТЕМА УЧЕТА ОБОРУДОВАНИЯ</h1>
-      {% if inventory %}
-      <a href="{% url 'locations' %}" class="u-align-center u-border-2 u-border-black u-btn u-button-style u-hover-black u-none u-text-hover-white u-btn-1">Продолжить инвентаризацию</a>
-      {% else %}
-      <a href="{% url 'create_invent' %}" class="u-align-center u-border-2 u-border-black u-btn u-button-style u-hover-black u-none u-text-hover-white u-btn-1">начать инвентаризацию </a>
-      {% endif %}
-    </div>
-  </section>
-
-
-{% endblock %}
+    {% block continue %}
+    <section class="u-clearfix u-section-inventory" id="sec-093e">
+        <div class="u-clearfix u-sheet u-sheet-inventory">
+            <h1 class = "u-text-center">СИСТЕМА УЧЕТА ОБОРУДОВАНИЯ</h1>
+            {% if inventory %}
+            <a href="{% url 'locations' %}" class="u-btn">Продолжить инвентаризацию</a>
+            {% else %}
+            <a href="{% url 'create_invent' %}" class="u-btn">Начать инвентаризацию</a>
+            {% endif %}
+        </div>
+    </section>
+    {% endblock %}
 </body>
 </html>

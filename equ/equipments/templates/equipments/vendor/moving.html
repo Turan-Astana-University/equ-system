@@ -2,105 +2,8 @@
 {% load static %}
 {% block css %}
 <style>
-  /* заголовок*/
-  .equipment-heading {
-    font-size: 32px !important;  /* Увеличенный размер шрифта */
-    font-weight: bold !important;  /* Жирное начертание */
-    color: rgba(114, 20, 56, 0.9411764705882353) !important;  /* Цвет */
-    text-transform: uppercase !important;  /* Заглавные буквы */
-    letter-spacing: 3px !important;  /* Расстояние между буквами */
-    margin-bottom: 30px !important;  /* Отступ снизу */
-    text-align: center !important;  /* Выравнивание по центру */
-    font-family: 'Arial', sans-serif !important;  /* Шрифт */
-    
-    opacity: 0;  /* Начальная прозрачность */
-    transform: translateY(-50px);  /* Начальная позиция сверху */
-    animation: fadeIn 1s ease-out 0.5s forwards, slideIn 1s ease-out 0.5s forwards, colorShift 1s ease-in-out 1s forwards;
-}
-
-@keyframes fadeIn {
-    0% {
-        opacity: 0;
-    }
-    100% {
-        opacity: 1;
-    }
-}
-
-@keyframes slideIn {
-    0% {
-        transform: translateY(-50px);  /* Начальная позиция */
-    }
-    100% {
-        transform: translateY(0);  /* Конечная позиция */
-    }
-}
-
-@keyframes colorShift {
-    0% {
-        color: rgba(114, 20, 56, 0.9411764705882353);  /* Начальный цвет */
-    }
-    50% {
-        color: rgba(0, 150, 255, 1);  /* Полупрозрачный синий цвет */
-    }
-    100% {
-        color: rgba(114, 20, 56, 0.9411764705882353);  /* Возвращение к изначальному цвету */
-    }
-}
-
-
-@keyframes fadeIn {
-    0% {
-        opacity: 0;
-    }
-    100% {
-        opacity: 1;
-    }
-}
-
-@keyframes slideIn {
-    0% {
-        transform: translateY(-30px);  /* Начальная позиция сверху */
-    }
-    100% {
-        transform: translateY(0);  /* Конечная позиция */
-    }
-}
-/* заголовок*/
-/* кнопка */
-#start-scan-btn {
-    display: inline-block !important;
-    padding: 10px 20px !important;
-    font-size: 16px !important;
-    font-weight: bold !important;
-    text-align: center !important;
-    background-color: rgba(114, 20, 56, 0.9411764705882353) !important;  /* Ваш цвет фона */
-    color: #fff !important;  /* Белый текст */
-    border: 2px solid rgba(114, 20, 56, 0.9411764705882353) !important;  /* Рамка того же цвета */
-    border-radius: 5px !important;  /* Скругленные углы */
-    text-decoration: none !important;  /* Убирает подчеркивание */
-    transition: all 0.3s ease !important;  /* Плавный переход для всех эффектов */
-}
-
-#start-scan-btn:hover {
-    background-color: rgba(114, 20, 56, 1) !important;  /* Цвет фона при наведении (более насыщенный) */
-    color: #fff !important;  /* Белый текст при наведении */
-    border-color: rgba(114, 20, 56, 1) !important;  /* Рамка того же цвета при наведении */
-}
-
-#start-scan-btn:active {
-    transform: scale(0.95) !important;  /* Легкое уменьшение кнопки при нажатии */
-}
-
-#start-scan-btn:focus {
-    outline: none !important;  /* Убирает обводку при фокусе */
-    box-shadow: 0 0 5px 2px rgba(114, 20, 56, 0.5) !important;  /* Тень при фокусе с полупрозрачным цветом */
-}
-
-/* кнопка */
-
     .container-content {
-        max-height: 400px;
+        max-height: 1000px;
     }
     h2 {
         display: flex;
@@ -138,7 +41,7 @@
         display: flex;
         flex-direction: column;
         align-items: center; /* Центрирует строки по вертикали */
-      
+        margin-left: 44%;
     }
     .request-button {
         margin-top: 15px;
@@ -147,333 +50,8 @@
         flex-direction: column;
         align-items: center; /* Центрирует строки по вертикали */
         margin-left: 47%;
-        margin-bottom: 430px;
+        margin-bottom: 480px;
     }
-
-/* Общий стиль контейнера */
-#equipment-container {
-    margin: 20px auto;
-    padding: 15px;
-    max-width: 800px;
-    border: 1px solid #ddd;
-    border-radius: 10px;
-    background-color: #f9f9f9;
-    box-shadow: 0px 4px 8px rgba(0, 0, 0, 0.1);
-}
-
-/* Общий стиль для строки */
-.equipment-row {
-    display: flex;
-    align-items: center;
-    gap: 15px;
-    margin-bottom: 10px;
-}
-
-/* Поля ввода и выпадающие списки */
-.equipment-row input[type="text"],
-.equipment-row select {
-    flex: 1;
-    padding: 10px 12px;
-    font-size: 14px;
-    font-family: 'Roboto', Arial, sans-serif;
-    border: 1px solid #ddd;
-    border-radius: 8px;
-    box-shadow: inset 0px 1px 3px rgba(0, 0, 0, 0.1);
-    transition: border-color 0.3s ease, box-shadow 0.3s ease;
-}
-
-/* Фокус на полях ввода и списках */
-.equipment-row input[type="text"]:focus,
-.equipment-row select:focus {
-    outline: none;
-    border-color: #007bff;
-    box-shadow: 0 0 6px rgba(0, 123, 255, 0.3);
-}
-
-/* Placeholder для полей ввода */
-.equipment-row input::placeholder {
-    color: #aaa;
-    font-style: italic;
-}
-
-/* Список автозаполнения */
-datalist option {
-    font-size: 14px;
-    font-family: 'Roboto', Arial, sans-serif;
-    color: #333;
-    padding: 5px 10px;
-}
-
-/* Кнопка удаления строки */
-.equipment-row button {
-    background-color: #ff4d4f;
-    color: #fff;
-    font-size: 14px;
-    font-weight: bold;
-    padding: 8px 12px;
-    border: none;
-    border-radius: 8px;
-    cursor: pointer;
-    transition: background-color 0.3s ease, transform 0.2s ease;
-}
-
-/* При наведении на кнопку */
-.equipment-row button:hover {
-    background-color: #e63946;
-    transform: scale(1.05);
-}
-
-/* Уменьшаем элементы на мобильных */
-@media (max-width: 768px) {
-    .equipment-row {
-        flex-direction: column;
-        align-items: stretch;
-    }
-    .equipment-row input[type="text"],
-    .equipment-row select,
-    .equipment-row button {
-        width: 100%;
-    }
-}
-/* Выпадающий список и элементы datalist */
-.equipment-row input[type="text"] {
-    flex: 1;
-    padding: 10px 12px;
-    font-size: 14px;
-    font-family: 'Roboto', Arial, sans-serif;
-    border: 1px solid #ccc;
-    border-radius: 8px;
-    background-color: #fff;
-    transition: border-color 0.3s ease, box-shadow 0.3s ease;
-    position: relative;
-}
-
-.equipment-row input[type="text"]:focus {
-    outline: none;
-    border-color: #007bff;
-    box-shadow: 0 0 6px rgba(0, 123, 255, 0.3);
-}
-
-/* Datalist options */
-datalist option {
-    font-size: 14px;
-    font-family: 'Roboto', Arial, sans-serif;
-    color: #333;
-    background-color: #fff;
-    padding: 5px;
-    border: none;
-    cursor: pointer;
-}
-
-/* Стили для select (альтернативные списки) */
-.equipment-row select {
-    flex: 1;
-    padding: 10px 12px;
-    font-size: 14px;
-    font-family: 'Roboto', Arial, sans-serif;
-    border: 1px solid #ccc;
-    border-radius: 8px;
-    background-color: #fff;
-    appearance: none;
-    -webkit-appearance: none;
-    -moz-appearance: none;
-    background-image: url("data:image/svg+xml;charset=UTF-8,%3Csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 10 6'%3E%3Cpath fill='%23aaa' d='M0 0l5 6 5-6z'/%3E%3C/svg%3E");
-    background-repeat: no-repeat;
-    background-position: right 10px center;
-    background-size: 10px 6px;
-    transition: border-color 0.3s ease, box-shadow 0.3s ease;
-}
-
-.equipment-row select:focus {
-    outline: none;
-    border-color: #007bff;
-    box-shadow: 0 0 6px rgba(0, 123, 255, 0.3);
-}
-
-/* Placeholder для select */
-.equipment-row select option[disabled] {
-    color: #aaa;
-}
-
-/* Общий стиль контейнера для дополнительного эффекта */
-.equipment-container {
-    position: relative;
-    max-width: 800px;
-    margin: 20px auto;
-    padding: 20px;
-    border: 1px solid #e0e0e0;
-    border-radius: 10px;
-    background-color: #ffffff;
-    box-shadow: 0px 4px 10px rgba(0, 0, 0, 0.1);
-}
-
-/* Стили для кнопки "Удалить" */
-.equipment-row button
-
-/* Общий стиль контейнера */
-div#equipment-container {
-    margin: 20px auto;
-    padding: 15px;
-    max-width: 800px;
-    border: 1px solid #ddd;
-    border-radius: 10px;
-    background-color: #f9f9f9;
-    box-shadow: 0px 4px 8px rgba(0, 0, 0, 0.1);
-}
-
-/* Стиль для строки оборудования */
-div#equipment-container div.equipment-row {
-    display: flex;
-    align-items: center;
-    gap: 15px;
-    margin-bottom: 10px;
-}
-
-/* Поля ввода */
-div#equipment-container div.equipment-row input[type="text"] {
-    flex: 1;
-    padding: 10px 12px;
-    font-size: 14px;
-    font-family: 'Roboto', Arial, sans-serif;
-    border: 1px solid #ddd !important;
-    border-radius: 8px;
-    background-color: #fff !important;
-    box-shadow: inset 0px 1px 3px rgba(0, 0, 0, 0.1);
-    transition: border-color 0.3s ease, box-shadow 0.3s ease;
-}
-
-div#equipment-container div.equipment-row input[type="text"]:focus {
-    outline: none !important;
-    border-color: #007bff !important;
-    box-shadow: 0 0 6px rgba(0, 123, 255, 0.3) !important;
-}
-
-/* Выпадающий список */
-div#equipment-container div.equipment-row select {
-    flex: 1;
-    padding: 10px 12px;
-    font-size: 14px;
-    font-family: 'Roboto', Arial, sans-serif;
-    border: 1px solid #ccc !important;
-    border-radius: 8px;
-    background-color: #fff !important;
-    appearance: none;
-    -webkit-appearance: none;
-    -moz-appearance: none;
-    background-image: url("data:image/svg+xml;charset=UTF-8,%3Csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 10 6'%3E%3Cpath fill='%23aaa' d='M0 0l5 6 5-6z'/%3E%3C/svg%3E");
-    background-repeat: no-repeat;
-    background-position: right 10px center;
-    background-size: 10px 6px;
-    transition: border-color 0.3s ease, box-shadow 0.3s ease;
-}
-
-div#equipment-container div.equipment-row select:focus {
-    outline: none !important;
-    border-color: #007bff !important;
-    box-shadow: 0 0 6px rgba(0, 123, 255, 0.3) !important;
-}
-
-/* Плейсхолдер для select */
-div#equipment-container div.equipment-row select option[disabled] {
-    color: #aaa !important;
-}
-
-/* Стили для datalist */
-datalist#equipment-list option {
-    font-size: 14px !important;
-    font-family: 'Roboto', Arial, sans-serif;
-    color: #333 !important;
-    background-color: #fff !important;
-    padding: 5px;
-    border: none;
-    cursor: pointer;
-}
-
-/* Кнопка удаления */
-div#equipment-container div.equipment-row button {
-    background-color: #e63946 !important;
-    color: #fff !important;
-    font-size: 14px !important;
-    font-weight: bold !important;
-    padding: 8px 12px;
-    border: none !important;
-    border-radius: 8px;
-    cursor: pointer !important;
-    transition: background-color 0.3s ease, transform 0.2s ease !important;
-}
-
-div#equipment-container div.equipment-row button:hover {
-    background-color: #d62839 !important;
-    transform: scale(1.05) !important;
-}
-
-/* Адаптивность */
-@media (max-width: 768px) {
-    div#equipment-container div.equipment-row {
-        flex-direction: column !important;
-        align-items: stretch !important;
-    }
-    div#equipment-container div.equipment-row input[type="text"],
-    div#equipment-container div.equipment-row select,
-    div#equipment-container div.equipment-row button {
-        width: 100% !important;
-    }
-}
-/* Кнопка добавления нового ряда */
-button.add-button {
-    display: inline-block;
-    margin-top: 15px;
-    padding: 10px 20px;
-    font-size: 14px !important;
-    font-family: 'Roboto', Arial, sans-serif;
-    font-weight: bold !important;
-    color: #fff !important;
-    background-color: rgba(114,20,56,0.9411764705882353) !important; /* Зеленый цвет */
-    border: none !important;
-    border-radius: 8px !important;
-    cursor: pointer !important;
-    transition: background-color 0.3s ease, transform 0.2s ease !important;
-    box-shadow: 0px 4px 6px rgba(0, 0, 0, 0.1) !important;
-}
-
-button.add-button:hover {
-    background-color: rgba(114,20,56,0.9411764705882353) !important; /* Более темный зеленый при наведении */
-    transform: scale(1.05) !important;
-}
-
-button.add-button:active {
-    background-color: rgba(114,20,56,0.9411764705882353) !important;
-    transform: scale(1) !important;
-}
-
-/* Кнопка для отправки данных на сервер */
-button.request-button {
-    display: inline-block;
-    margin-top: 15px;
-    margin-left: 10px; /* Отступ от кнопки добавления */
-    padding: 10px 20px;
-    font-size: 14px !important;
-    font-family: 'Roboto', Arial, sans-serif;
-    font-weight: bold !important;
-    color: #fff !important;
-    background-color: rgba(114,20,56,0.9411764705882353) !important; /* Синий цвет */
-    border: none !important;
-    border-radius: 8px !important;
-    cursor: pointer !important;
-    transition: background-color 0.3s ease, transform 0.2s ease !important;
-    box-shadow: 0px 4px 6px rgba(0, 0, 0, 0.1) !important;
-}
-
-button.request-button:hover {
-    background-color: rgba(114,20,56,0.9411764705882353) !important; /* Более темный синий при наведении */
-    transform: scale(1.05) !important;
-}
-
-button.request-button:active {
-    background-color: rgba(114,20,56,0.9411764705882353) !important;
-    transform: scale(1) !important;
-}
-
 </style>
 <script src="{% static 'node_modules/html5-qrcode/html5-qrcode.min.js' %}"></script>
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
@@ -520,7 +98,7 @@ button.request-button:active {
             </div>
         </main>
 <!--    </div>-->
-    <h2 class = "equipment-heading">Перемещение Оборудования</h2>
+    <h2>Перемещение Оборудования</h2>
 
     <!-- Форма для отправки данных -->
     <form id="equipment-form" action="{% url 'release_equipments' %}" method="post" onsubmit="return validateForm()">
@@ -587,7 +165,7 @@ button.request-button:active {
         <select name="responsible_person[]">
             <option value="" disabled selected>Отв. лицо</option>
             {% for user in users %}
-                <option value="{{ user.id }}">{{ user }} - {{ user.first_name }} {{ user.last_name }}</option>
+                <option value="{{ user.id }}">{{ user.first_name }} {{ user.last_name }}</option>
             {% endfor %}
         </select>
 
@@ -624,7 +202,7 @@ function removeEquipmentRow(button) {
             <select name="responsible_person[]">
                 <option value="" disabled selected>Отв. лицо</option>
                 {% for user in users %}
-                    <option value="{{ user.id }}">{{ user }} - {{ user.first_name }} {{ user.last_name }}</option>
+                    <option value="{{ user.id }}">{{ user.first_name }} {{ user.last_name }}</option>
                 {% endfor %}
             </select>
             <button type="button" onclick="removeEquipmentRow(this)">Удалить</button>
@@ -732,10 +310,10 @@ function addEquipmentRowScan(data) {
             {% endfor %}
         </select>
 
-       <select name="responsible_person[]">
+        <select name="responsible_person[]">
             <option value="" disabled selected>Отв. лицо</option>
             {% for user in users %}
-                <option value="{{ user.id }}">{{ user }} - {{ user.first_name }} {{ user.last_name }}</option>
+                <option value="{{ user.id }}">{{ user.first_name }} {{ user.last_name }}</option>
             {% endfor %}
         </select>
             <button type="button" onclick="removeEquipmentRow(this)">Удалить</button>

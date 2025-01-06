@@ -1,0 +1,38 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <title>Title</title>
+        <script>
+        function showConfirmation() {
+            if (confirm('Вы действительно хотите закончить инвентаризацию?')) {
+                // Выполнить AJAX-запрос к методу invent
+                var xhr = new XMLHttpRequest();
+                xhr.open("POST", "{% url 'end_invent' %}", true);
+                xhr.setRequestHeader("Content-Type", "application/x-www-form-urlencoded");
+                xhr.setRequestHeader("X-CSRFToken", "{{ csrf_token }}"); // Добавьте CSRF-токен для безопасности
+                xhr.onreadystatechange = function () {
+                    if (xhr.readyState === 4 && xhr.status === 200) {
+                        // Перенаправить на locations после успешного вызова invent
+                        window.location.href = "{% url 'locations' %}";
+                    }
+                    else {
+                            // Показать сообщение об ошибке
+                            alert('Начните инвентаризацию');
+                        }
+                };
+                xhr.send();
+            }
+        }
+    </script>
+</head>
+<body>
+    {% for loc in locations %}
+        <h2>
+            <a href="{% url 'location_detail' loc.pk %}">{{ loc }}</a>
+        </h2>
+    {% endfor %}
+
+    <button onclick="showConfirmation()">ЗАКОНЧИТЬ ИНВЕНТАРИЗАЦИЮ</button>
+</body>
+</html>

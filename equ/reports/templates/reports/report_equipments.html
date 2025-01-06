@@ -1,77 +1,323 @@
 {% extends 'inventory/base.html' %}
+
 {% block continue %}
-    <!DOCTYPE html>
-    <html lang="en">
-    <head>
-        <meta charset="UTF-8">
-        <title>Title</title>
-    </head>
-    <body>
-        <section class="u-align-center u-clearfix u-grey-10 u-section-1" id="sec-c79d">
+<!DOCTYPE html>
+<html lang="en">
 
-  <div class="u-clearfix u-sheet u-sheet-1">
+<head>
+    <meta charset="UTF-8">
+    <title>Equipment List</title>
+<style>.filter-form {
+    display: flex !important;
+    justify-content: center !important;
+    margin-bottom: 20px !important;
+  }
+  
+  .filter-container {
+    display: flex !important;
+        gap: 10px !important;
+        justify-content: center !important;
+        margin-bottom: 20px;
+  }
+  
+  .filter-group {
+    flex: 1;
+    min-width: 200px;
+  }
+  
+  .input-field {
+    padding: 8px;
+    width: 100%;
+    font-size: 14px;
+    border: 1px solid #ccc;
+    border-radius: 5px;
+    background-color: #f9f9f9;
+  }
+  
+  .submit-button {
+    padding: 8px 12px;
+        border: none;
+        background-color: rgba(114, 20, 56, 0.941) !important;
+        color: white;
+        border-radius: 5px;
+        cursor: pointer;
+  }
+  
+  .submit-button:hover {
+    background-color: rgba(114, 20, 56, 0.941) !important;
+  }
+  
+        .u-section-1 .u-sheet-1{
+            margin-bottom: 0 !important;
+        }
+        body {
+            font-family: Arial, sans-serif;
+            line-height: 1.6;
+            margin: 0;
+            padding: 0;
+            background-color: #f4f4f9;
+        }
+  
+        section {
+            padding: 61px;
+        }
+  
+        h1.u-text-center {
+            font-size: 2.5rem;
+            text-align: center;
+            color: rgba(114, 20, 56, 0.941);
+            margin-bottom: 20px;
+            position: relative;
+            animation: fadeInDown 1s ease-in-out;
+        }
+  
+        h1.u-text-center::after {
+            content: '';
+            display: block;
+            width: 60px;
+            height: 4px;
+            background-color: rgba(114, 20, 56, 0.941);
+            margin: 10px auto 0;
+            animation: slideIn 1.5s ease-in-out;
+        }
+  
+        .u-table {
+            width: 100%;
+            border-collapse: collapse;
+            margin: 20px 0;
+            background: white;
+            box-shadow: 0 4px 8px rgba(0, 0, 0, 0.1);
+            border-radius: 8px;
+            overflow: hidden;
+            animation: fadeInUp 1s ease-in-out;
+        }
+  
+        .u-table thead {
+            background-color: rgba(114, 20, 56, 0.941) !important;
+            color: white !important;
+        }
+  
+        .u-table th {
+            padding: 15px;
+            font-size: 16px;
+            text-transform: uppercase;
+        }
+  
+        .u-table td {
+            padding: 15px;
+            text-align: center;
+            font-size: 14px;
+            background-color: #f9f9f9;
+            transition: background-color 0.3s ease;
+        }
+  
+        .u-table tr:hover td {
+            background-color: #ffecec;
+        }
+  
+        .u-table tr:nth-child(even) td {
+            background-color: #f3f3f3;
+        }
+  
+        .pagination {
+            display: flex;
+            justify-content: center;
+            align-items: center;
+            margin-top: 20px;
+            font-size: 14px;
+        }
+  
+        .pagination a,
+        .pagination strong {
+            margin: 0 5px;
+            padding: 5px 10px;
+            text-decoration: none;
+            color: #007BFF;
+            border-radius: 5px;
+            transition: background-color 0.3s ease;
+        }
+  
+        .pagination a:hover {
+            background-color: #0056b3;
+            color: white;
+        }
+  
+        .pagination .current-page {
+            background-color: #007BFF;
+            color: white;
+        }
+  
+        .pagination span {
+            padding: 5px 10px;
+            color: #555;
+        }
+  
+        @keyframes fadeInDown {
+            from {
+                opacity: 0;
+                transform: translateY(-20px);
+            }
+            to {
+                opacity: 1;
+                transform: translateY(0);
+            }
+        }
+  
+        @keyframes slideIn {
+            from {
+                width: 0;
+                opacity: 0;
+            }
+            to {
+                width: 60px;
+                opacity: 1;
+            }
+        }
+  
+        @keyframes fadeInUp {
+            from {
+                opacity: 0;
+                transform: translateY(20px);
+            }
+            to {
+                opacity: 1;
+                transform: translateY(0);
+            }
+        }
+  
+        @media (max-width: 768px) {
+            .u-table th,
+            .u-table td {
+                padding: 10px;
+                font-size: 12px;
+            }
+  
+            .pagination a,
+            .pagination strong {
+                padding: 3px 7px;
+                font-size: 12px;
+            }
+  
+            h1.u-text-center {
+                font-size: 2rem;
+            }
+        }</style>
+</head>
 
-      <div class="u-expanded-width u-tabs u-tabs-1">
-          <br>
-          <div class="u-tab-content">
-              <div class="u-container-style u-tab-active u-tab-pane u-white u-tab-pane-1" id="tab-0da5" role="tabpanel" aria-labelledby="link-tab-0da5">
-                  <div class="u-container-layout u-container-layout-1">
-                      <div class="u-expanded-width u-table u-table-responsive u-table-1">
-                          <table id="nonfound" class="u-table-entity">
-                              <colgroup>
-                                  <col width="20%">
-                                  <col width="20%">
-                                  <col width="20%">
-                                  <col width="20%">
-                                  <col width="20%">
-                              </colgroup>
-                              <tbody class="u-table-body">
-                                  <tr style="height: 87px;">
-                                      <td class="u-align-center u-border-2 u-border-grey-90 u-custom-font u-first-column u-font-roboto-slab u-table-cell u-table-cell-1">ID</td>
-                                      <td class="u-align-center u-border-2 u-border-grey-90 u-custom-font u-font-roboto-slab u-table-cell u-table-cell-2">Наименование</td>
-                                      <td class="u-align-center u-border-2 u-border-grey-90 u-custom-font u-font-roboto-slab u-table-cell u-table-cell-2">Местоположение</td>
-                                      <td class="u-align-center u-border-2 u-border-grey-90 u-custom-font u-font-roboto-slab u-table-cell u-table-cell-3">Отв.сотрудник</td>
-                                      <td class="u-align-center u-border-2 u-border-grey-90 u-custom-font u-font-roboto-slab u-table-cell u-table-cell-4">Тип</td>
-                                  </tr>
-                                  {% for equ in objects %}
-                                      <tr style="height: 52px;">
-                                          <td class="u-align-left u-border-2 u-border-grey-70 u-custom-font u-first-column u-font-roboto-slab u-table-cell">{{ equ.pk }}</td>
-                                          <td class="u-align-left u-border-2 u-border-grey-70 u-custom-font u-font-roboto-slab u-table-cell">{{ equ.title }}</td>
-                                          <td class="u-align-left u-border-2 u-border-grey-70 u-custom-font u-font-roboto-slab u-table-cell">{{ equ.location }}</td>
-                                          <td class="u-align-left u-border-2 u-border-grey-70 u-custom-font u-font-roboto-slab u-table-cell">{{ equ.responsible }}</td>
-                                          <td class="u-align-left u-border-2 u-border-grey-70 u-custom-font u-font-roboto-slab u-table-cell">{{ equ.category }}</td>
-                                      </tr>
-                                  {% endfor %}
-                              </tbody>
-                          </table>
-                      </div>
-                  </div>
-              </div>
-                      </div>
-                  </div>
-              </div>
-<div class="pagination">
-    <span>Страница {{ objects.number }} из {{ objects.paginator.num_pages }}</span>
-    <div>
-        {% if objects.has_previous %}
-            <a href="?page=1"><<</a>
-            <a href="?page={{ objects.previous_page_number }}"><</a>
-        {% endif %}
+<body>
+    <section class="u-align-center u-clearfix u-grey-10 u-section-1" id="sec-c79d">
+        <div class="u-clearfix u-sheet u-sheet-1">
+            <h1 class="u-text-center">Отчет по оборудованию</h1>
+            
+      
+            <form method="get" id="filter-form" class="filter-form">
+                <div class="filter-container">
+                    <div class="filter-group">
+                        <label for="filter-id">ID</label>
+                        <input type="text" id="filter-id" name="id" class="input-field" placeholder="Введите ID">
+                    </div>
+                    <div class="filter-group">
+                        <label for="filter-title">Наименование</label>
+                        <input type="text" id="filter-title" name="title" class="input-field" placeholder="Введите наименование">
+                    </div>
+                    <div class="filter-group">
+                        <label for="filter-location">Местоположение</label>
+                        <input type="text" id="filter-location" name="location" class="input-field" placeholder="Введите местоположение">
+                    </div>
+                    <div class="filter-group">
+                        <label for="filter-responsible">Ответственный</label>
+                        <input type="text" id="filter-responsible" name="responsible" class="input-field" placeholder="Введите ответственного">
+                    </div>
+                    <button type="submit" class="submit-button">Применить фильтр</button>
+                </div>
+            </form>
+    
+            <div class="table-container">
+                <table id="nonfound" class="u-table">
+                    <thead>
+                        <tr>
+                            <th>ID</th>
+                            <th>Наименование</th>
+                            <th>Местоположение</th>
+                            <th>Отв.сотрудник</th>
+                            <th>Тип</th>
+                        </tr>
+                    </thead>
+                    <tbody class="u-table-body">
+                        {% for equ in objects %}
+                        <tr class="table-row">
+                            <td>{{ equ.pk }}</td>
+                            <td>{{ equ.title }}</td>
+                            <td>{{ equ.location }}</td>
+                            <td>{{ equ.responsible }} - {{ equ.responsible.first_name }} {{ equ.responsible.last_name }}</td>
+                            <td>{{ equ.category }}</td>
+                        </tr>
+                        {% endfor %}
+                    </tbody>
+                </table>
+            </div>
+        </div>
+    
+        <!-- Пагинация -->
+        <div class="pagination">
+            <span>Страница {{ objects.number }} из {{ objects.paginator.num_pages }}</span>
+            <div class="pagination-links">
+                {% if objects.has_previous %}
+                <a href="?page=1" class="pagination-link" aria-label="Первая страница"><<</a>
+                <a href="?page={{ objects.previous_page_number }}" class="pagination-link" aria-label="Предыдущая страница"><</a>
+                {% endif %}
+    
+                {% for page_num in objects.paginator.page_range %}
+                    {% if page_num == objects.number %}
+                        <strong>{{ page_num }}</strong>
+                    {% else %}
+                        <a href="?page={{ page_num }}" class="pagination-link" aria-label="Страница {{ page_num }}">{{ page_num }}</a>
+                    {% endif %}
+                {% endfor %}
+    
+                {% if objects.has_next %}
+                <a href="?page={{ objects.next_page_number }}" class="pagination-link" aria-label="Следующая страница">></a>
+                <a href="?page={{ objects.paginator.num_pages }}" class="pagination-link" aria-label="Последняя страница">>></a>
+                {% endif %}
+            </div>
+        </div>
+    </section>
+    
+    <script>
+document.getElementById("filter-form").addEventListener("submit", function(event) {
+    event.preventDefault();
+    
+    
+    let filterId = document.getElementById("filter-id").value.toLowerCase();
+    let filterTitle = document.getElementById("filter-title").value.toLowerCase();
+    let filterLocation = document.getElementById("filter-location").value.toLowerCase();
+    let filterResponsible = document.getElementById("filter-responsible").value.toLowerCase();
 
-        {% for page_num in objects.paginator.page_range %}
-            {% if page_num == objects.number %}
-                <strong>{{ page_num }}</strong>
-            {% else %}
-                <a href="?page={{ page_num }}">{{ page_num }}</a>
-            {% endif %}
-        {% endfor %}
+ 
+    let rows = document.querySelectorAll("#nonfound .table-row");
+    
+  
+    rows.forEach(function(row) {
+        let id = row.cells[0].textContent.toLowerCase();
+        let title = row.cells[1].textContent.toLowerCase();
+        let location = row.cells[2].textContent.toLowerCase();
+        let responsible = row.cells[3].textContent.toLowerCase();
 
-        {% if objects.has_next %}
-            <a href="?page={{ objects.next_page_number }}">> </a>
-            <a href="?page={{ objects.paginator.num_pages }}"> >> </a>
-        {% endif %}
-    </div>
-</div>
-</section>
+        if (
+            (filterId === "" || id.includes(filterId)) &&
+            (filterTitle === "" || title.includes(filterTitle)) &&
+            (filterLocation === "" || location.includes(filterLocation)) &&
+            (filterResponsible === "" || responsible.includes(filterResponsible))
+        ) {
+            row.style.display = "";
+        } else {
+            row.style.display = "none";
+        }
+    });
+});
 
+    
+    </script>   
+</body>
+</html>
 {% endblock %}
