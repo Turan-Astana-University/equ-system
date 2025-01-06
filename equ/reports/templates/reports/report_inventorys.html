@@ -164,6 +164,7 @@
                 font-size: 2rem;
             }
         }
+
     </style>
 </head>
 
@@ -200,23 +201,25 @@
     </div>
 
         <!-- Pagination Section -->
-        <div class="pagination">
-            <span class="step-links">
+        <div class="pagination-links">
                 {% if objects.has_previous %}
-                    <a href="?page=1">Первая</a>
-                    <a href="?page={{ objects.previous_page_number }}">Предыдущая</a>
+                <a href="?page=1" class="pagination-link" aria-label="Первая страница"><<</a>
+                <a href="?page={{ objects.previous_page_number }}" class="pagination-link" aria-label="Предыдущая страница"><</a>
                 {% endif %}
 
-                <span class="current">
-                    Страница {{ objects.number }} из {{ objects.paginator.num_pages }}.
-                </span>
+                {% for page_num in objects.paginator.page_range %}
+                    {% if page_num == objects.number %}
+                        <strong>{{ page_num }}</strong>
+                    {% else %}
+                        <a href="?page={{ page_num }}" class="pagination-link" aria-label="Страница {{ page_num }}">{{ page_num }}</a>
+                    {% endif %}
+                {% endfor %}
 
                 {% if objects.has_next %}
-                    <a href="?page={{ objects.next_page_number }}">Следующая</a>
-                    <a href="?page={{ objects.paginator.num_pages }}">Последняя</a>
+                <a href="?page={{ objects.next_page_number }}" class="pagination-link" aria-label="Следующая страница">></a>
+                <a href="?page={{ objects.paginator.num_pages }}" class="pagination-link" aria-label="Последняя страница">>></a>
                 {% endif %}
-            </span>
-        </div>
+            </div>
     </section>
     </body>
     </html>

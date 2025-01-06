@@ -52,6 +52,7 @@ INSTALLED_APPS = [
     'django_plotly_dash.apps.DjangoPlotlyDashConfig',
     'dpd_static_support',
     'channels',
+    'django_prometheus',
 ]
 
 MIDDLEWARE = [

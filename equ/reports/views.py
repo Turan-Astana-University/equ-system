@@ -58,4 +58,20 @@ class InventoryReportView(LoginRequiredMixin, AccountingUserRequiredMixin, ListV
     model = Inventory
     template_name = 'reports/report_inventorys.html'
     context_object_name = 'objects'
+    paginate_by = 5
 
+    def get(self, request, *args, **kwargs):
+        inventorys = Inventory.objects.all()
+        paginator = Paginator(inventorys, self.paginate_by)
+
+        # Получаем номер страницы из GET-параметров
+        page_number = request.GET.get('page')
+
+        # Получаем текущую страницу с данными
+        page_obj = paginator.get_page(page_number)
+
+        # Передаем контекст в шаблон
+        context = {
+            'objects': page_obj
+        }
+        return render(request, self.template_name, context)

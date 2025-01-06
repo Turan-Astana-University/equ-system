@@ -75,10 +75,12 @@ class Barcode(models.Model):
         self.barcode.save(file_name, File(final_buffer), save=False)
         super().save()
 
+
 class CategoryStatusChoices(models.TextChoices):
-    BROKEN = 'broken', ('Broken')
-    NEW = 'new', ('new')
-    RENOVATED = 'renovated', ('Renovated')
+    BROKEN = 'неисправен', ('Неисправен')
+    NEW = 'Новое', ('новое')
+    RENOVATED = 'отремонтировано', ('Отремонтировано')
+
 
 class Equipment(models.Model):
     title = models.CharField(max_length=255, verbose_name="Название")
