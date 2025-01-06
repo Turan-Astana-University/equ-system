@@ -9,18 +9,32 @@
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>Inventory</title>
     <style>
-        body {
-            font-family: Arial, sans-serif;
-            line-height: 1.6;
-            margin: 0;
-            padding: 0;
-            background-color: #f4f4f9;
-        }
+body {
+    font-family: Arial, sans-serif;
+    line-height: 1.6;
+    margin: 0;
+    padding: 0;
+    background-color: #f4f4f9;
+    display: flex;
+    flex-direction: column;
+    min-height: 100vh;
+}
 
-        section {
-            padding: 61px;
-        }
+section {
+    padding: 61px;
+    flex-grow: 1; /* позволяет разделу занимать оставшееся место */
+}
 
+footer {
+    background-color: #333;
+    color: white;
+    text-align: center;
+    padding: 10px;
+    position: relative;
+    bottom: 0;
+    width: 100%;
+    margin-top: auto; /* автоматически перемещает футер вниз */
+}
         h1.u-text-center {
             font-size: 2.5rem;
             text-align: center;
