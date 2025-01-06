@@ -1,0 +1,167 @@
+body {
+    font-family: Arial, sans-serif;
+    line-height: 1.6;
+    margin: 0;
+    padding: 0;
+    background-color: #f4f4f9;
+    display: flex;
+    flex-direction: column;
+    min-height: 100vh;
+}
+
+section {
+    padding: 61px;
+    flex-grow: 1;
+}
+
+footer {
+    background-color: #333;
+    color: white;
+    text-align: center;
+    padding: 10px;
+    position: relative;
+    bottom: 0;
+    width: 100%;
+    margin-top: auto;
+}
+
+h1.u-text-center {
+    font-size: 2.5rem;
+    text-align: center;
+    color: rgba(114, 20, 56, 0.941);
+    margin-bottom: 20px;
+    position: relative;
+    animation: fadeInDown 1s ease-in-out;
+}
+
+h1.u-text-center::after {
+    content: '';
+    display: block;
+    width: 60px;
+    height: 4px;
+    background-color: rgba(114, 20, 56, 0.941);
+    margin: 10px auto 0;
+    animation: slideIn 1.5s ease-in-out;
+}
+
+.u-table {
+    width: 100%;
+    border-collapse: collapse;
+    margin: 20px 0;
+    background: white;
+    box-shadow: 0 4px 8px rgba(0, 0, 0, 0.1);
+    border-radius: 8px;
+    overflow: hidden;
+    animation: fadeInUp 1s ease-in-out;
+}
+
+.u-table thead {
+    background-color: rgba(114, 20, 56, 0.941);
+    color: white;
+}
+
+.u-table th {
+    padding: 15px;
+    font-size: 16px;
+    text-transform: uppercase;
+}
+
+.u-table td {
+    padding: 15px;
+    text-align: center;
+    font-size: 14px;
+    background-color: #f9f9f9;
+    transition: background-color 0.3s ease;
+}
+
+.u-table tr:hover td {
+    background-color: #ffecec;
+}
+
+.u-table tr:nth-child(even) td {
+    background-color: #f3f3f3;
+}
+
+.pagination {
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    margin-top: 20px;
+    font-size: 14px;
+}
+
+.pagination a,
+.pagination strong {
+    margin: 0 5px;
+    padding: 5px 10px;
+    text-decoration: none;
+    color: #007BFF;
+    border-radius: 5px;
+    transition: background-color 0.3s ease;
+}
+
+.pagination a:hover {
+    background-color: #0056b3;
+    color: white;
+}
+
+.pagination .current-page {
+    background-color: #007BFF;
+    color: white;
+}
+
+.pagination span {
+    padding: 5px 10px;
+    color: #555;
+}
+
+@keyframes fadeInDown {
+    from {
+        opacity: 0;
+        transform: translateY(-20px);
+    }
+    to {
+        opacity: 1;
+        transform: translateY(0);
+    }
+}
+
+@keyframes slideIn {
+    from {
+        width: 0;
+        opacity: 0;
+    }
+    to {
+        width: 60px;
+        opacity: 1;
+    }
+}
+
+@keyframes fadeInUp {
+    from {
+        opacity: 0;
+        transform: translateY(20px);
+    }
+    to {
+        opacity: 1;
+        transform: translateY(0);
+    }
+}
+
+@media (max-width: 768px) {
+    .u-table th,
+    .u-table td {
+        padding: 10px;
+        font-size: 12px;
+    }
+
+    .pagination a,
+    .pagination strong {
+        padding: 3px 7px;
+        font-size: 12px;
+    }
+
+    h1.u-text-center {
+        font-size: 2rem;
+    }
+}
