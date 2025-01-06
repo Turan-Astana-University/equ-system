@@ -8,20 +8,35 @@
     <meta charset="UTF-8">
     <title>Equipment List</title>
     <style>
-        body {
-            font-family: Arial, sans-serif;
-            line-height: 1.6;
-            margin: 0;
-            padding: 0;
-            background-color: #f4f4f9;
-        }
+body {
+    font-family: Arial, sans-serif;
+    line-height: 1.6;
+    margin: 0;
+    padding: 0;
+    background-color: #f4f4f9;
+    display: flex;
+    flex-direction: column;
+    min-height: 100vh;
+}
+
+section {
+    padding: 61px;
+    flex-grow: 1; /* позволяет разделу занимать оставшееся место */
+}
+
+footer {
+    background-color: #333;
+    color: white;
+    text-align: center;
+    padding: 10px;
+    position: relative;
+    bottom: 0;
+    width: 100%;
+    margin-top: auto; /* автоматически перемещает футер вниз */
+}
         .u-section-1 .u-sheet-1{
             margin-bottom: 0px !important;
         }
-        section {
-            padding: 61px;
-        }
-
         h1.u-text-center {
             font-size: 2.5rem;
             text-align: center;
@@ -201,23 +216,23 @@
     </div>
 
         <!-- Pagination Section -->
-        <div class="pagination-links">
+        <div class="pagination">
                 {% if objects.has_previous %}
-                <a href="?page=1" class="pagination-link" aria-label="Первая страница"><<</a>
-                <a href="?page={{ objects.previous_page_number }}" class="pagination-link" aria-label="Предыдущая страница"><</a>
+                <a href="?page=1" class="pagination-link" aria-label="Первая страница">Первая</a>
+                <a href="?page={{ page_obj.previous_page_number }}">&laquo;</a>
                 {% endif %}
 
                 {% for page_num in objects.paginator.page_range %}
                     {% if page_num == objects.number %}
-                        <strong>{{ page_num }}</strong>
+                        <strong class="current-page">{{ page_num }}</strong>
                     {% else %}
-                        <a href="?page={{ page_num }}" class="pagination-link" aria-label="Страница {{ page_num }}">{{ page_num }}</a>
+                        <a href="?page={{ page_num }}" class="pagination" aria-label="Страница {{ page_num }}">{{ page_num }}</a>
                     {% endif %}
                 {% endfor %}
 
                 {% if objects.has_next %}
-                <a href="?page={{ objects.next_page_number }}" class="pagination-link" aria-label="Следующая страница">></a>
-                <a href="?page={{ objects.paginator.num_pages }}" class="pagination-link" aria-label="Последняя страница">>></a>
+                <a href="?page={{ objects.next_page_number }}" class="pagination" aria-label="Следующая страница">></a>
+                <a href="?page={{ objects.paginator.num_pages }}" class="pagination" aria-label="Последняя страница">>></a>
                 {% endif %}
             </div>
     </section>

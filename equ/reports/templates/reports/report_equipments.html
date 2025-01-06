@@ -7,7 +7,34 @@
 <head>
     <meta charset="UTF-8">
     <title>Equipment List</title>
-<style>.filter-form {
+<style>
+body {
+    font-family: Arial, sans-serif;
+    line-height: 1.6;
+    margin: 0;
+    padding: 0;
+    background-color: #f4f4f9;
+    display: flex;
+    flex-direction: column;
+    min-height: 100vh;
+}
+
+section {
+    padding: 61px;
+    flex-grow: 1; /* позволяет разделу занимать оставшееся место */
+}
+
+footer {
+    background-color: #333;
+    color: white;
+    text-align: center;
+    padding: 10px;
+    position: relative;
+    bottom: 0;
+    width: 100%;
+    margin-top: auto; /* автоматически перемещает футер вниз */
+}
+.filter-form {
     display: flex !important;
     justify-content: center !important;
     margin-bottom: 20px !important;

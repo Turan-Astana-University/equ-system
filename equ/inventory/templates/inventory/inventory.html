@@ -3,13 +3,37 @@
 {% block css %}
 <link rel="stylesheet" href="{% static 'css/Инвентаризация.css' %}" media="screen">
 <style>
+body {
+    font-family: Arial, sans-serif;
+    line-height: 1.6;
+    margin: 0;
+    padding: 0;
+    background-color: #f4f4f9;
+    display: flex;
+    flex-direction: column;
+    min-height: 100vh;
+}
 
+section {
+    padding: 61px;
+    flex-grow: 1; /* позволяет разделу занимать оставшееся место */
+}
+
+footer {
+    background-color: #333;
+    color: white;
+    text-align: center;
+    padding: 10px;
+    position: relative;
+    bottom: 0;
+    width: 100%;
+    margin-top: auto; /* автоматически перемещает футер вниз */
+}
 
 .u-section-inventory {
     display: flex !important;
     justify-content: center !important;
     align-items: center !important;
-    min-height: 100vh !important;
     padding: 20px !important;
     background: linear-gradient(135deg, #721438) !important;
 

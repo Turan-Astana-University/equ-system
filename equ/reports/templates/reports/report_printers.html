@@ -6,6 +6,33 @@
     <meta charset="UTF-8">
     <title>Inventory</title>
     <style>
+body {
+    font-family: Arial, sans-serif;
+    line-height: 1.6;
+    margin: 0;
+    padding: 0;
+    background-color: #f4f4f9;
+    display: flex;
+    flex-direction: column;
+    min-height: 100vh;
+}
+
+section {
+    padding: 61px;
+    flex-grow: 1; /* позволяет разделу занимать оставшееся место */
+}
+
+footer {
+    background-color: #333;
+    color: white;
+    text-align: center;
+    padding: 10px;
+    position: relative;
+    bottom: 0;
+    width: 100%;
+    margin-top: auto; /* автоматически перемещает футер вниз */
+}
+
 .filter-container {
     display: flex;
     gap: 10px;
@@ -234,32 +261,6 @@
             </div>
         </div>
     </section>
-    
-        <!-- Pagination -->
-           <!-- Pagination -->
-           <div class="pagination">
-            <span>Страница {{ objects.number }} из {{ objects.paginator.num_pages }}</span>
-            <div>
-                {% if objects.has_previous %}
-                <a href="?page=1" aria-label="First page"><<</a>
-                <a href="?page={{ objects.previous_page_number }}" aria-label="Previous page"><</a>
-                {% endif %}
-
-                {% for page_num in objects.paginator.page_range %}
-                {% if page_num == objects.number %}
-                <strong>{{ page_num }}</strong>
-                {% else %}
-                <a href="?page={{ page_num }}" aria-label="Page {{ page_num }}">{{ page_num }}</a>
-                {% endif %}
-                {% endfor %}
-
-                {% if objects.has_next %}
-                <a href="?page={{ objects.next_page_number }}" aria-label="Next page">></a>
-                <a href="?page={{ objects.paginator.num_pages }}" aria-label="Last page"> >></a>
-                {% endif %}
-            </div>
-        </div>
-</section>
 <script>document.getElementById("filter-form").addEventListener("submit", function(event) {
     event.preventDefault();
     
