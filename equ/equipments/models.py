@@ -75,6 +75,10 @@ class Barcode(models.Model):
         self.barcode.save(file_name, File(final_buffer), save=False)
         super().save()
 
+class CategoryStatusChoices(models.TextChoices):
+    BROKEN = 'broken', ('Broken')
+    NEW = 'new', ('new')
+    RENOVATED = 'renovated', ('Renovated')
 
 class Equipment(models.Model):
     title = models.CharField(max_length=255, verbose_name="Название")
@@ -87,6 +91,7 @@ class Equipment(models.Model):
     responsible = models.ForeignKey(User, on_delete=models.CASCADE, null=True, blank=True, verbose_name="Ответственное лицо")
     image = models.ImageField(upload_to='equipment_images/', null=True, blank=True, verbose_name="Изображение")
     is_true_position = models.BooleanField(default=True, null=True, blank=True)
+    status = models.CharField(max_length=144, choices=CategoryStatusChoices.choices, default=CategoryStatusChoices.NEW)
 
     class Meta:
         verbose_name = "Оборудование"
