@@ -231,8 +231,8 @@ footer {
                 {% endfor %}
 
                 {% if objects.has_next %}
-                <a href="?page={{ objects.next_page_number }}" class="pagination" aria-label="Следующая страница">></a>
-                <a href="?page={{ objects.paginator.num_pages }}" class="pagination" aria-label="Последняя страница">>></a>
+                <a href="?page={{ page_obj.next_page_number }}">&raquo;</a>
+                <a href="?page={{ page_obj.paginator.num_pages }}">Последняя</a>
                 {% endif %}
             </div>
     </section>

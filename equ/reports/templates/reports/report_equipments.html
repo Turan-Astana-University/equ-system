@@ -41,7 +41,7 @@ footer {
   }
   
   .filter-container {
-    display: flex !important;
+    display: flex;
         gap: 10px !important;
         justify-content: center !important;
         margin-bottom: 20px;
@@ -237,27 +237,6 @@ footer {
             <h1 class="u-text-center">Отчет по оборудованию</h1>
             
       
-            <form method="get" id="filter-form" class="filter-form">
-                <div class="filter-container">
-                    <div class="filter-group">
-                        <label for="filter-id">ID</label>
-                        <input type="text" id="filter-id" name="id" class="input-field" placeholder="Введите ID">
-                    </div>
-                    <div class="filter-group">
-                        <label for="filter-title">Наименование</label>
-                        <input type="text" id="filter-title" name="title" class="input-field" placeholder="Введите наименование">
-                    </div>
-                    <div class="filter-group">
-                        <label for="filter-location">Местоположение</label>
-                        <input type="text" id="filter-location" name="location" class="input-field" placeholder="Введите местоположение">
-                    </div>
-                    <div class="filter-group">
-                        <label for="filter-responsible">Ответственный</label>
-                        <input type="text" id="filter-responsible" name="responsible" class="input-field" placeholder="Введите ответственного">
-                    </div>
-                    <button type="submit" class="submit-button">Применить фильтр</button>
-                </div>
-            </form>
     
             <div class="table-container">
                 <table id="nonfound" class="u-table">
@@ -285,66 +264,29 @@ footer {
             </div>
         </div>
     
-        <!-- Пагинация -->
+
+        <!-- Pagination Section -->
         <div class="pagination">
-            <span>Страница {{ objects.number }} из {{ objects.paginator.num_pages }}</span>
-            <div class="pagination-links">
-                {% if objects.has_previous %}
-                <a href="?page=1" class="pagination-link" aria-label="Первая страница"><<</a>
-                <a href="?page={{ objects.previous_page_number }}" class="pagination-link" aria-label="Предыдущая страница"><</a>
+            {% if objects.has_previous %}
+            <a href="?page=1" class="pagination-link" aria-label="Первая страница">Первая</a>
+            <a href="?page={{ page_obj.previous_page_number }}">&laquo;</a>
+            {% endif %}
+
+            {% for page_num in objects.paginator.page_range %}
+                {% if page_num == objects.number %}
+                    <strong class="current-page">{{ page_num }}</strong>
+                {% else %}
+                    <a href="?page={{ page_num }}" class="pagination" aria-label="Страница {{ page_num }}">{{ page_num }}</a>
                 {% endif %}
-    
-                {% for page_num in objects.paginator.page_range %}
-                    {% if page_num == objects.number %}
-                        <strong>{{ page_num }}</strong>
-                    {% else %}
-                        <a href="?page={{ page_num }}" class="pagination-link" aria-label="Страница {{ page_num }}">{{ page_num }}</a>
-                    {% endif %}
-                {% endfor %}
-    
-                {% if objects.has_next %}
-                <a href="?page={{ objects.next_page_number }}" class="pagination-link" aria-label="Следующая страница">></a>
-                <a href="?page={{ objects.paginator.num_pages }}" class="pagination-link" aria-label="Последняя страница">>></a>
-                {% endif %}
-            </div>
+            {% endfor %}
+
+            {% if objects.has_next %}
+            <a href="?page={{ page_obj.next_page_number }}">&raquo;</a>
+            <a href="?page={{ page_obj.paginator.num_pages }}">Последняя</a>
+            {% endif %}
+        </div>
         </div>
     </section>
-    
-    <script>
-document.getElementById("filter-form").addEventListener("submit", function(event) {
-    event.preventDefault();
-    
-    
-    let filterId = document.getElementById("filter-id").value.toLowerCase();
-    let filterTitle = document.getElementById("filter-title").value.toLowerCase();
-    let filterLocation = document.getElementById("filter-location").value.toLowerCase();
-    let filterResponsible = document.getElementById("filter-responsible").value.toLowerCase();
-
- 
-    let rows = document.querySelectorAll("#nonfound .table-row");
-    
-  
-    rows.forEach(function(row) {
-        let id = row.cells[0].textContent.toLowerCase();
-        let title = row.cells[1].textContent.toLowerCase();
-        let location = row.cells[2].textContent.toLowerCase();
-        let responsible = row.cells[3].textContent.toLowerCase();
-
-        if (
-            (filterId === "" || id.includes(filterId)) &&
-            (filterTitle === "" || title.includes(filterTitle)) &&
-            (filterLocation === "" || location.includes(filterLocation)) &&
-            (filterResponsible === "" || responsible.includes(filterResponsible))
-        ) {
-            row.style.display = "";
-        } else {
-            row.style.display = "none";
-        }
-    });
-});
-
-    
-    </script>   
 </body>
 </html>
 {% endblock %}
