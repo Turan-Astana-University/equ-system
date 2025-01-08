@@ -18,10 +18,8 @@ def create_file(request, inventory):
     # Фильтруем данные операций
     filtered_data = Operation.objects.filter(
         date__gte=inventory.date_start,
-        date__lte=inventory.date_end
-    ).filter(
-        ~Q(operation_type=OperationCategoryChoices.RELEASE_CARTRIDGE) &
-        ~Q(operation_type=OperationCategoryChoices.RELEASE_EQUIPMENT)
+        date__lte=inventory.date_end,
+        operation_type__in=['INVENTORY', 'MOVED_WITHOUT_NOTICE']
     )
 
     # Фильтруем данные оборудования, которые не найдены
