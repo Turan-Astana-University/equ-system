@@ -15,10 +15,6 @@ from .mixin import AccountingUserRequiredMixin
 from django.views.generic import ListView
 
 
-# Create your views here.
-
-
-# Класс для списка оборудования
 
 class EquipmentReportView(LoginRequiredMixin, AccountingUserRequiredMixin, ListView):
     model = Equipment
