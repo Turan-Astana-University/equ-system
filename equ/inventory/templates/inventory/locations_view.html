@@ -28,6 +28,16 @@
 
 <link rel="stylesheet" href="{% static 'css/Инвентаризация-аудитория.css' %}" media="screen">
 <style>
+.status-passed {
+    background-color: #d4edda; /* Light green background */
+    color: green; /* Dark green text */
+    font-weight: bold; /* Optional: make text bold for emphasis */
+}
+.status-not-passed {
+    background-color: #f8d7da; /* Light red background */
+    color: red;
+    font-weight: bold; /* Optional: make text bold for emphasis */
+}
     body {
         font-family: 'Roboto', Arial, sans-serif;
         line-height: 1.6;
@@ -378,8 +388,7 @@ h1.u-text-center {
                             {{ loc.responsible }}</td>
                         <td>
                             {{ loc.category }}</td>
-                        <td>
-                          Не пройдено </td>
+                        <td class="status-not-passed">Не пройдено </td>
                         <td>
                             <a href="{% url 'location_detail' loc.pk %}">Перейти</a></td>
                       </tr>
@@ -420,7 +429,7 @@ h1.u-text-center {
                         <td>{{ loc.title }}</td>
                         <td>{{ loc.responsible }}</td>
                         <td>{{ loc.category }}</td>
-                        <td>Пройдено</td>
+                        <td class = "status-passed">Пройдено</td>
                         <td><a href="{% url 'location_detail' loc.pk %}">Перейти</a></td>
                       </tr>
                       {% endfor %}
