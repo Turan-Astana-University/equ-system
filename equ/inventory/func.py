@@ -9,6 +9,7 @@ from django.http import HttpResponse
 from reports.models import Report, CategoryChoices
 from django.utils.timezone import now
 from django.core.files.base import ContentFile
+from operations.models import OperationCategoryChoices
 
 
 def create_file(request, inventory):
@@ -18,8 +19,9 @@ def create_file(request, inventory):
     # Фильтруем данные операций
     filtered_data = Operation.objects.filter(
         date__gte=inventory.date_start,
-        operation_type__in=['INVENTORY', 'MOVED_WITHOUT_NOTICE']
+        operation_type__in=[OperationCategoryChoices.INVENTORY, OperationCategoryChoices.MOVED_WITHOUT_NOTICE]
     )
+    print(filtered_data)
 
     # Фильтруем данные оборудования, которые не найдены
     equipments_non_found = Equipment.objects.filter(
