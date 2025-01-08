@@ -23,7 +23,7 @@ def create_file(request, inventory):
 
     # Фильтруем данные оборудования, которые не найдены
     equipments_non_found = Equipment.objects.filter(
-        Q(date_last_invent__lte=inventory.date_start) | Q(date_last_invent__isnull=True)
+        Q(date_last_invent__isnull=True)
     )
 
     # Добавляем строки для операций
