@@ -392,7 +392,7 @@ body { font-family: Arial, sans-serif;
         <div class="pagination">
             {% if objects.has_previous %}
             <a href="?page=1" class="pagination-link" aria-label="Первая страница">Первая</a>
-            <a href="?page={{ page_obj.previous_page_number }}">&laquo;</a>
+            <a href="?page={{ objects.previous_page_number }}">&laquo;</a>
             {% endif %}
 
             {% for page_num in objects.paginator.page_range %}
@@ -404,8 +404,8 @@ body { font-family: Arial, sans-serif;
             {% endfor %}
 
             {% if objects.has_next %}
-            <a href="?page={{ page_obj.next_page_number }}">&raquo;</a>
-            <a href="?page={{ page_obj.paginator.num_pages }}">Последняя</a>
+            <a href="?page={{ objects.next_page_number }}">&raquo;</a>
+            <a href="?page={{ objects.paginator.num_pages }}">Последняя</a>
             {% endif %}
         </div>
         </div>
