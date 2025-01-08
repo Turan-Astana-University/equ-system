@@ -15,7 +15,6 @@ from .mixin import AccountingUserRequiredMixin
 from django.views.generic import ListView
 
 
-
 class EquipmentReportView(LoginRequiredMixin, AccountingUserRequiredMixin, ListView):
     model = Equipment
     template_name = 'reports/report_equipments.html'

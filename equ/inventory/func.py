@@ -2,7 +2,7 @@ from datetime import datetime
 from django.db.models import Q
 from equipments.models import Equipment
 from inventory.models import Inventory
-from operations.models import Operation
+from operations.models import Operation, OperationCategoryChoices
 import pandas as pd
 from io import BytesIO
 from django.http import HttpResponse
@@ -29,6 +29,9 @@ def create_file(request, inventory):
     filtered_data = Operation.objects.filter(
         date__gte=inventory.date_start,
         date__lte=inventory.date_end
+    ).filter(
+        ~Q(operation_type=OperationCategoryChoices.RELEASE_CARTRIDGE) &
+        ~Q(operation_type=OperationCategoryChoices.RELEASE_EQUIPMENT)
     )
     equipments_non_found = Equipment.objects.filter(
     Q(date_last_invent__lte=inventory.date_start) | Q(date_last_invent__isnull=True)

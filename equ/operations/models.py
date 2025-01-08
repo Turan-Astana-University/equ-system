@@ -2,6 +2,7 @@ from django.db import models
 from equipments.models import Equipment, Cartridge
 from locations.models import Location
 from users.models import User
+
 # Create your models here.
 
 
