@@ -297,7 +297,15 @@ h1.u-text-center {
             margin: 10px auto 0;
             animation: slideIn 1.5s ease-in-out;
         }
-
+        .status-passed {
+    background-color: #d4edda; /* Light green background */
+    color: green; /* Dark green text */
+    font-weight: bold; /* Optional: make text bold for emphasis */
+}
+.status-not-passed {
+    background-color: #f8d7da; /* Light red background */
+    color: red;
+}
 </style>
     <script type="application/ld+json">{
 		"@context": "http://schema.org",
@@ -378,7 +386,7 @@ h1.u-text-center {
                                         <td>{{ equ.title }}</td>
                                         <td>{{ equ.responsible }} - {{ equ.responsible.first_name }} {{ equ.responsible.last_name }}</td>
                                         <td>{{ equ.category }}</td>
-                                        <td>Не найдено</td>
+                                        <td class = "status-not-passed">Не найдено</td>
                                         
                                       </tr>
                                   {% endfor %}
@@ -414,7 +422,7 @@ h1.u-text-center {
                                         <td>{{ equ.title }}</td>
                                         <td>{{ equ.responsible }} - {{ equ.responsible.first_name }}</td>
                                         <td>{{ equ.category }}</td>
-                                        <td>Найдено</td>
+                                        <td class = "status-passed">Найдено</td>
                                         
                                       </tr>
                                   {% endfor %}
