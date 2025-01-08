@@ -6,6 +6,9 @@
 
 <head>
     <meta charset="UTF-8">
+    <link rel="icon" href="/equ-system/equ/static/images/icon.png" type="image/x-icon">
+    <link rel="shortcut icon" href="/equ-system/equ/static/images/icon.png" type="image/x-icon">
+
     <title>Equipment List</title>
 <style>
 body {
@@ -235,7 +238,8 @@ footer {
     <section class="u-align-center u-clearfix u-grey-10 u-section-1" id="sec-c79d">
         <div class="u-clearfix u-sheet u-sheet-1">
             <h1 class="u-text-center">Отчет по оборудованию</h1>
-            
+            <a href="{% url 'export_excel' %}" class="u-btn u-btn-primary">Экспорт в Excel</a>
+
       
     
             <div class="table-container">
