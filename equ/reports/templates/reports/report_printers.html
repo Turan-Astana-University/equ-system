@@ -6,8 +6,97 @@
     <meta charset="UTF-8">
     <link rel="icon" href="/equ-system/equ/static/images/icon.png" type="image/x-icon">
     <link rel="shortcut icon" href="/equ-system/equ/static/images/icon.png" type="image/x-icon">
+    <!-- Подключение стилей и скриптов Select2 -->
+   <link href="https://cdnjs.cloudflare.com/ajax/libs/select2/4.0.13/css/select2.min.css" rel="stylesheet" />
+   <script src="https://cdnjs.cloudflare.com/ajax/libs/jquery/3.6.0/jquery.min.js"></script>
+   <script src="https://cdnjs.cloudflare.com/ajax/libs/select2/4.0.13/js/select2.min.js"></script>
+
     <title>Inventory</title>
     <style>
+.filter-form {
+    margin: 30px auto;
+    padding: 30px;
+    background-color: #ffffff;
+    border-radius: 12px;
+    box-shadow: 0 4px 20px rgba(0, 0, 0, 0.1);
+    max-width: 1200px;
+}
+
+.filter-container {
+    display: flex;
+    flex-wrap: wrap;
+    gap: 25px;
+    justify-content: space-between;
+}
+
+.filter-input {
+    flex: 1 1 calc(25% - 30px);
+    min-width: 250px;
+    margin-bottom: 20px;
+}
+
+.filter-input label {
+    display: block;
+    font-size: 15px;
+    font-weight: bold;
+    color: #333;
+    margin-bottom: 8px;
+    text-transform: uppercase;
+}
+.select2-container--default .select2-selection--multiple .select2-selection__choice{
+
+    font-size: 14px;            /* Размер шрифта */
+
+}
+.filter-select {
+    width: 100%;
+    padding: 12px;
+    font-size: 8px;  /* Уменьшили размер шрифта */
+    color: #555;
+    border-radius: 8px;
+    border: 1px solid #ccc;
+    background-color: #f9f9f9;
+    transition: all 0.3s ease;
+    overflow: hidden;
+    text-overflow: ellipsis;  /* Добавление многоточия для длинных названий */
+    white-space: nowrap;  /* Обрезка текста на одну строку */
+}
+
+.filter-select:hover, .filter-select:focus {
+    border-color: rgba(114, 20, 56, 0.941);
+    box-shadow: 0 0 8px rgba(176, 137, 67, 0.3);
+}
+
+.filter-button {
+    padding: 12px 30px;
+    background-color: rgba(114, 20, 56, 0.941);
+    color: white;
+    font-size: 16px;
+    font-weight: bold;
+    border: none;
+    border-radius: 8px;
+    cursor: pointer;
+    transition: background-color 0.3s ease;
+    text-align: center;
+    margin-top: 20px;
+    display: inline-block;
+}
+
+.filter-button:hover {
+    background-color: rgba(114, 20, 56, 0.941);
+}
+
+/* Мобильная адаптивность */
+@media (max-width: 768px) {
+    .filter-input {
+        flex: 1 1 100%;
+    }
+    .filter-button {
+        width: auto;
+        margin-top: 20px;
+    }
+}
+
         .icon {
   background-image: url('/equ-system/equ/static/images/icon.png"');
   background-size: cover;
@@ -41,36 +130,7 @@ footer {
     width: 100%;
     margin-top: auto; /* автоматически перемещает футер вниз */
 }
-
-.filter-container {
-    display: flex;
-    gap: 10px;
-    justify-content: center;
-    margin-bottom: 20px;
-}
-
-.filter-input {
-    padding: 8px;
-    font-size: 14px;
-    border: 1px solid #ccc;
-    border-radius: 5px;
-}
-
-.filter-button {
-    padding: 8px 12px;
-    border: none;
-    background-color: rgba(114, 20, 56, 0.941);
-    color: white;
-    border-radius: 5px;
-    cursor: pointer;
-}
-
-.filter-button:hover {
-    background-color: #0056b3;
-}
-
-        body {
-            font-family: Arial, sans-serif;
+body { font-family: Arial, sans-serif;
             line-height: 1.6;
             margin: 0;
             padding: 0;
@@ -228,16 +288,43 @@ footer {
         <div class="u-clearfix u-sheet u-sheet-1">
             <h1 class="u-text-center">Отчет по принтерам</h1>
             
-            <!-- Форма для фильтрации -->
-            <form id="filter-form" class="filter-form">
-                <div class="filter-container">
-                    <input type="text" id="filter-id" class="filter-input" placeholder="Фильтр по ID" />
-                    <input type="text" id="filter-title" class="filter-input" placeholder="Фильтр по наименованию" />
-                    <input type="text" id="filter-location" class="filter-input" placeholder="Фильтр по местоположению" />
-                    <input type="text" id="filter-responsible" class="filter-input" placeholder="Фильтр по ответственному сотруднику" />
-                    <button type="submit" class="filter-button">Применить фильтр</button>
-                </div>
-            </form>
+<!-- Форма для фильтрации -->
+<form id="filter-form" class="filter-form">
+    <div class="filter-container">
+        <div class="filter-input">
+            <label for="select-title">Фильтр по наименованию</label>
+            <select class="filter-select" multiple id="select-title">
+                {% for equ in objects %}
+                    <option value="{{ equ.title }}">{{ equ.title }}</option>
+                {% endfor %}
+            </select>
+        </div>
+
+        <div class="filter-input">
+            <label for="select-location">Фильтр по местоположению</label>
+            <select class="filter-select" multiple id="select-location">
+                {% for equ in objects %}
+                    <option value="{{ equ.location }}">{{ equ.location }}</option>
+                {% endfor %}
+            </select>
+        </div>
+
+        <div class="filter-input">
+            <label for="select-responsible">Сотрудник</label>
+            <select class="filter-select" multiple id="select-responsible">
+                {% for equ in objects %}
+                    <option value="{{ equ.responsible.first_name }} {{ equ.responsible.last_name }}">
+                        {{ equ.responsible.first_name }} {{ equ.responsible.last_name }}
+                    </option>
+                {% endfor %}
+            </select>
+        </div>
+    </div>
+    <button type="submit" class="filter-button">Применить фильтр</button>
+</form>
+
+
+
     
             <!-- Таблица с данными -->
             <div class="table-container">
@@ -271,34 +358,57 @@ footer {
         </div>
         
     </section>
-<script>document.getElementById("filter-form").addEventListener("submit", function(event) {
-    event.preventDefault();
+<script src="https://code.jquery.com/jquery-3.6.0.min.js"></script>
+<script src="https://cdn.jsdelivr.net/npm/select2@4.0.13/dist/js/select2.min.js"></script>
+<script>
+    $(document).ready(function() {
+        // Убираем дубликаты из списка select
+        $('#select-title, #select-location, #select-responsible').each(function() {
+            var seen = {};
+            $(this).find('option').each(function() {
+                var value = $(this).val();
+                if (seen[value]) {
+                    $(this).remove();
+                } else {
+                    seen[value] = true;
+                }
+            });
+        });
     
-    let filterId = document.getElementById("filter-id").value.toLowerCase();
-    let filterTitle = document.getElementById("filter-title").value.toLowerCase();
-    let filterLocation = document.getElementById("filter-location").value.toLowerCase();
-    let filterResponsible = document.getElementById("filter-responsible").value.toLowerCase();
-
-    let rows = document.querySelectorAll("#nonfound .table-row");
-    rows.forEach(function(row) {
-        let id = row.cells[0].textContent.toLowerCase();
-        let title = row.cells[1].textContent.toLowerCase();
-        let location = row.cells[2].textContent.toLowerCase();
-        let responsible = row.cells[3].textContent.toLowerCase();
-
-        if (
-            (filterId === "" || id.includes(filterId)) &&
-            (filterTitle === "" || title.includes(filterTitle)) &&
-            (filterLocation === "" || location.includes(filterLocation)) &&
-            (filterResponsible === "" || responsible.includes(filterResponsible))
-        ) {
-            row.style.display = "";
-        } else {
-            row.style.display = "none";
-        }
+        $(".filter-select").select2({
+            placeholder: "Выберите опции",
+            allowClear: true
+        });
+    
+        // Обработка отправки формы фильтрации
+        $("#filter-form").on("submit", function(event) {
+            event.preventDefault();
+    
+            let selectedTitles = $("#select-title").val() || [];
+            let selectedLocations = $("#select-location").val() || [];
+            let selectedResponsibles = $("#select-responsible").val() || [];
+    
+            let rows = document.querySelectorAll("#nonfound .table-row");
+            rows.forEach(function(row) {
+                let title = row.cells[1].textContent.trim().toLowerCase();
+                let location = row.cells[2].textContent.trim().toLowerCase();
+                let responsible = row.cells[3].textContent.trim().toLowerCase();
+    
+                let matchesTitle = selectedTitles.length === 0 || selectedTitles.some(titleValue => titleValue.toLowerCase() === title);
+                let matchesLocation = selectedLocations.length === 0 || selectedLocations.some(locationValue => locationValue.toLowerCase() === location);
+                let matchesResponsible = selectedResponsibles.length === 0 || selectedResponsibles.some(responsibleValue => responsibleValue.toLowerCase() === responsible);
+    
+                if (matchesTitle && matchesLocation && matchesResponsible) {
+                    row.style.display = "";
+                } else {
+                    row.style.display = "none";
+                }
+            });
+        });
     });
-});
-</script>
+    </script>
+    
+    
 </body>
 </html>
 {% endblock %}
