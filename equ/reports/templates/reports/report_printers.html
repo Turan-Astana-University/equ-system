@@ -43,6 +43,45 @@
     margin-bottom: 8px;
     text-transform: uppercase;
 }
+/* Изменения для улучшенного вида выбора */
+.select2-container--default .select2-selection--multiple .select2-selection__choice {
+    background-color: rgba(114, 20, 56, 0.941);
+    color: white; /* Белый текст */
+    border: 2px solid rgba(114, 20, 56, 0.941);
+    border-radius: 15px; /* Закругленные углы */
+    padding: 5px 10px; /* Добавлен отступ */
+    font-size: 14px; /* Немного уменьшен шрифт */
+    margin: 3px; /* Добавлен небольшой отступ между элементами */
+    display: inline-block;
+    transition: all 0.3s ease; /* Плавное изменение при наведении */
+}
+
+/* Эффект при наведении на элемент */
+.select2-container--default .select2-selection--multiple .select2-selection__choice:hover {
+    background-color: rgba(114, 20, 56, 0.941);
+    cursor: pointer; /* Указатель при наведении */
+    transform: scale(1.05); /* Легкое увеличение при наведении */
+}
+
+/* Эффект при удалении элемента */
+.select2-container--default .select2-selection--multiple .select2-selection__choice__remove {
+    color: #FF5722; /* Красный цвет для крестика */
+    font-size: 18px; /* Увеличен размер крестика */
+    margin-left: 10px; /* Отступ для крестика */
+    transition: color 0.3s ease;
+}
+
+/* Эффект при наведении на крестик */
+.select2-container--default .select2-selection--multiple .select2-selection__choice__remove:hover {
+    color: #D32F2F; /* Темно-красный при наведении */
+}
+
+/* Стилизация фокуса */
+.select2-container--default .select2-selection--multiple:focus-within {
+    border-color: rgba(114, 20, 56, 0.941);
+    box-shadow: 0 0 5px rgba(114, 20, 56, 0.941);
+}
+
 .select2-container--default .select2-selection--multiple .select2-selection__choice{
 
     font-size: 14px;            /* Размер шрифта */

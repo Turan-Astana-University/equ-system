@@ -8,9 +8,141 @@
     <meta charset="UTF-8">
     <link rel="icon" href="/equ-system/equ/static/images/icon.png" type="image/x-icon">
     <link rel="shortcut icon" href="/equ-system/equ/static/images/icon.png" type="image/x-icon">
-
+    <link href="https://cdnjs.cloudflare.com/ajax/libs/select2/4.0.13/css/select2.min.css" rel="stylesheet" />
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/jquery/3.6.0/jquery.min.js"></script>
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/select2/4.0.13/js/select2.min.js"></script>
     <title>Equipment List</title>
 <style>
+.filter-form {
+    margin: 30px auto;
+    padding: 30px;
+    background-color: #ffffff;
+    border-radius: 12px;
+    box-shadow: 0 4px 20px rgba(0, 0, 0, 0.1);
+    max-width: 1200px;
+}
+
+.filter-container {
+    display: flex;
+    flex-wrap: wrap;
+    gap: 25px;
+    justify-content: space-between;
+}
+
+.filter-input {
+    flex: 1 1 calc(25% - 30px);
+    min-width: 250px;
+    margin-bottom: 20px;
+}
+
+.filter-input label {
+    display: block;
+    font-size: 15px;
+    font-weight: bold;
+    color: #333;
+    margin-bottom: 8px;
+    text-transform: uppercase;
+}
+/* Изменения для улучшенного вида выбора */
+.select2-container--default .select2-selection--multiple .select2-selection__choice {
+    background-color: rgba(114, 20, 56, 0.941);
+    color: white; /* Белый текст */
+    border: 2px solid rgba(114, 20, 56, 0.941);
+    border-radius: 15px; /* Закругленные углы */
+    padding: 5px 10px; /* Добавлен отступ */
+    font-size: 14px; /* Немного уменьшен шрифт */
+    margin: 3px; /* Добавлен небольшой отступ между элементами */
+    display: inline-block;
+    transition: all 0.3s ease; /* Плавное изменение при наведении */
+}
+
+/* Эффект при наведении на элемент */
+.select2-container--default .select2-selection--multiple .select2-selection__choice:hover {
+    background-color: rgba(114, 20, 56, 0.941);
+    cursor: pointer; /* Указатель при наведении */
+    transform: scale(1.05); /* Легкое увеличение при наведении */
+}
+
+/* Эффект при удалении элемента */
+.select2-container--default .select2-selection--multiple .select2-selection__choice__remove {
+    color: #FF5722; /* Красный цвет для крестика */
+    font-size: 18px; /* Увеличен размер крестика */
+    margin-left: 10px; /* Отступ для крестика */
+    transition: color 0.3s ease;
+}
+
+/* Эффект при наведении на крестик */
+.select2-container--default .select2-selection--multiple .select2-selection__choice__remove:hover {
+    color: #D32F2F; /* Темно-красный при наведении */
+}
+
+/* Стилизация фокуса */
+.select2-container--default .select2-selection--multiple:focus-within {
+    border-color: rgba(114, 20, 56, 0.941);
+    box-shadow: 0 0 5px rgba(114, 20, 56, 0.941);
+}
+
+.select2-container--default .select2-selection--multiple .select2-selection__choice{
+
+    font-size: 14px;            /* Размер шрифта */
+
+}
+.filter-select {
+    width: 100%;
+    padding: 12px;
+    font-size: 8px;  /* Уменьшили размер шрифта */
+    color: #555;
+    border-radius: 8px;
+    border: 1px solid #ccc;
+    background-color: #f9f9f9;
+    transition: all 0.3s ease;
+    overflow: hidden;
+    text-overflow: ellipsis;  /* Добавление многоточия для длинных названий */
+    white-space: nowrap;  /* Обрезка текста на одну строку */
+}
+
+.filter-select:hover, .filter-select:focus {
+    border-color: rgba(114, 20, 56, 0.941);
+    box-shadow: 0 0 8px rgba(176, 137, 67, 0.3);
+}
+
+.filter-button {
+    padding: 12px 30px;
+    background-color: rgba(114, 20, 56, 0.941);
+    color: white;
+    font-size: 16px;
+    font-weight: bold;
+    border: none;
+    border-radius: 8px;
+    cursor: pointer;
+    transition: background-color 0.3s ease;
+    text-align: center;
+    margin-top: 20px;
+    display: inline-block;
+}
+
+.filter-button:hover {
+    background-color: rgba(114, 20, 56, 0.941);
+}
+
+/* Мобильная адаптивность */
+@media (max-width: 768px) {
+    .filter-input {
+        flex: 1 1 100%;
+    }
+    .filter-button {
+        width: auto;
+        margin-top: 20px;
+    }
+}
+
+        .icon {
+  background-image: url('/equ-system/equ/static/images/icon.png"');
+  background-size: cover;
+  width: 50px;
+  height: 50px;
+  display: inline-block;
+}
 body {
     font-family: Arial, sans-serif;
     line-height: 1.6;
@@ -37,61 +169,17 @@ footer {
     width: 100%;
     margin-top: auto; /* автоматически перемещает футер вниз */
 }
-.filter-form {
-    display: flex !important;
-    justify-content: center !important;
-    margin-bottom: 20px !important;
-  }
-  
-  .filter-container {
-    display: flex;
-        gap: 10px !important;
-        justify-content: center !important;
-        margin-bottom: 20px;
-  }
-  
-  .filter-group {
-    flex: 1;
-    min-width: 200px;
-  }
-  
-  .input-field {
-    padding: 8px;
-    width: 100%;
-    font-size: 14px;
-    border: 1px solid #ccc;
-    border-radius: 5px;
-    background-color: #f9f9f9;
-  }
-  
-  .submit-button {
-    padding: 8px 12px;
-        border: none;
-        background-color: rgba(114, 20, 56, 0.941) !important;
-        color: white;
-        border-radius: 5px;
-        cursor: pointer;
-  }
-  
-  .submit-button:hover {
-    background-color: rgba(114, 20, 56, 0.941) !important;
-  }
-  
-        .u-section-1 .u-sheet-1{
-            margin-bottom: 0 !important;
-        }
-        body {
-            font-family: Arial, sans-serif;
+body { font-family: Arial, sans-serif;
             line-height: 1.6;
             margin: 0;
             padding: 0;
             background-color: #f4f4f9;
         }
-  
+
         section {
             padding: 61px;
         }
-  
+
         h1.u-text-center {
             font-size: 2.5rem;
             text-align: center;
@@ -100,7 +188,7 @@ footer {
             position: relative;
             animation: fadeInDown 1s ease-in-out;
         }
-  
+
         h1.u-text-center::after {
             content: '';
             display: block;
@@ -110,7 +198,7 @@ footer {
             margin: 10px auto 0;
             animation: slideIn 1.5s ease-in-out;
         }
-  
+
         .u-table {
             width: 100%;
             border-collapse: collapse;
@@ -121,18 +209,18 @@ footer {
             overflow: hidden;
             animation: fadeInUp 1s ease-in-out;
         }
-  
+
         .u-table thead {
-            background-color: rgba(114, 20, 56, 0.941) !important;
-            color: white !important;
+            background-color: rgba(114, 20, 56, 0.941);
+            color: white;
         }
-  
+
         .u-table th {
             padding: 15px;
             font-size: 16px;
             text-transform: uppercase;
         }
-  
+
         .u-table td {
             padding: 15px;
             text-align: center;
@@ -140,15 +228,15 @@ footer {
             background-color: #f9f9f9;
             transition: background-color 0.3s ease;
         }
-  
+
         .u-table tr:hover td {
             background-color: #ffecec;
         }
-  
+
         .u-table tr:nth-child(even) td {
             background-color: #f3f3f3;
         }
-  
+
         .pagination {
             display: flex;
             justify-content: center;
@@ -156,7 +244,7 @@ footer {
             margin-top: 20px;
             font-size: 14px;
         }
-  
+
         .pagination a,
         .pagination strong {
             margin: 0 5px;
@@ -166,22 +254,22 @@ footer {
             border-radius: 5px;
             transition: background-color 0.3s ease;
         }
-  
+
         .pagination a:hover {
             background-color: #0056b3;
             color: white;
         }
-  
+
         .pagination .current-page {
             background-color: #007BFF;
             color: white;
         }
-  
+
         .pagination span {
             padding: 5px 10px;
             color: #555;
         }
-  
+
         @keyframes fadeInDown {
             from {
                 opacity: 0;
@@ -192,7 +280,7 @@ footer {
                 transform: translateY(0);
             }
         }
-  
+
         @keyframes slideIn {
             from {
                 width: 0;
@@ -203,7 +291,7 @@ footer {
                 opacity: 1;
             }
         }
-  
+
         @keyframes fadeInUp {
             from {
                 opacity: 0;
@@ -214,20 +302,20 @@ footer {
                 transform: translateY(0);
             }
         }
-  
+
         @media (max-width: 768px) {
             .u-table th,
             .u-table td {
                 padding: 10px;
                 font-size: 12px;
             }
-  
+
             .pagination a,
             .pagination strong {
                 padding: 3px 7px;
                 font-size: 12px;
             }
-  
+
             h1.u-text-center {
                 font-size: 2rem;
             }
@@ -238,8 +326,39 @@ footer {
     <section class="u-align-center u-clearfix u-grey-10 u-section-1" id="sec-c79d">
         <div class="u-clearfix u-sheet u-sheet-1">
             <h1 class="u-text-center">Отчет по оборудованию</h1>
-            <a href="{% url 'export_excel' %}" class="u-btn u-btn-primary">Экспорт в Excel</a>
-
+            <form id="filter-form" class="filter-form">
+                <div class="filter-container">
+                    <div class="filter-input">
+                        <label for="select-title">Фильтр по наименованию</label>
+                        <select class="filter-select" multiple id="select-title">
+                            {% for equ in objects %}
+                                <option value="{{ equ.title }}">{{ equ.title }}</option>
+                            {% endfor %}
+                        </select>
+                    </div>
+            
+                    <div class="filter-input">
+                        <label for="select-location">Фильтр по местоположению</label>
+                        <select class="filter-select" multiple id="select-location">
+                            {% for equ in objects %}
+                                <option value="{{ equ.location }}">{{ equ.location }}</option>
+                            {% endfor %}
+                        </select>
+                    </div>
+            
+                    <div class="filter-input">
+                        <label for="select-responsible">Сотрудник</label>
+                        <select class="filter-select" multiple id="select-responsible">
+                            {% for equ in objects %}
+                                <option value="{{ equ.responsible.first_name }} {{ equ.responsible.last_name }}">
+                                    {{ equ.responsible.first_name }} {{ equ.responsible.last_name }}
+                                </option>
+                            {% endfor %}
+                        </select>
+                    </div>
+                </div>
+                <button type="submit" class="filter-button">Применить фильтр</button>
+            </form>
       
     
             <div class="table-container">
@@ -291,6 +410,55 @@ footer {
         </div>
         </div>
     </section>
+    <script src="https://code.jquery.com/jquery-3.6.0.min.js"></script>
+    <script src="https://cdn.jsdelivr.net/npm/select2@4.0.13/dist/js/select2.min.js"></script>
+    <script>
+        $(document).ready(function() {
+            // Убираем дубликаты из списка select
+            $('#select-title, #select-location, #select-responsible').each(function() {
+                var seen = {};
+                $(this).find('option').each(function() {
+                    var value = $(this).val();
+                    if (seen[value]) {
+                        $(this).remove();
+                    } else {
+                        seen[value] = true;
+                    }
+                });
+            });
+        
+            $(".filter-select").select2({
+                placeholder: "Выберите опции",
+                allowClear: true
+            });
+        
+            // Обработка отправки формы фильтрации
+            $("#filter-form").on("submit", function(event) {
+                event.preventDefault();
+        
+                let selectedTitles = $("#select-title").val() || [];
+                let selectedLocations = $("#select-location").val() || [];
+                let selectedResponsibles = $("#select-responsible").val() || [];
+        
+                let rows = document.querySelectorAll("#nonfound .table-row");
+                rows.forEach(function(row) {
+                    let title = row.cells[1].textContent.trim().toLowerCase();
+                    let location = row.cells[2].textContent.trim().toLowerCase();
+                    let responsible = row.cells[3].textContent.trim().toLowerCase();
+        
+                    let matchesTitle = selectedTitles.length === 0 || selectedTitles.some(titleValue => titleValue.toLowerCase() === title);
+                    let matchesLocation = selectedLocations.length === 0 || selectedLocations.some(locationValue => locationValue.toLowerCase() === location);
+                    let matchesResponsible = selectedResponsibles.length === 0 || selectedResponsibles.some(responsibleValue => responsibleValue.toLowerCase() === responsible);
+        
+                    if (matchesTitle && matchesLocation && matchesResponsible) {
+                        row.style.display = "";
+                    } else {
+                        row.style.display = "none";
+                    }
+                });
+            });
+        });
+        </script>
 </body>
 </html>
 {% endblock %}
