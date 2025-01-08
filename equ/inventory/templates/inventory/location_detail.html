@@ -267,7 +267,18 @@
     border: 2px solid #721438 !important;
     transition: all 0.3s ease !important;
 }
-
+.u-btn1 {
+ 
+    padding: 12px 30px !important;
+    font-size: 1.2rem !important;
+    font-weight: bold !important;
+    color: #fff !important;
+    text-decoration: none !important;
+    border-radius: 50px !important;
+    background: #721438 !important;
+    border: 2px solid #721438 !important;
+    transition: all 0.3s ease !important;
+}
 .u-btn:hover {
     background: #fff !important;
     color: #721438 !important;
@@ -331,7 +342,7 @@ h1.u-text-center {
               Сканировать штрих-код
           </a>
          
-          <a href="#" id="stop-scan-btn"  style="display:none;">
+          <a href="#" id="stop-scan-btn"  class="u-btn1" style="display:none;">
             Остановить сканер
         </a>
         <a href="{% url 'end_invent_location' location.pk %}" class="u-btn">
