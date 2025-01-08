@@ -18,7 +18,6 @@ def create_file(request, inventory):
     # Фильтруем данные операций
     filtered_data = Operation.objects.filter(
         date__gte=inventory.date_start,
-        date__lte=inventory.date_end,
         operation_type__in=['INVENTORY', 'MOVED_WITHOUT_NOTICE']
     )
 
