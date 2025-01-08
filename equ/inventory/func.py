@@ -13,19 +13,9 @@ from django.core.files.base import ContentFile
 
 def create_file(request, inventory):
     # Создаем DataFrame
-    df = pd.DataFrame(
-        columns=[
-            'Операция',
-            'Оборудование',
-            'Дата',
-            'Прошлое местоположение',
-            'Новое местоположение',
-            'Прошлый ответственный сотрудник',
-            'Новый ответственный сотрудник',
-        ]
-    )
+    rows = []
 
-    # Фильтруем данные
+    # Фильтруем данные операций
     filtered_data = Operation.objects.filter(
         date__gte=inventory.date_start,
         date__lte=inventory.date_end
@@ -33,12 +23,13 @@ def create_file(request, inventory):
         ~Q(operation_type=OperationCategoryChoices.RELEASE_CARTRIDGE) &
         ~Q(operation_type=OperationCategoryChoices.RELEASE_EQUIPMENT)
     )
+
+    # Фильтруем данные оборудования, которые не найдены
     equipments_non_found = Equipment.objects.filter(
-    Q(date_last_invent__lte=inventory.date_start) | Q(date_last_invent__isnull=True)
-)
-    print(equipments_non_found)
-    # Наполняем таблицу данными
-    rows = []
+        Q(date_last_invent__lte=inventory.date_start) | Q(date_last_invent__isnull=True)
+    )
+
+    # Добавляем строки для операций
     for row in filtered_data:
         rows.append({
             'Операция': row.operation_type,
@@ -49,19 +40,21 @@ def create_file(request, inventory):
             'Прошлый ответственный сотрудник': f"{row.responsible_old.first_name} {row.responsible_old.last_name} - {row.responsible_old}",
             'Новый ответственный сотрудник': f"{row.responsible_new.first_name} {row.responsible_new.last_name} - {row.responsible_new}",
         })
-    df = pd.concat([df, pd.DataFrame(rows)], ignore_index=True)
 
-    for row in equipments_non_found:
+    # Добавляем строки для оборудования, которое не найдено
+    for equipment in equipments_non_found:
         rows.append({
             'Операция': "Не найдено",
-            'Оборудование': row.title,
+            'Оборудование': equipment.title,
             'Дата': "",
-            'Прошлое местоположение': row.location,
-            'Новое местоположение': row.location,
-            'Прошлый ответственный сотрудник': f"{row.responsible.first_name} {row.responsible.last_name} - {row.responsible}",
-            'Новый ответственный сотрудник': f"{row.responsible.first_name} {row.responsible.last_name} - {row.responsible}",
+            'Прошлое местоположение': equipment.location,
+            'Новое местоположение': equipment.location,
+            'Прошлый ответственный сотрудник': f"{equipment.responsible.first_name} {equipment.responsible.last_name} - {equipment.responsible}",
+            'Новый ответственный сотрудник': f"{equipment.responsible.first_name} {equipment.responsible.last_name} - {equipment.responsible}",
         })
-    df = pd.concat([df, pd.DataFrame(rows)], ignore_index=True)
+
+    # Создаем DataFrame один раз
+    df = pd.DataFrame(rows)
 
     # Генерация Excel-файла
     output = BytesIO()
