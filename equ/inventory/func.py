@@ -9,6 +9,7 @@ from django.http import HttpResponse
 from reports.models import Report, CategoryChoices
 from django.utils.timezone import now
 from django.core.files.base import ContentFile
+from operations.models import OperationCategoryChoices
 
 
 def create_file(request, inventory):
@@ -18,15 +19,13 @@ def create_file(request, inventory):
     # Фильтруем данные операций
     filtered_data = Operation.objects.filter(
         date__gte=inventory.date_start,
-        date__lte=inventory.date_end
-    ).filter(
-        ~Q(operation_type=OperationCategoryChoices.RELEASE_CARTRIDGE) &
-        ~Q(operation_type=OperationCategoryChoices.RELEASE_EQUIPMENT)
+        operation_type__in=[OperationCategoryChoices.INVENTORY, OperationCategoryChoices.MOVED_WITHOUT_NOTICE]
     )
+    print(filtered_data)
 
     # Фильтруем данные оборудования, которые не найдены
     equipments_non_found = Equipment.objects.filter(
-        Q(date_last_invent__lte=inventory.date_start) | Q(date_last_invent__isnull=True)
+        Q(date_last_invent__isnull=True)
     )
 
     # Добавляем строки для операций
