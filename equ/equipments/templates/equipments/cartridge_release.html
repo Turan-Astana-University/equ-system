@@ -595,28 +595,29 @@ button.request-button:active {
     newRow.className = "equipment-row";
 
     newRow.innerHTML = `
-        <select name="name[]">
-            <option value="" disabled selected>Название</option>
-            {% for equ in equipments %}
-                <option value="{{ equ.pk }}">{{ equ }}</option>
-            {% endfor %}
-        </select>
+        <div class="equipment-row">
+                <select name="name[]">
+                    <option value="" disabled selected>Название</option>
+                    {% for equ in cartridges %}
+                        <option value="{{ equ.title }}">{{ equ.title }} - {{ equ.status }} ({{ equ.count }})</option>
+                    {% endfor %}
+                </select>
 
-        <select name="location[]">
-            <option value="" disabled selected>Местонахождение</option>
-            {% for loc in locations %}
-                <option value="{{ loc.pk }}">{{ loc }}</option>
-            {% endfor %}
-        </select>
+                <select name="location[]">
+                    <option value="" disabled selected>Местонахождение</option>
+                    {% for loc in locations %}
+                        <option value="{{ loc.pk }}">{{ loc }}</option>
+                    {% endfor %}
+                </select>
 
-        <select name="responsible_person[]">
-            <option value="" disabled selected>Отв. лицо</option>
-            {% for user in users %}
-                <option value="{{ user.id }}">{{ user }} - {{ user.first_name }} {{ user.last_name }}</option>
-            {% endfor %}
-        </select>
-
-        <button type="button" onclick="removeEquipmentRow(this)">Удалить</button>
+                <select name="responsible_person[]">
+                    <option value="" disabled selected>Отв. лицо</option>
+                    {% for user in users %}
+                        <option value="{{ user.id }}">{{ user }} - {{ user.first_name }} {{ user.last_name }}</option>
+                    {% endfor %}
+                </select>
+                 <button type="button" onclick="removeEquipmentRow(this)">Удалить</button>
+            </div>
     `;
 
     container.appendChild(newRow);
@@ -632,28 +633,28 @@ function removeEquipmentRow(button) {
         newRow.className = "equipment-row";
 
         newRow.innerHTML = `
-            <select name="name[]">
-                <option value="" disabled selected>Название</option>
-                {% for equ in equipments %}
-                    <option value="{{ equ.pk }}">{{ equ }}</option>
-                {% endfor %}
-            </select>
+            <div class="equipment-row">
+                <select name="name[]">
+                    <option value="" disabled selected>Название</option>
+                    {% for equ in cartridges %}
+                        <option value="{{ equ.title }}">{{ equ.title }} - {{ equ.status }} ({{ equ.count }})</option>
+                    {% endfor %}
+                </select>
 
-            <select name="location[]">
-                <option value="" disabled selected>Местонахождение</option>
-                {% for loc in locations %}
-                    <option value="{{ loc.pk }}">{{ loc }}</option>
-                {% endfor %}
-            </select>
+                <select name="location[]">
+                    <option value="" disabled selected>Местонахождение</option>
+                    {% for loc in locations %}
+                        <option value="{{ loc.pk }}">{{ loc }}</option>
+                    {% endfor %}
+                </select>
 
-            <select name="responsible_person[]">
-                <option value="" disabled selected>Отв. лицо</option>
-                {% for user in users %}
-                    <option value="{{ user.id }}">{{ user }} - {{ user.first_name }} {{ user.last_name }}</option>
-                {% endfor %}
-            </select>
-            <button type="button" onclick="removeEquipmentRow(this)">Удалить</button>
-            </div>
+                <select name="responsible_person[]">
+                    <option value="" disabled selected>Отв. лицо</option>
+                    {% for user in users %}
+                        <option value="{{ user.id }}">{{ user }} - {{ user.first_name }} {{ user.last_name }}</option>
+                    {% endfor %}
+                </select>
+                 <button type="button" onclick="removeEquipmentRow(this)">Удалить</button>
         </div>
 
         `;
@@ -743,26 +744,27 @@ function addEquipmentRowScan(data) {
 
     // Заполняем строку с данными об оборудовании, если оно было получено от бэкенда
     newRow.innerHTML = `
-        <select name="name[]">
-            <option value="" disabled>Название</option>
-            {% for equ in equipments %}
-                <option value="{{ equ.pk }}" ${data && data.id === {{ equ.pk }} ? 'selected' : ''}>{{ equ }}</option>
-            {% endfor %}
-        </select>
+        <div class="equipment-row">
+                <select name="name[]">
+                    <option value="" disabled selected>Название</option>
+                    {% for equ in cartridges %}
+                        <option value="{{ equ.title }}">{{ equ.title }} - {{ equ.status }} ({{ equ.count }})</option>
+                    {% endfor %}
+                </select>
 
-        <select name="location[]">
-            <option value="" disabled selected>Местонахождение</option>
-            {% for loc in locations %}
-                <option value="{{ loc.pk }}">{{ loc }}</option>
-            {% endfor %}
-        </select>
+                <select name="location[]">
+                    <option value="" disabled selected>Местонахождение</option>
+                    {% for loc in locations %}
+                        <option value="{{ loc.pk }}">{{ loc }}</option>
+                    {% endfor %}
+                </select>
 
-       <select name="responsible_person[]">
-            <option value="" disabled selected>Отв. лицо</option>
-            {% for user in users %}
-                <option value="{{ user.id }}">{{ user }} - {{ user.first_name }} {{ user.last_name }}</option>
-            {% endfor %}
-        </select>
+                <select name="responsible_person[]">
+                    <option value="" disabled selected>Отв. лицо</option>
+                    {% for user in users %}
+                        <option value="{{ user.id }}">{{ user }} - {{ user.first_name }} {{ user.last_name }}</option>
+                    {% endfor %}
+                </select>
             <button type="button" onclick="removeEquipmentRow(this)">Удалить</button>
             </div>
         </div>
