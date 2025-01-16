@@ -325,42 +325,12 @@ body { font-family: Arial, sans-serif;
 <body>
     <section class="u-align-center u-clearfix u-grey-10 u-section-1" id="sec-c79d">
         <div class="u-clearfix u-sheet u-sheet-1">
-            <h1 class="u-text-center">Отчет по оборудованию</h1>
-            <form id="filter-form" class="filter-form">
-                <div class="filter-container">
-                    <div class="filter-input">
-                        <label for="select-title">Фильтр по наименованию</label>
-                        <select class="filter-select" multiple id="select-title">
-                            {% for equ in objects %}
-                                <option value="{{ equ.title }}">{{ equ.title }}</option>
-                            {% endfor %}
-                        </select>
-                    </div>
-            
-                    <div class="filter-input">
-                        <label for="select-location">Фильтр по местоположению</label>
-                        <select class="filter-select" multiple id="select-location">
-                            {% for equ in objects %}
-                                <option value="{{ equ.location }}">{{ equ.location }}</option>
-                            {% endfor %}
-                        </select>
-                    </div>
-            
-                    <div class="filter-input">
-                        <label for="select-responsible">Сотрудник</label>
-                        <select class="filter-select" multiple id="select-responsible">
-                            {% for equ in objects %}
-                                <option value="{{ equ.responsible.first_name }} {{ equ.responsible.last_name }}">
-                                    {{ equ.responsible.first_name }} {{ equ.responsible.last_name }}
-                                </option>
-                            {% endfor %}
-                        </select>
-                    </div>
-                </div>
-                <button type="submit" class="filter-button">Применить фильтр</button>
+            <h1 class="u-text-center">Отчет по оборудованию: {{ object.title }}</h1>
+            <h4>{{ object.description }}</h4>
+            <form method="POST" action="{% url 'equipment_detail' object.pk %}">
+                {% csrf_token %}
+                <button type="submit">Распечатать штрих-код</button>
             </form>
-      
-    
             <div class="table-container">
                 <table id="nonfound" class="u-table">
                     <thead>
@@ -376,12 +346,7 @@ body { font-family: Arial, sans-serif;
                         {% for equ in objects %}
                         <tr class="table-row">
                             <td>{{ equ.pk }}</td>
-
-                            <td>
-                                <a href="{% url 'equipment_detail' equ.pk %}">
-                                    {{ equ.title }}
-                                </a>
-                            </td>
+                            <td>{{ equ.title }}</td>
                             <td>{{ equ.location }}</td>
                             <td>{{ equ.responsible }} - {{ equ.responsible.first_name }} {{ equ.responsible.last_name }}</td>
                             <td>{{ equ.category }}</td>
