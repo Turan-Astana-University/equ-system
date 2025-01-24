@@ -1,6 +1,7 @@
+import os
 from django.http import HttpResponse, JsonResponse
 from django.shortcuts import render
-
+import plotly.express as px
 from equipments.models import Equipment, Printer
 from django.core.paginator import Paginator
 
@@ -10,6 +11,8 @@ from .mixin import AccountingUserRequiredMixin
 from django.views.generic import ListView, DetailView
 import win32print
 from operations.models import Operation
+import pandas as pd
+from django.conf import settings
 
 def print_test_label(zpl_data):
     printer_name = "ZDesigner ZD220-203dpi ZPL"  # Укажите имя вашего принтера
@@ -104,3 +107,31 @@ class InventoryReportView(LoginRequiredMixin, AccountingUserRequiredMixin, ListV
             'objects': page_obj
         }
         return render(request, self.template_name, context)
+
+
+class InventoryDetailView(LoginRequiredMixin, AccountingUserRequiredMixin, DetailView):
+    model = Inventory
+    template_name = 'reports/inventory_detail.html'
+    context_object_name = 'object'
+
+    def get_context_data(self, *args, **kwargs):
+        context = super().get_context_data(**kwargs)
+
+        inventory = self.get_object()
+
+        df = pd.read_excel(os.path.join(settings.MEDIA_ROOT, 'reports', 'inventory_report_20250124_103735.xlsx'))
+        print(df.groupby('Операция').count())
+        fig = px.pie(
+            df,
+            names='Операция',  # Параметр для названия категорий
+            title="Круговая диаграмма: Отчет инвентаризации"  # Заголовок
+        )
+        fig.update_traces(textinfo='percent+label')
+
+
+        graph_json = fig.to_json()  # Конвертируем график в JSON
+
+        context['graph_json'] = graph_json
+        return context
+
+

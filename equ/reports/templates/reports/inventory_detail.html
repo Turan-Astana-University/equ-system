@@ -1,0 +1,77 @@
+{% extends 'inventory/base.html' %} {% load static %}
+
+{% block continue %}
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Интерактивный дашборд</title>
+    <script src="https://cdn.plot.ly/plotly-latest.min.js"></script>
+<style>
+ body {
+    font-family: Arial, sans-serif;
+    line-height: 1.6;
+    margin: 0;
+    padding: 0;
+    background-color: #f4f4f9;
+    display: flex;
+    flex-direction: column;
+    min-height: 100vh;
+}
+
+section {
+    padding: 61px;
+    flex-grow: 1; /* позволяет разделу занимать оставшееся место */
+}
+
+footer {
+    background-color: #333;
+    color: white;
+    text-align: center;
+    padding: 10px;
+    position: relative;
+    bottom: 0;
+    width: 100%;
+    margin-top: auto; /* автоматически перемещает футер вниз */
+}
+
+h1.u-text-center {
+            font-size: 2.5rem;
+            text-align: center;
+            color: rgba(114, 20, 56, 0.941);
+            margin-bottom: 20px;
+            position: relative;
+            animation: fadeInDown 1s ease-in-out;
+        }
+
+        h1.u-text-center::after {
+            content: '';
+            display: block;
+            width: 60px;
+            height: 4px;
+            background-color: rgba(114, 20, 56, 0.941);
+            margin: 10px auto 0;
+            animation: slideIn 1.5s ease-in-out;
+        }
+
+/* Добавьте футер на ваше усмотрение */
+
+</style>
+</head>
+<body>
+<section class="u-align-center u-clearfixu-section-1" id="sec-c79d">
+    <h1 class = "u-text-center">Интерактивный дашборд</h1>
+    <div id="plotly-graph"></div>
+
+    <script>
+        // Получаем данные графика из контекста Django
+        const graphData = JSON.parse('{{ graph_json|safe }}');
+
+        // Рендеринг графика Plotly
+        Plotly.react('plotly-graph', graphData.data, graphData.layout);
+    </script>
+    </section>
+</body>
+</html>
+{% endblock %}
