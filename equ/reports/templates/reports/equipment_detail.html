@@ -325,31 +325,32 @@ body { font-family: Arial, sans-serif;
 <body>
     <section class="u-align-center u-clearfix u-grey-10 u-section-1" id="sec-c79d">
         <div class="u-clearfix u-sheet u-sheet-1">
-            <h1 class="u-text-center">Отчет по оборудованию: {{ object.title }}</h1>
+            <h1 class="u-text-center">{{ object.title }}</h1>
             <h4>{{ object.description }}</h4>
             <form method="POST" action="{% url 'equipment_detail' object.pk %}">
                 {% csrf_token %}
                 <button type="submit">Распечатать штрих-код</button>
             </form>
+            <h1 class="u-text-center">Операции с оборудованием</h1>
             <div class="table-container">
                 <table id="nonfound" class="u-table">
                     <thead>
                         <tr>
-                            <th>ID</th>
-                            <th>Наименование</th>
-                            <th>Местоположение</th>
-                            <th>Отв.сотрудник</th>
-                            <th>Тип</th>
+                            <th>Операция</th>
+                            <th>Предыдущее расположение</th>
+                            <th>Новое расположение</th>
+                            <th>Прошлый отв.сотрудник</th>
+                            <th>Новый отв.сотрудник</th>
                         </tr>
                     </thead>
                     <tbody class="u-table-body">
-                        {% for equ in objects %}
+                        {% for obj in operations %}
                         <tr class="table-row">
-                            <td>{{ equ.pk }}</td>
-                            <td>{{ equ.title }}</td>
-                            <td>{{ equ.location }}</td>
-                            <td>{{ equ.responsible }} - {{ equ.responsible.first_name }} {{ equ.responsible.last_name }}</td>
-                            <td>{{ equ.category }}</td>
+                            <td>{{ obj.operation_type }}</td>
+                            <td>{{ obj.location_old }}</td>
+                            <td>{{ obj.location_new }}</td>
+                            <td>{{ obj.responsible_old }} - {{ obj.responsible_old.first_name }} {{ obj.responsible_old.last_name }}</td>
+                            <td>{{ obj.responsible_new }} - {{ obj.responsible_new.first_name }} {{ obj.responsible_new.last_name }}</td>
                         </tr>
                         {% endfor %}
                     </tbody>

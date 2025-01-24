@@ -9,15 +9,7 @@ from django.contrib.auth.mixins import LoginRequiredMixin
 from .mixin import AccountingUserRequiredMixin
 from django.views.generic import ListView, DetailView
 import win32print
-from PIL import Image
-import base64
-from io import BytesIO
-from django.conf import settings
-import os
-import io
-from PIL import Image
-import zebra
-
+from operations.models import Operation
 
 def print_test_label(zpl_data):
     printer_name = "ZDesigner ZD220-203dpi ZPL"  # Укажите имя вашего принтера
@@ -46,6 +38,15 @@ class EquipmentDetailView(LoginRequiredMixin, AccountingUserRequiredMixin, Detai
     model = Equipment
     template_name = 'reports/equipment_detail.html'
     context_object_name = 'object'
+
+    def get_context_data(self, **kwargs):
+        context = super().get_context_data(**kwargs)
+
+        equipment = self.get_object()
+
+        context['operations'] = Operation.objects.filter(equipment=equipment) # related_name='operations'
+
+        return context
 
     def post(self, request, *args, **kwargs):
         equipment = self.get_object()

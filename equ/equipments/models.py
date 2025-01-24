@@ -84,6 +84,9 @@ class Barcode(models.Model):
 ^FO100, 100^BY3
 ^BEN, 100, Y, N
 ^FD{barcode_data}^FS
+^FO100,220^A0,30,30
+^FO{(530 - len(title) * 24) // 2},250^A0,40,40
+^FD{title}^FS
 ^XZ
         """
 
