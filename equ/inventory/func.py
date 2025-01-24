@@ -27,14 +27,16 @@ def create_file(request, inventory):
     equipments_non_found = Equipment.objects.filter(
         Q(date_last_invent__isnull=True)
     )
+    print(equipments_non_found)
 
     # Добавляем строки для операций
     for row in filtered_data:
+        print(row)
         rows.append({
             'Операция': row.operation_type,
             'Оборудование': row.equipment.title,
             'Дата': row.date.replace(tzinfo=None),
-            'Прошлое местоположение': row.location_old.title,
+            'Прошлое местоположение': row.location_old.title if row.location_old else None,
             'Новое местоположение': row.location_new.title,
             'Прошлый ответственный сотрудник': f"{row.responsible_old.first_name} {row.responsible_old.last_name} - {row.responsible_old}",
             'Новый ответственный сотрудник': f"{row.responsible_new.first_name} {row.responsible_new.last_name} - {row.responsible_new}",
@@ -42,6 +44,7 @@ def create_file(request, inventory):
 
     # Добавляем строки для оборудования, которое не найдено
     for equipment in equipments_non_found:
+        print(equipment)
         rows.append({
             'Операция': "Не найдено",
             'Оборудование': equipment.title,
