@@ -139,6 +139,10 @@ class CartridgeTypes(models.Model):
     def __str__(self):
         return self.title
 
+    def get_count_cartridge(self):
+        cartridge = Cartridge.objects.filter(cartridge_type=self)
+        return len(cartridge)
+
 
 class Printer(Equipment):
     cartridge_types = models.ManyToManyField(CartridgeTypes)

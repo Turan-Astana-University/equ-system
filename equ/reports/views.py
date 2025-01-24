@@ -13,7 +13,7 @@ import win32print
 from operations.models import Operation
 import pandas as pd
 from django.conf import settings
-
+from equipments.models import CartridgeTypes
 def print_test_label(zpl_data):
     printer_name = "ZDesigner ZD220-203dpi ZPL"  # Укажите имя вашего принтера
 
@@ -134,4 +134,8 @@ class InventoryDetailView(LoginRequiredMixin, AccountingUserRequiredMixin, Detai
         context['graph_json'] = graph_json
         return context
 
+class CartridgeReportView(LoginRequiredMixin, AccountingUserRequiredMixin, ListView):
+    model = CartridgeTypes
+    template_name = 'reports/cartridge_types.html'
+    context_object_name = 'objects'
 
