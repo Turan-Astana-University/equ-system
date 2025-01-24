@@ -119,7 +119,7 @@ class InventoryDetailView(LoginRequiredMixin, AccountingUserRequiredMixin, Detai
 
         inventory = self.get_object()
 
-        df = pd.read_excel(os.path.join(settings.MEDIA_ROOT, 'reports', 'inventory_report_20250124_103735.xlsx'))
+        df = pd.read_excel(os.path.join(settings.MEDIA_ROOT, inventory.report.result_file.name))
         print(df.groupby('Операция').count())
         fig = px.pie(
             df,
