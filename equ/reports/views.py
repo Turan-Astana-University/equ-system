@@ -19,44 +19,6 @@ from PIL import Image
 import zebra
 
 
-def convert_png_to_zpl(png_image_path):
-    zebra.setdevice('Zebra')
-    # Формируем путь к файлу изображения
-    image_path = os.path.join(settings.MEDIA_ROOT, 'barcodes', os.path.basename(png_image_path))
-    print(f"Image path: {image_path}")
-    print(zebra.ZPLconvert(image_path))
-
-    # Открываем изображение с помощью PIL
-    img = Image.open(image_path)
-
-    # Открываем изображение в стандартном просмотрщике (для Windows)
-    if os.name == 'nt':  # Для Windows
-        os.startfile(image_path)
-    elif os.name == 'posix':  # Для macOS и Linux
-        os.system(f'open {image_path}')  # Для macOS
-        # или для Linux:
-        # os.system(f'xdg-open {image_path}')
-
-    # Преобразуем изображение в черно-белое (1 бит)
-    img = img.convert("1")
-
-    # Преобразуем изображение в строку байтов
-    byte_arr = io.BytesIO()
-    img.save(byte_arr, format='PNG')
-    byte_arr = byte_arr.getvalue()
-
-    # Преобразуем байты в строку base64
-    base64_str = base64.b64encode(byte_arr).decode("utf-8")
-
-    # Формируем строку ZPL
-    zpl_header = "^XA\n^FO50,50\n^GFA,"
-    zpl_footer = "^FS\n^XZ"
-
-    # Генерируем строку ZPL с изображением в base64
-    zpl_image = f"{zpl_header}{len(byte_arr)},{len(byte_arr)},{len(byte_arr) // len(byte_arr)}," + base64_str + zpl_footer
-    return zpl_image
-
-
 def print_test_label(zpl_data):
     printer_name = "ZDesigner ZD220-203dpi ZPL"  # Укажите имя вашего принтера
 
@@ -87,9 +49,7 @@ class EquipmentDetailView(LoginRequiredMixin, AccountingUserRequiredMixin, Detai
 
     def post(self, request, *args, **kwargs):
         equipment = self.get_object()
-        print(equipment.equipment_barcode)
-        print((equipment.equipment_barcode.barcode.url))
-        zpl_data = convert_png_to_zpl(equipment.equipment_barcode.barcode.url)
+        zpl_data = equipment.equipment_barcode.zpl_barcode
         try:
             print_test_label(zpl_data)
             return HttpResponse("Этикетка успешно отправлена на печать!")
@@ -104,19 +64,10 @@ class EquipmentReportView(LoginRequiredMixin, AccountingUserRequiredMixin, ListV
     paginate_by = 10  # Количество объектов на странице
 
     def get(self, request, *args, **kwargs):
-        # Получаем все объекты Equipment
         equipments = Equipment.objects.all()
-
-        # Создаем объект Paginator для пагинации
         paginator = Paginator(equipments, self.paginate_by)
-
-        # Получаем номер страницы из GET-параметров
         page_number = request.GET.get('page')
-
-        # Получаем текущую страницу с данными
         page_obj = paginator.get_page(page_number)
-
-        # Передаем контекст в шаблон
         context = {
             'objects': page_obj
         }

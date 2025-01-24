@@ -18,62 +18,77 @@ class EquipmentType(models.Model):
 
 class Barcode(models.Model):
     barcode = models.ImageField(upload_to='barcodes/', blank=True, verbose_name="Штрих код")
+    zpl_barcode = models.TextField(null=True, blank=True)
 
     def generate_barcode(self, title=None):
-        # Генерация штрих-кода используя python-barcode
-        super().save()
+        # Step 1: Определяем базовый штрих-код
+        barcode_data = f'{self.id:012}'  # Унифицированное представление
+
+        # Step 2: Генерация изображения
         EAN = barcode.get_barcode_class('ean13')
-        ean = EAN(f'{self.id:012}', writer=ImageWriter())
+        ean = EAN(barcode_data, writer=ImageWriter())
 
         buffer = BytesIO()
         ean.write(buffer)
-
-        # Загружаем сгенерированное изображение штрих-кода
         buffer.seek(0)
         barcode_image = Image.open(buffer)
 
-        # Определяем отступ между штрих-кодом и текстом
         barcode_height = barcode_image.height
-        padding = 20  # Отступ для текста сверху
-
-        # Создаём новое изображение с дополнительным местом под текст
-        new_height = barcode_height + padding + 100  # Увеличиваем высоту для нескольких строк текста
+        padding = 20
+        new_height = barcode_height + padding + 100
         new_image = Image.new("RGB", (barcode_image.width, new_height), "white")
-        new_image.paste(barcode_image, (0, 0))  # Вставляем штрих-код в верхнюю часть
+        new_image.paste(barcode_image, (0, 0))
 
-        # Добавляем текст (title) под штрих-код
         if title:
             draw = ImageDraw.Draw(new_image)
-
-            # Используем шрифт
             try:
-                font = ImageFont.truetype("arial.ttf", size=24)  # Размер шрифта
+                font = ImageFont.truetype("arial.ttf", size=24)
             except IOError:
-                font = ImageFont.load_default()  # Резервный шрифт
+                font = ImageFont.load_default()
 
-            # Разбиваем текст на строки по 20 символов
-            max_length = 20  # Максимальное количество символов в строке
+            max_length = 20
             lines = [title[i:i + max_length] for i in range(0, len(title), max_length)]
-
-            # Вычисляем начальную позицию для текста
-            line_height = draw.textbbox((0, 0), "A", font=font)[3]  # Высота строки
-            y_start = barcode_height + padding  # Начальная позиция для текста, после отступа
+            line_height = draw.textbbox((0, 0), "A", font=font)[3]
+            y_start = barcode_height + padding
 
             for i, line in enumerate(lines):
                 text_bbox = draw.textbbox((0, 0), line, font=font)
                 text_width = text_bbox[2] - text_bbox[0]
-                x = (new_image.width - text_width) // 2  # Центровка текста
-                y = y_start + i * line_height  # Вертикальная позиция каждой строки
+                x = (new_image.width - text_width) // 2
+                y = y_start + i * line_height
                 draw.text((x, y), line, font=font, fill="black")
 
-        # Сохраняем итоговое изображение
         final_buffer = BytesIO()
         new_image.save(final_buffer, format='PNG')
         final_buffer.seek(0)
 
         file_name = f'{self.id}.png'
         self.barcode.save(file_name, File(final_buffer), save=False)
-        super().save()
+
+        # Step 3: Генерация ZPL-кода
+        label_width = 55 * 10  # 55 мм = 550 точек
+        label_height = 38 * 10  # 38 мм = 380 точек
+
+        text_width = len(title) * 10 if title else 0  # Примерная ширина текста
+        text_x = (label_width - text_width) // 2 if title else 0
+        text_y = 100  # Смещение текста от верхнего края
+
+        barcode_width = 200  # Ширина штрих-кода
+        barcode_x = (label_width - barcode_width) // 2
+        barcode_y = 150  # Смещение штрих-кода от верхнего края
+
+        zpl_code = f"""
+^XA
+^PW530
+^LL400
+^FO100, 100^BY3
+^BEN, 100, Y, N
+^FD{barcode_data}^FS
+^XZ
+        """
+
+        self.zpl_barcode = zpl_code
+        self.save()
 
 
 class CategoryStatusChoices(models.TextChoices):
