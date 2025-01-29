@@ -166,10 +166,10 @@ class Printer(Equipment):
 
 class CategoryChoices(models.TextChoices):
     FILLED = 'filled', ('Filled')
-    NEW = 'new', ('new')
-    EMPTY = 'empty', ('empty')
-    DEFECTIVE = 'defective', ('defective')
-    RELEASE = 'release', ('release')
+    NEW = 'new', ('New')
+    EMPTY = 'empty', ('Empty')
+    DEFECTIVE = 'defective', ('Defective')
+    RELEASE = 'release', ('Release')
 
 
 class Cartridge(models.Model):

@@ -30,6 +30,7 @@ class Operation(models.Model):
     user = models.ForeignKey(User, on_delete=models.CASCADE)
     equipment = models.ForeignKey(Equipment, on_delete=models.CASCADE, null=True, blank=True)
     cartridge = models.ForeignKey(Cartridge, on_delete=models.CASCADE, null=True, blank=True)
+    cartridge_old = models.ForeignKey(Cartridge, on_delete=models.CASCADE, null=True, blank=True, related_name='cartridge_old')
     location_old = models.ForeignKey(Location, on_delete=models.CASCADE, related_name="old_location", null=True, blank=True)
     location_new = models.ForeignKey(Location, on_delete=models.CASCADE, related_name="new_location")
     responsible_old = models.ForeignKey(User, on_delete=models.CASCADE, related_name="old_user")

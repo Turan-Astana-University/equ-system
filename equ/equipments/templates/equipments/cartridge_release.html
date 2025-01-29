@@ -335,13 +335,12 @@ datalist option {
 }
 
 /* Стили для кнопки "Удалить" */
-.equipment-row button
 
 /* Общий стиль контейнера */
 div#equipment-container {
     margin: 20px auto;
     padding: 15px;
-    max-width: 800px;
+    max-width: 1260px;
     border: 1px solid #ddd;
     border-radius: 10px;
     background-color: #f9f9f9;
@@ -498,7 +497,6 @@ button.request-button:active {
     background-color: rgba(114,20,56,0.9411764705882353) !important;
     transform: scale(1) !important;
 }
-
 </style>
 <script src="{% static 'node_modules/html5-qrcode/html5-qrcode.min.js' %}"></script>
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
@@ -567,14 +565,33 @@ button.request-button:active {
                     {% endfor %}
                 </select>
 
+
+
                 <select name="responsible_person[]">
                     <option value="" disabled selected>Отв. лицо</option>
                     {% for user in users %}
                         <option value="{{ user.id }}">{{ user }} - {{ user.first_name }} {{ user.last_name }}</option>
                     {% endfor %}
                 </select>
+                <br>
+
+                <select name="cartridge_old[]">
+                    <option value="" disabled selected>Старый картридж</option>
+                    {% for cart in cartridges %}
+                        <option value="{{ cart.pk }}">{{ cart.title }} {{ cart.status }}</option>
+                    {% endfor %}
+                </select>
+
+                <select name="status[]">
+                    <option value="" disabled selected>Статус</option>
+                        {% for choice in choices %}
+                                <option value="{{ choice }}">{{ choice }}</option>
+                        {% endfor %}
+                </select>
                  <button type="button" onclick="removeEquipmentRow(this)">Удалить</button>
+
             </div>
+
         </div>
 
         <!-- Кнопка добавления нового ряда -->
@@ -610,13 +627,31 @@ button.request-button:active {
                     {% endfor %}
                 </select>
 
+
+
                 <select name="responsible_person[]">
                     <option value="" disabled selected>Отв. лицо</option>
                     {% for user in users %}
                         <option value="{{ user.id }}">{{ user }} - {{ user.first_name }} {{ user.last_name }}</option>
                     {% endfor %}
                 </select>
+                <br>
+
+                <select name="cartridge_old[]">
+                    <option value="" disabled selected>Старый картридж</option>
+                    {% for cart in cartridges %}
+                        <option value="{{ cart.pk }}">{{ cart.title }} {{ cart.status }}</option>
+                    {% endfor %}
+                </select>
+
+                <select name="status[]">
+                    <option value="" disabled selected>Статус</option>
+                        {% for choice in choices %}
+                                <option value="{{ choice }}">{{ choice }}</option>
+                        {% endfor %}
+                </select>
                  <button type="button" onclick="removeEquipmentRow(this)">Удалить</button>
+
             </div>
     `;
 
@@ -648,15 +683,32 @@ function removeEquipmentRow(button) {
                     {% endfor %}
                 </select>
 
+
+
                 <select name="responsible_person[]">
                     <option value="" disabled selected>Отв. лицо</option>
                     {% for user in users %}
                         <option value="{{ user.id }}">{{ user }} - {{ user.first_name }} {{ user.last_name }}</option>
                     {% endfor %}
                 </select>
-                 <button type="button" onclick="removeEquipmentRow(this)">Удалить</button>
-        </div>
+                <br>
 
+                <select name="cartridge_old[]">
+                    <option value="" disabled selected>Старый картридж</option>
+                    {% for cart in cartridges %}
+                        <option value="{{ cart.pk }}">{{ cart.title }} {{ cart.status }}</option>
+                    {% endfor %}
+                </select>
+
+                <select name="status[]">
+                    <option value="" disabled selected>Статус</option>
+                        {% for choice in choices %}
+                                <option value="{{ choice }}">{{ choice }}</option>
+                        {% endfor %}
+                </select>
+                 <button type="button" onclick="removeEquipmentRow(this)">Удалить</button>
+
+            </div>
         `;
 
         container.appendChild(newRow);
@@ -759,15 +811,32 @@ function addEquipmentRowScan(data) {
                     {% endfor %}
                 </select>
 
+
+
                 <select name="responsible_person[]">
                     <option value="" disabled selected>Отв. лицо</option>
                     {% for user in users %}
                         <option value="{{ user.id }}">{{ user }} - {{ user.first_name }} {{ user.last_name }}</option>
                     {% endfor %}
                 </select>
-            <button type="button" onclick="removeEquipmentRow(this)">Удалить</button>
+                <br>
+
+                <select name="cartridge_old[]">
+                    <option value="" disabled selected>Старый картридж</option>
+                    {% for cart in cartridges %}
+                        <option value="{{ cart.pk }}">{{ cart.title }} {{ cart.status }}</option>
+                    {% endfor %}
+                </select>
+
+                <select name="status[]">
+                    <option value="" disabled selected>Статус</option>
+                        {% for choice in choices %}
+                                <option value="{{ choice }}">{{ choice }}</option>
+                        {% endfor %}
+                </select>
+                 <button type="button" onclick="removeEquipmentRow(this)">Удалить</button>
+
             </div>
-        </div>
     `;
 
     container.appendChild(newRow);
@@ -827,6 +896,76 @@ function getCookie(name) {
 
 function error(err) {
     console.error(err);
+
+
+
 }
+function updateSelectOptions(newData) {
+    const selectElement = document.querySelector("select[name='cartridge_old[]']");
+
+    if (!selectElement) {
+        console.error("Элемент списка картриджей не найден!");
+        return;
+    }
+
+    // Очищаем список, оставляя только первую опцию
+    selectElement.innerHTML = '<option value="" disabled selected>Старый картридж</option>';
+
+    // Проверяем, есть ли новые данные
+    if (!newData || newData.length === 0) {
+        console.warn("Нет новых картриджей для добавления.");
+        return;
+    }
+    console.log(newData);
+        newData.cartridges.forEach(cart => {
+        const option = document.createElement("option");
+        option.value = cart.pk;  // ID картриджа
+        option.textContent = cart.title + " - " + cart.status;  // Название картриджа
+        selectElement.appendChild(option);
+    });
+}
+
+
+document.addEventListener("DOMContentLoaded", function () {
+    const selectElement = document.querySelector("select[name='location[]']");
+
+    if (selectElement) {
+        selectElement.addEventListener("change", function () {
+            const selectedValue = this.value;
+
+            if (selectedValue) {
+                console.log("Выбранное местоположение:", selectedValue);
+
+                fetch(`{% url 'get_cartridges' %}`, {  // Формируем URL динамически
+                    method: "POST",  // GET-запрос, так как просто получаем данные
+                    headers: {
+                        'Content-Type': 'application/json',
+                        'X-CSRFToken': getCookie('csrftoken'), // Если используется CSRF-защита
+                        "location_pk": selectedValue,
+                    },
+                    body: JSON.stringify({ "location": selectedValue })
+                })
+                .then(response => response.json())
+                .then(data => {
+                    console.log("Ответ сервера:", data);
+                    const selectElement = document.querySelector("select[name='cartridge_old[]']");
+
+                    if (selectElement) {
+                        while (selectElement.options.length > 1) {
+                            selectElement.remove(1);
+                        }
+                    }
+                    updateSelectOptions(data);
+
+                    // Здесь можно обновлять DOM, например, список картриджей
+                })
+                .catch(error => console.error("Ошибка запроса:", error));
+            }
+        });
+    }
+});
+
+
+
 </script>
 {% endblock %}

@@ -139,10 +139,13 @@ class CartridgeRelease(View):
 
         locations = Location.objects.all()
         users = User.objects.all()
+        choices = CategoryChoices.choices
+
         return render(request, self.template_name, context={
             "cartridges": cartridges,
             "locations": locations,
             "users": users,
+            "choices": choices,
         })
 
     def post(self, request):
@@ -160,9 +163,21 @@ class CartridgeRelease(View):
             location_new = Location.objects.get(pk=request.POST.getlist("location[]")[i])
             responsible_old = cartridge.responsible
             responsible_new = User.objects.get(pk=request.POST.getlist("responsible_person[]")[i])
+
+            user_cartridge_new = request.user
+            location_cartridge_new = Location.objects.get(responsible=user_cartridge_new)
+
+            cartridge_old = Cartridge.objects.get(pk=request.POST.getlist("cartridge_old[]")[i])
+            status_cartridge_old = request.POST.getlist("status[]")[i]
+            cartridge_old.status = status_cartridge_old
+            cartridge_old.responsible = user_cartridge_new
+            cartridge_old.location = location_cartridge_new
+            cartridge_old.save()
+            print(cartridge_old.status, status_cartridge_old)
             cartridge.location = location_new
             cartridge.responsible = responsible_new
             create_operation_log(request, operation_type=OperationCategoryChoices.RELEASE_CARTRIDGE, cartridge=cartridge,
+                                 cartridge_old=cartridge_old,
                                  location_old=location_old, location_new=location_new, responsible_old=responsible_old,
                                  responsible_new=responsible_new)
             cartridge.save()
@@ -218,3 +233,16 @@ class MyEquipments(ListView):
           Предполагается, что в модели Equipment есть поле 'responsible', которое связано с пользователем.
         """
         return Equipment.objects.filter(responsible=self.request.user)
+
+def get_cartridges(request, *args, **kwargs):
+    data = json.loads(request.body)
+    location_pk = (int(data.get('location', '')))
+    location = Location.objects.get(pk=location_pk)
+    print(location)
+    cartridges = Cartridge.objects.filter(location=location).values("pk", "title", "status", "responsible__first_name", "responsible__last_name")
+    print(list(cartridges))
+    return JsonResponse(
+        {
+            'cartridges': list(cartridges)
+        }
+    )
