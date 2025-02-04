@@ -26,11 +26,10 @@ class QRCodeView(View):
             barcode_id = int(code[:-1])
 
             equipment = get_object_or_404(Equipment, equipment_barcode=get_object_or_404(Barcode, pk=barcode_id))
-
             return JsonResponse({
                 'id': equipment.id,
                 'name': equipment.title,
-                'user': equipment.responsible.email,
+                'user': equipment.responsible,
                 'message': 'Equipment found',
                 'location_correct': 1,
             })
