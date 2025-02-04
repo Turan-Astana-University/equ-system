@@ -14,27 +14,36 @@ from operations.models import Operation
 import pandas as pd
 from django.conf import settings
 from equipments.models import CartridgeTypes
-def print_test_label(zpl_data):
-    printer_name = "ZDesigner ZD220-203dpi ZPL"  # Укажите имя вашего принтера
+import requests
 
-    try:
-        printers = [printer[2] for printer in win32print.EnumPrinters(win32print.PRINTER_ENUM_LOCAL)]
-        if printer_name not in printers:
-            print(f"Принтер '{printer_name}' не найден. Доступные принтеры: {printers}")
-            return
 
-        printer = win32print.OpenPrinter(printer_name)
+def get_client_ip(request):
+    x_forwarded_for = request.META.get('HTTP_X_FORWARDED_FOR')
+    if x_forwarded_for:
+        ip = x_forwarded_for.split(',')[0]  # Берем первый IP в цепочке
+    else:
+        ip = request.META.get('REMOTE_ADDR')  # Обычный IP, если прокси нет
+    return ip
+
+
+def send_print_request(request, zpl_code):
+    """Django получает IP клиента и отправляет запрос на FastAPI"""
+    if request.method == "POST":
+        client_ip = get_client_ip(request)  # Получаем IP-адрес клиента
+
+        if not zpl_code:
+            return JsonResponse({"error": "Не указан zpl_data"}, status=400)
+
+        # Формируем URL FastAPI сервера на клиентском IP
+        fastapi_url = f"http://{client_ip}:8000/print"
+
         try:
-            job = win32print.StartDocPrinter(printer, 1, ("Test Print", None, "RAW"))
-            win32print.StartPagePrinter(printer)
-            bytes_written = win32print.WritePrinter(printer, zpl_data.encode('utf-8'))
-            win32print.EndPagePrinter(printer)
-            win32print.EndDocPrinter(printer)
-            print(f"Этикетка успешно отправлена на печать! Байтов отправлено: {bytes_written}")
-        finally:
-            win32print.ClosePrinter(printer)
-    except Exception as e:
-        print(f"Ошибка печати: {e}")
+            response = requests.post(fastapi_url, json={"zpl_data": zpl_code})
+            return JsonResponse(response.json(), status=response.status_code)
+        except requests.exceptions.RequestException as e:
+            return JsonResponse({"error": f"Не удалось подключиться к {fastapi_url}", "details": str(e)}, status=500)
+
+    return JsonResponse({"error": "Используйте POST-запрос"}, status=405)
 
 
 class EquipmentDetailView(LoginRequiredMixin, AccountingUserRequiredMixin, DetailView):
@@ -47,15 +56,14 @@ class EquipmentDetailView(LoginRequiredMixin, AccountingUserRequiredMixin, Detai
 
         equipment = self.get_object()
 
-        context['operations'] = Operation.objects.filter(equipment=equipment) # related_name='operations'
-
+        context['operations'] = Operation.objects.filter(equipment=equipment)
         return context
 
     def post(self, request, *args, **kwargs):
         equipment = self.get_object()
         zpl_data = equipment.equipment_barcode.zpl_barcode
         try:
-            print_test_label(zpl_data)
+            send_print_request(request, zpl_data)
             return HttpResponse("Этикетка успешно отправлена на печать!")
         except Exception as e:
             return HttpResponse(f"Ошибка печати: {e}", status=500)
@@ -75,6 +83,7 @@ class EquipmentReportView(LoginRequiredMixin, AccountingUserRequiredMixin, ListV
         context = {
             'objects': page_obj
         }
+        client_ip = get_client_ip(request)
         return render(request, self.template_name, context)
 
 
@@ -133,6 +142,7 @@ class InventoryDetailView(LoginRequiredMixin, AccountingUserRequiredMixin, Detai
 
         context['graph_json'] = graph_json
         return context
+
 
 class CartridgeReportView(LoginRequiredMixin, AccountingUserRequiredMixin, ListView):
     model = CartridgeTypes
