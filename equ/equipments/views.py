@@ -12,7 +12,6 @@ from operations.models import OperationCategoryChoices
 from operations.views import create_operation_log
 from django.db.models import Count
 from django.http import HttpResponse
-from django.core.paginator import Paginator
 from django.contrib import messages
 from django.views.generic import ListView
 # Create your views here.
@@ -67,7 +66,6 @@ class QRCodeView(View):
             code = data.get('code', '')
             barcode_id = int(code[:-1])
             equipment = get_object_or_404(Equipment, equipment_barcode=get_object_or_404(Barcode, pk=barcode_id))
-            print(equipment)
             equipment.date_last_invent = datetime.datetime.now()
             equipment_true_position = location == equipment.location
 
@@ -126,7 +124,6 @@ class ReleaseEquipmentsView(View):
         })
 
     def post(self, request):
-        print(request.POST)
         for i in range(len(request.POST.getlist("name[]"))):
             equipment = Equipment.objects.get(pk=request.POST.getlist("name[]")[i], responsible=request.user)
             location_old = equipment.location
@@ -162,7 +159,6 @@ class CartridgeRelease(View):
         locations = Location.objects.all()
         users = User.objects.all()
         choices = CategoryChoices.choices
-        print(cartridges)
         return render(request, self.template_name, context={
             "cartridges": cartridges,
             "locations": locations,
@@ -195,7 +191,6 @@ class CartridgeRelease(View):
             cartridge_old.responsible = user_cartridge_new
             cartridge_old.location = location_cartridge_new
             cartridge_old.save()
-            print(cartridge_old.status, status_cartridge_old)
             cartridge.location = location_new
             cartridge.responsible = responsible_new
             create_operation_log(request, operation_type=OperationCategoryChoices.RELEASE_CARTRIDGE, cartridge=cartridge,
@@ -256,13 +251,12 @@ class MyEquipments(ListView):
         """
         return Equipment.objects.filter(responsible=self.request.user)
 
+
 def get_cartridges(request, *args, **kwargs):
     data = json.loads(request.body)
     location_pk = (int(data.get('location', '')))
     location = Location.objects.get(pk=location_pk)
-    print(location)
     cartridges = Cartridge.objects.filter(location=location).values("pk", "title", "status", "responsible__first_name", "responsible__last_name")
-    print(list(cartridges))
     return JsonResponse(
         {
             'cartridges': list(cartridges)
