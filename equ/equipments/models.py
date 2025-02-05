@@ -78,17 +78,20 @@ class Barcode(models.Model):
         barcode_y = 150  # Смещение штрих-кода от верхнего края
 
         zpl_code = f"""
-^XA^CI28
-^PW530
-^LL400
-^FO100, 100^BY3
-^BEN, 100, Y, N
-^FD{barcode_data}^FS
-^FO100,220^A0,30,30
-^FO{(530 - len(title) * 24) // 2},250^A0,40,40
-^FD{title}^FS
-^XZ
-        """
+        ^XA^CI28
+        ^PW530
+        ^LL400
+
+        ^FO100,50^A0,30,30^FDTuran-Astana University^FS  ; <-- Добавлен текст над штрих-кодом
+
+        ^FO100,100^BY3
+        ^BEN,100,Y,N
+        ^FD{barcode_data}^FS
+
+        ^FO100,220^A0,30,30
+        ^FO{(530 - len(title) * 24) // 2},250^A0,40,40
+        ^FD{title}^FS
+        ^XZ"""
 
         self.zpl_barcode = zpl_code
         self.save()
