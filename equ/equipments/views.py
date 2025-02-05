@@ -29,7 +29,27 @@ class QRCodeView(View):
             return JsonResponse({
                 'id': equipment.id,
                 'name': equipment.title,
-                'user': equipment.responsible,
+                'user': equipment.responsible.first_name,
+                'message': 'Equipment found',
+                'location_correct': 1,
+            })
+        except json.JSONDecodeError:
+            return JsonResponse({'error': 'Неверный формат JSON'}, status=400)
+
+        except KeyError:
+            return JsonResponse({'error': 'Location header отсутствует'}, status=400)
+
+    def qr_cartridge_release(self, request, *args, **kwargs):
+        try:
+            data = json.loads(request.body)
+            code = data.get('code', '')
+            barcode_id = int(code[:-1])
+
+            cart = get_object_or_404(Cartridge, cartridge_barcode=get_object_or_404(Barcode, pk=barcode_id))
+            return JsonResponse({
+                'id': cart.id,
+                'name': cart.title,
+                'user': cart.responsible.first_name,
                 'message': 'Equipment found',
                 'location_correct': 1,
             })
@@ -83,6 +103,8 @@ class QRCodeView(View):
     def post(self, request, *args, **kwargs):
         if request.headers.get('equipment-type') == "release":
             return self.equipment_release_qr_scan(request, *args, **kwargs)
+        elif request.headers.get('equipment-type') == "release_cartridge":
+            return self.qr_cartridge_release(request, *args, **kwargs)
         else:
             return self.equipment_inventory_qr_scan(request, *args, **kwargs)
 
@@ -130,7 +152,7 @@ class CartridgeRelease(View):
         result = Cartridge.objects.filter(responsible=request.user)
         cartridges = (
             Cartridge.objects.filter(responsible=request.user)
-            .values('title', 'status')
+            .values("pk", 'title', 'status', 'location')
             .annotate(count=Count('title'))
             .order_by('title')
             .filter(status__in=[CategoryChoices.NEW, CategoryChoices.FILLED])
@@ -139,7 +161,7 @@ class CartridgeRelease(View):
         locations = Location.objects.all()
         users = User.objects.all()
         choices = CategoryChoices.choices
-
+        print(cartridges)
         return render(request, self.template_name, context={
             "cartridges": cartridges,
             "locations": locations,

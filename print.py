@@ -9,7 +9,7 @@ class PrintRequest(BaseModel):
     zpl_data: str
 
 
-def print_test_label(zpl_data):
+def print_label_zpl(zpl_data):
     printer_name = "ZDesigner ZD220-203dpi ZPL"  # Укажите имя вашего принтера
 
     try:
@@ -33,5 +33,5 @@ def print_test_label(zpl_data):
 
 @app.post("/print")
 async def print_label(request: PrintRequest):
-    return print_test_label(request.zpl_data)
+    return print_label_zpl(request.zpl_data)
 

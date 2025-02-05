@@ -793,14 +793,13 @@ function addEquipmentRowScan(data) {
     // Создаем новую строку для оборудования
     const newRow = document.createElement("div");
     newRow.className = "equipment-row";
-
-    // Заполняем строку с данными об оборудовании, если оно было получено от бэкенда
+    // Заполняем строку с данными об оборудовании, если оно было получено от бэкенда <option value="{{ equ.title }}">{{ equ.title }} - {{ equ.status }} ({{ equ.count }})</option>
     newRow.innerHTML = `
         <div class="equipment-row">
                 <select name="name[]">
                     <option value="" disabled selected>Название</option>
                     {% for equ in cartridges %}
-                        <option value="{{ equ.title }}">{{ equ.title }} - {{ equ.status }} ({{ equ.count }})</option>
+                        <option value="{{ equ.title }}" ${data && data.id === {{ equ.pk }} ? 'selected' : ''}>{{ equ.title }}</option>
                     {% endfor %}
                 </select>
 
@@ -810,8 +809,6 @@ function addEquipmentRowScan(data) {
                         <option value="{{ loc.pk }}">{{ loc }}</option>
                     {% endfor %}
                 </select>
-
-
 
                 <select name="responsible_person[]">
                     <option value="" disabled selected>Отв. лицо</option>
@@ -857,7 +854,7 @@ function success(decodedText, decodedResult) {
         method: 'POST',
         headers: {
             'Content-Type': 'application/json',
-            'equipment-type': "release",
+            'equipment-type': "release_cartridge",
             'X-CSRFToken': getCookie('csrftoken'),
         },
         body: JSON.stringify({ code: decodedText })

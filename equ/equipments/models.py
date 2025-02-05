@@ -78,7 +78,7 @@ class Barcode(models.Model):
         barcode_y = 150  # Смещение штрих-кода от верхнего края
 
         zpl_code = f"""
-^XA
+^XA^CI28
 ^PW530
 ^LL400
 ^FO100, 100^BY3
