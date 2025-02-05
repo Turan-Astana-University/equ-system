@@ -1,10 +1,10 @@
 import os
 from django.http import HttpResponse, JsonResponse
-from django.shortcuts import render
+from django.shortcuts import render, redirect
 import plotly.express as px
 from equipments.models import Equipment, Printer
 from django.core.paginator import Paginator
-
+from django.contrib import messages
 from inventory.models import Inventory
 from django.contrib.auth.mixins import LoginRequiredMixin
 from .mixin import AccountingUserRequiredMixin
@@ -64,7 +64,11 @@ class EquipmentDetailView(LoginRequiredMixin, AccountingUserRequiredMixin, Detai
         zpl_data = equipment.equipment_barcode.zpl_barcode
         try:
             send_print_request(request, zpl_data)
-            return HttpResponse("Этикетка успешно отправлена на печать!")
+            messages.success(request, "Этикетка успешно отправлена на печать")
+            previous_url = request.META.get('HTTP_REFERER', '/default-url')
+
+            # Перенаправляем на предыдущую страницу
+            return redirect("report_equipments")
         except Exception as e:
             return HttpResponse(f"Ошибка печати: {e}", status=500)
 
