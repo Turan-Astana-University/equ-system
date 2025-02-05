@@ -527,6 +527,31 @@ button.request-button:active {
 {% endblock %}
 
 {% block continue %}
+{% if messages %}
+    <div class="toast-container position-fixed bottom-0 end-0 p-3">
+        {% for message in messages %}
+            <div class="toast align-items-center text-bg-{{ message.tags }} border-0" role="alert" aria-live="assertive" aria-atomic="true">
+                <div class="d-flex">
+                    <div class="toast-body">
+                        {{ message }}
+                    </div>
+                    <button type="button" class="btn-close me-2 m-auto" data-bs-dismiss="toast" aria-label="Закрыть"></button>
+                </div>
+            </div>
+        {% endfor %}
+    </div>
+
+    <script>
+        document.addEventListener("DOMContentLoaded", function () {
+            var toastElList = document.querySelectorAll(".toast");
+            toastElList.forEach(function (toastEl) {
+                var toast = new bootstrap.Toast(toastEl, { delay: 5000 }); // Авто-закрытие через 5 сек
+                toast.show();
+            });
+        });
+    </script>
+{% endif %}
+
 <section class="u-align-center u-clearfix u-grey-10 u-section-1" id="sec-c79d">
 <!--    <div class="u-clearfix u-sheet u-sheet-1">-->
       <main>

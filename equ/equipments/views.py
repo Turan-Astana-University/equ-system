@@ -13,6 +13,7 @@ from operations.views import create_operation_log
 from django.db.models import Count
 from django.http import HttpResponse
 from django.core.paginator import Paginator
+from django.contrib import messages
 from django.views.generic import ListView
 # Create your views here.
 
@@ -139,7 +140,7 @@ class ReleaseEquipmentsView(View):
                                  responsible_old=responsible_old,
                                  responsible_new=responsible_new)
             equipment.save()
-
+        messages.success(request, "Операция выполнена успешно!")
         return redirect("home")
 
 
@@ -202,7 +203,7 @@ class CartridgeRelease(View):
                                  location_old=location_old, location_new=location_new, responsible_old=responsible_old,
                                  responsible_new=responsible_new)
             cartridge.save()
-
+        messages.success(request, "Операция выполнена успешно!")
         return redirect("home")
 
 
