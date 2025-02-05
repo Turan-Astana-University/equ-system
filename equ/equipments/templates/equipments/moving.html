@@ -548,7 +548,7 @@ button.request-button:active {
     <h2 class = "equipment-heading">Перемещение Оборудования</h2>
 
     <!-- Форма для отправки данных -->
-    <form id="equipment-form" action="{% url 'release_equipments' %}" method="post" onsubmit="return validateForm()">
+    <form id="equipment-form" action="{% url 'moving_equipments' %}" method="post" onsubmit="return validateForm()">
         {% csrf_token %}
 
         <div id="equipment-container">
