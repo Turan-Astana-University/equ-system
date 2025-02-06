@@ -231,7 +231,13 @@ footer {
                         {% for equ in objects %}
                         <tr>
                             <td>{{ equ.pk }}</td>
-                            <td>{{ equ.title }}</td>
+
+                            <td>
+                                <a href="{% url 'equipment_detail' equ.pk %}">
+                                    {{ equ.title }}
+                                </a>
+                            </td>
+
                             <td>{{ equ.location }}</td>
                             <td>{{ equ.responsible.first_name }} {{ equ.responsible.last_name }}</td>
                             <td>{{ equ.category }}</td>
