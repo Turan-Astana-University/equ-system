@@ -609,8 +609,8 @@ button.request-button:active {
 
                 <select name="status[]">
                     <option value="" disabled selected>Статус</option>
-                        {% for choice in choices %}
-                                <option value="{{ choice }}">{{ choice }}</option>
+                        {% for choice in choices|slice:"1:" %}
+                            <option value="{{ choice.0 }}">{{ choice.0 }}</option>
                         {% endfor %}
                 </select>
                  <button type="button" onclick="removeEquipmentRow(this)">Удалить</button>
