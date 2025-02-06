@@ -104,14 +104,14 @@ class CategoryStatusChoices(models.TextChoices):
 
 
 class Equipment(models.Model):
-    title = models.CharField(max_length=255, verbose_name="Название")
+    title = models.CharField(max_length=255, verbose_name="Название", null=True, blank=True)
     description = models.TextField(verbose_name="Описание")
-    category = models.ForeignKey(EquipmentType, on_delete=models.CASCADE, verbose_name="Категория")
-    equipment_barcode = models.ForeignKey(Barcode, on_delete=models.CASCADE, null=True, blank=True)  # Оставляем это поле как есть
-    location = models.ForeignKey(Location, on_delete=models.CASCADE, verbose_name="Местонахождение")
+    category = models.ForeignKey(EquipmentType, on_delete=models.SET_NULL, verbose_name="Категория", null=True, blank=True)
+    equipment_barcode = models.ForeignKey(Barcode, on_delete=models.SET_NULL, null=True, blank=True)  # Оставляем это поле как есть
+    location = models.ForeignKey(Location, on_delete=models.CASCADE, verbose_name="Местонахождение", null=True, blank=True)
     date_last_invent = models.DateTimeField(blank=True, null=True, verbose_name="Дата последней инвентаризации")
     date_last_check = models.DateTimeField(blank=True, null=True, verbose_name="Дата последней проверки")
-    responsible = models.ForeignKey(User, on_delete=models.CASCADE, verbose_name="Ответственное лицо")
+    responsible = models.ForeignKey(User, on_delete=models.CASCADE, verbose_name="Ответственное лицо", null=True, blank=True)
     image = models.ImageField(upload_to='equipment_images/', null=True, blank=True, verbose_name="Изображение")
     is_true_position = models.BooleanField(default=True, null=True, blank=True)
     status = models.CharField(max_length=144, choices=CategoryStatusChoices.choices, default=CategoryStatusChoices.NEW)
