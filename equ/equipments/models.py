@@ -143,7 +143,7 @@ class CartridgeTypes(models.Model):
         return self.title
 
     def get_count_cartridge(self):
-        cartridge = Cartridge.objects.filter(cartridge_type=self)
+        cartridge = Cartridge.objects.filter(cartridge_type=self, status__in=[CategoryChoices.NEW, CategoryChoices.FILLED])
         return len(cartridge)
 
 

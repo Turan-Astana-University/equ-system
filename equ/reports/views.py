@@ -152,4 +152,3 @@ class CartridgeReportView(LoginRequiredMixin, AccountingUserRequiredMixin, ListV
     model = CartridgeTypes
     template_name = 'reports/cartridge_types.html'
     context_object_name = 'objects'
-

@@ -193,6 +193,7 @@ class CartridgeRelease(View):
             cartridge_old.save()
             cartridge.location = location_new
             cartridge.responsible = responsible_new
+            print(cartridge, cartridge_old)
             create_operation_log(request, operation_type=OperationCategoryChoices.RELEASE_CARTRIDGE, cartridge=cartridge,
                                  cartridge_old=cartridge_old,
                                  location_old=location_old, location_new=location_new, responsible_old=responsible_old,
