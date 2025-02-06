@@ -46,7 +46,7 @@ def send_print_request(request, zpl_code):
     return JsonResponse({"error": "Используйте POST-запрос"}, status=405)
 
 
-class EquipmentDetailView(LoginRequiredMixin, AccountingUserRequiredMixin, DetailView):
+class EquipmentDetailView(LoginRequiredMixin, DetailView):
     model = Equipment
     template_name = 'reports/equipment_detail.html'
     context_object_name = 'object'
