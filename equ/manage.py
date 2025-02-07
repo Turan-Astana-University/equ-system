@@ -19,4 +19,10 @@ def main():
 
 
 if __name__ == '__main__':
+    env = os.getenv("DJANGO_ENV", "local")  # По умолчанию local
+    os.environ.setdefault("DJANGO_SETTINGS_MODULE", f"equ.settings.{env}")
+
+    from django.core.management import execute_from_command_line
+
+    execute_from_command_line(sys.argv)
     main()

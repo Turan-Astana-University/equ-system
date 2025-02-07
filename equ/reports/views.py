@@ -9,7 +9,6 @@ from inventory.models import Inventory
 from django.contrib.auth.mixins import LoginRequiredMixin
 from .mixin import AccountingUserRequiredMixin
 from django.views.generic import ListView, DetailView
-import win32print
 from operations.models import Operation
 import pandas as pd
 from django.conf import settings
@@ -35,7 +34,8 @@ def send_print_request(request, zpl_code):
             return JsonResponse({"error": "Не указан zpl_data"}, status=400)
 
         # Формируем URL FastAPI сервера на клиентском IP
-        fastapi_url = f"http://{client_ip}:8000/print"
+        fastapi_url = f"http://{client_ip}:8563/print"
+        print(fastapi_url)
 
         try:
             response = requests.post(fastapi_url, json={"zpl_data": zpl_code})
