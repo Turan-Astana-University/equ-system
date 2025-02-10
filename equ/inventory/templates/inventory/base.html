@@ -182,9 +182,68 @@
     </div>
   </header>
 {% block continue %}
+{% if messages %}
+    <div class="toast-container position-fixed bottom-0 end-0 p-3">
+        {% for message in messages %}
+            {% if "error" in message.tags %}
+                <div class="toast align-items-center text-bg-danger border-0" role="alert" aria-live="assertive" aria-atomic="true">
+            {% elif "warning" in message.tags %}
+                <div class="toast align-items-center text-bg-warning border-0" role="alert" aria-live="assertive" aria-atomic="true">
+            {% else %}
+                <div class="toast align-items-center text-bg-{{ message.tags }} border-0" role="alert" aria-live="assertive" aria-atomic="true">
+            {% endif %}
+                <div class="d-flex">
+                    <div class="toast-body">
+                        {{ message }}
+                    </div>
+                    <button type="button" class="btn-close me-2 m-auto" data-bs-dismiss="toast" aria-label="Закрыть"></button>
+                </div>
+            </div>
+        {% endfor %}
+    </div>
+
+    <script>
+        document.addEventListener("DOMContentLoaded", function () {
+            var toastElList = document.querySelectorAll(".toast");
+            toastElList.forEach(function (toastEl) {
+                var toast = new bootstrap.Toast(toastEl, { delay: 5000 }); // Авто-закрытие через 5 сек
+                toast.show();
+            });
+        });
+    </script>
+{% endif %}
 
 {% endblock %}
+{% if messages %}
+    <div class="toast-container position-fixed bottom-0 end-0 p-3">
+        {% for message in messages %}
+            {% if "error" in message.tags %}
+                <div class="toast align-items-center text-bg-danger border-0" role="alert" aria-live="assertive" aria-atomic="true">
+            {% elif "warning" in message.tags %}
+                <div class="toast align-items-center text-bg-warning border-0" role="alert" aria-live="assertive" aria-atomic="true">
+            {% else %}
+                <div class="toast align-items-center text-bg-{{ message.tags }} border-0" role="alert" aria-live="assertive" aria-atomic="true">
+            {% endif %}
+                <div class="d-flex">
+                    <div class="toast-body">
+                        {{ message }}
+                    </div>
+                    <button type="button" class="btn-close me-2 m-auto" data-bs-dismiss="toast" aria-label="Закрыть"></button>
+                </div>
+            </div>
+        {% endfor %}
+    </div>
 
+    <script>
+        document.addEventListener("DOMContentLoaded", function () {
+            var toastElList = document.querySelectorAll(".toast");
+            toastElList.forEach(function (toastEl) {
+                var toast = new bootstrap.Toast(toastEl, { delay: 5000 }); // Авто-закрытие через 5 сек
+                toast.show();
+            });
+        });
+    </script>
+{% endif %}
 <footer class="u-align-center u-clearfix u-custom-color-3 u-footer u-footer" id="sec-8659">
   <div class="u-clearfix u-sheet u-sheet-1">
     <p class="u-align-center u-custom-font u-font-roboto-slab u-text u-text-default u-text-1">Copyright (C) 2024. Университет «Туран-Астана»​. Департамент цифровой трансформации&nbsp;</p>

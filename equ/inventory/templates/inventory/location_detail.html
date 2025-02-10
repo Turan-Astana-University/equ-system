@@ -333,6 +333,30 @@ h1.u-text-center {
 {% endblock %}
 
 {% block continue %}
+{% if messages %}
+    <div class="toast-container position-fixed bottom-0 end-0 p-3">
+        {% for message in messages %}
+            <div class="toast align-items-center text-bg-{{ message.tags }} border-0" role="alert" aria-live="assertive" aria-atomic="true">
+                <div class="d-flex">
+                    <div class="toast-body">
+                        {{ message }}
+                    </div>
+                    <button type="button" class="btn-close me-2 m-auto" data-bs-dismiss="toast" aria-label="Закрыть"></button>
+                </div>
+            </div>
+        {% endfor %}
+    </div>
+
+    <script>
+        document.addEventListener("DOMContentLoaded", function () {
+            var toastElList = document.querySelectorAll(".toast");
+            toastElList.forEach(function (toastEl) {
+                var toast = new bootstrap.Toast(toastEl, { delay: 5000 }); // Авто-закрытие через 5 сек
+                toast.show();
+            });
+        });
+    </script>
+{% endif %}
 <section class="u-align-center u-clearfix u-grey-10 u-section-1" id="sec-c79d">
   <div class="u-clearfix u-sheet u-sheet-1">
       <main>
@@ -531,10 +555,7 @@ document.getElementById('stop-scan-btn').addEventListener('click', function(e) {
 });
 
 const qrCodeUrl = "{% url 'qr_code_view' %}";
-
 function success(decodedText, decodedResult) {
- 
-
     // Отправляем декодированный текст на бэкенд
     fetch(qrCodeUrl, {
         method: 'POST',
@@ -549,7 +570,8 @@ function success(decodedText, decodedResult) {
     .then(response => response.json())
     .then(data => {
         console.log('Ответ от сервера:', data);
-        console.log(data.message)
+        console.log(data.message);
+
         // Обновляем таблицу в зависимости от ответа сервера
         if (data.message === "Equipment found" && data.location_correct) {
             addRowToTable('found', data);
@@ -558,16 +580,21 @@ function success(decodedText, decodedResult) {
         } else {
             addRowToTable('not_found', data);
         }
+
         document.getElementById('result').innerHTML = `
         <h2>Успешно!</h2>
         <p>${data.name}, Позиция: ${data.location_correct}</p>
         `;
+
+        // Ждем 2 секунды перед перезагрузкой
+        setTimeout(() => {
+            window.location.reload();
+        }, 2000);
     })
     .catch(error => {
         console.error('Ошибка при отправке данных на сервер:', error);
     });
 
-    
     // Останавливаем сканирование после успешного сканирования
     html5QrCode.stop().then(() => {
         document.getElementById('reader').style.display = 'none';
@@ -575,6 +602,7 @@ function success(decodedText, decodedResult) {
         console.error(`Ошибка при остановке сканера: ${err}`);
     });
 }
+
 
 function addRowToTable(tableId, data) {
     const tableBody = document.querySelector(`#${tableId}`);

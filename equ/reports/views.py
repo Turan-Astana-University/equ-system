@@ -39,6 +39,10 @@ def send_print_request(request, zpl_code):
 
         try:
             response = requests.post(fastapi_url, json={"zpl_data": zpl_code})
+            if response:
+                print("YES")
+            else:
+                return JsonResponse(response.json(), status=response.status_code)
             return JsonResponse(response.json(), status=response.status_code)
         except requests.exceptions.RequestException as e:
             return JsonResponse({"error": f"Не удалось подключиться к {fastapi_url}", "details": str(e)}, status=500)
@@ -63,9 +67,12 @@ class EquipmentDetailView(LoginRequiredMixin, DetailView):
         equipment = self.get_object()
         zpl_data = equipment.equipment_barcode.zpl_barcode
         try:
-            send_print_request(request, zpl_data)
-            messages.success(request, "Этикетка успешно отправлена на печать")
-            previous_url = request.META.get('HTTP_REFERER', '/default-url')
+            response = send_print_request(request, zpl_data)
+            print(response)
+            if response.status_code == 500:
+                messages.error(request, "Этикетка не отправлена на печать")
+            else:
+                messages.success(request, "Этикетка успешно отправлена на печать")
 
             # Перенаправляем на предыдущую страницу
             return redirect("report_equipments")

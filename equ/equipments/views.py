@@ -77,6 +77,7 @@ class QRCodeView(View):
                                      location_new=location,
                                      responsible_old=equipment.responsible,
                                      responsible_new=location.responsible)
+                messages.success(request, f"{equipment.title} Успешно найдено на своей позиции")
             else:
                 create_operation_log(request, operation_type=OperationCategoryChoices.MOVED_WITHOUT_NOTICE,
                                      equipment=equipment,
@@ -84,6 +85,7 @@ class QRCodeView(View):
                                      location_new=location,
                                      responsible_old=equipment.responsible,
                                      responsible_new=location.responsible)
+                messages.success(request, f"{equipment.title} Успешно найдено в неправильной позиции")
                 equipment.location = location
             equipment.save()
 
@@ -147,15 +149,13 @@ class CartridgeRelease(View):
     def get(self, request):
         if request.user.is_anonymous:
             return redirect("login")
-        result = Cartridge.objects.filter(responsible=request.user)
         cartridges = (
             Cartridge.objects.filter(responsible=request.user)
-            .values("pk", 'title', 'status', 'location')
+            .values("pk", 'title', 'status', 'location').filter(status__in=[CategoryChoices.NEW, CategoryChoices.FILLED])
             .annotate(count=Count('title'))
             .order_by('title')
-            .filter(status__in=[CategoryChoices.NEW, CategoryChoices.FILLED])
         )
-
+        print(cartridges)
         locations = Location.objects.all()
         users = User.objects.all()
         choices = CategoryChoices.choices
