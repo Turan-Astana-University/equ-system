@@ -15,7 +15,8 @@
 
     <link rel="stylesheet" href="{% static 'css/nicepage.css' %}" media="screen">
     <link rel="stylesheet" href="{% static 'css/Инвентаризация.css' %}" media="screen">
-
+    <script class="u-script" type="text/javascript" src="{% static 'js/jquery.js' %}" defer=""></script>
+    <script class="u-script" type="text/javascript" src="{% static 'js/nicepage.js' %}" defer=""></script>
     <script class="u-script" type="text/javascript" src="jquery.js" defer=""></script>
     <script class="u-script" type="text/javascript" src="nicepage.js" defer=""></script>
     <meta name="generator" content="Nicepage 6.15.2, nicepage.com">
@@ -151,27 +152,57 @@
             <div class="u-inner-container-layout u-sidenav-overflow">
               <div class="u-menu-close"></div>
               <ul class="u-align-center u-nav u-popupmenu-items u-unstyled u-nav-3">
-                <li class="u-nav-item">
-                  <a class="u-button-style u-nav-link" href="#">Авторизация</a>
-                </li>
+                {% if user.is_authenticated %}
+
+                  {% else %}
+                    <li class="u-nav-item">
+                      <a class="u-button-style u-nav-link" href="#">Авторизация</a>
+                    </li>
+                {% endif %}
+
                 <li class="u-nav-item">
                   <a class="u-button-style u-nav-link" href="#">Оборудование</a>
                   <div class="u-nav-popup">
                     <ul class="u-h-spacing-20 u-nav u-unstyled u-v-spacing-10 u-nav-4">
                       <li class="u-nav-item">
-                        <a class="u-button-style u-nav-link">Выдача</a>
+                        <a href="{% url 'my_equipments' %}" class="u-button-style u-nav-link">Моё оборудование</a>
+                      </li>
+                      <li class="u-nav-item">
+                        <a href="{% url 'release_equipments' %}"class="u-button-style u-nav-link">Выдача оборудования</a>
+                      </li>
+                      <li class="u-nav-item">
+                        <a href="{% url 'cartridge_release' %}"class="u-button-style u-nav-link">Выдача картриджа</a>
+                      </li>
+                      <li class="u-nav-item">
+                        <a href="{% url 'moving_equipments' %}"class="u-button-style u-nav-link">Перемещение оборудования</a>
                       </li>
                     </ul>
                   </div>
                 </li>
                 <li class="u-nav-item">
-                  <a class="u-button-style u-nav-link">Инвентаризация</a>
+                  <a href="{% url 'invent' %}" class="u-button-style u-nav-link">Инвентаризация</a>
                 </li>
                 <li class="u-nav-item">
-                  <a class="u-button-style u-nav-link">Статистика</a>
+                  <a href="{% url 'dashboard' %}" class="u-button-style u-nav-link">Статистика</a>
                 </li>
                 <li class="u-nav-item">
                   <a class="u-button-style u-nav-link">Отчеты</a>
+                  <div class="u-nav-popup">
+                    <ul class="u-h-spacing-20 u-nav u-unstyled u-v-spacing-10 u-nav-4">
+                      <li class="u-nav-item">
+                        <a href="{% url 'report_printers' %}" class="u-button-style u-nav-link">Отчет по принтерам</a>
+                      </li>
+                      <li class="u-nav-item">
+                        <a href="{% url 'report_equipments' %}"class="u-button-style u-nav-link">Отчет по оборудованию</a>
+                      </li>
+                      <li class="u-nav-item">
+                        <a href="{% url 'report_cartridge' %}"class="u-button-style u-nav-link">Отчет по катриджам</a>
+                      </li>
+                      <li class="u-nav-item">
+                        <a href="{% url 'report_inventorys' %}"class="u-button-style u-nav-link">Отчет по инвентаризации</a>
+                      </li>
+                    </ul>
+                  </div>
                 </li>
               </ul>
             </div>

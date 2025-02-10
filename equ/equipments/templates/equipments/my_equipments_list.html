@@ -1,4 +1,6 @@
 {% extends 'inventory/base.html' %}
+{% load static %}
+
 
 {% block continue %}
 <!DOCTYPE html>
@@ -180,9 +182,9 @@ footer {
     </style>
 </head>
 
-<body>
 
-    <section class="u-align-center u-section-1">
+
+    <section class="u-align-center u-clearfix u-grey-10 u-section-1" id="sec-c79d">
         <div class="u-sheet">
             <h1 class="u-text-center">Моё оборудование</h1>
             <div class="u-table-responsive">
@@ -246,7 +248,6 @@ footer {
             </div>
         </div>
     </section>
-</body>
 
 </html>
 {% endblock %}
