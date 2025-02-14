@@ -4,6 +4,10 @@ DEBUG = False
 
 ALLOWED_HOSTS = env.list('ALLOWED_HOSTS', default=[])
 
+print(env("DB_NAME"))
+print(env("DB_USER"))
+print(env("DB_PASSWORD"))
+print(env("DB_PASSWORD"))
 DATABASES = {
     'default': {
         'ENGINE': 'django.db.backends.postgresql',
@@ -11,9 +15,16 @@ DATABASES = {
         'USER': env('DB_USER'),
         'PASSWORD': env('DB_PASSWORD'),
         'HOST': env('DB_HOST', default='localhost'),
-        'PORT': env.int('DB_PORT', default=5432),
+        'PORT': 5432,
     }
 }
+
+# DATABASES = {
+#     'default': {
+#         'ENGINE': 'django.db.backends.sqlite3',
+#         'NAME': BASE_DIR / 'db.sqlite3',
+#     }
+# }
 
 SECURE_BROWSER_XSS_FILTER = True
 SECURE_CONTENT_TYPE_NOSNIFF = True
