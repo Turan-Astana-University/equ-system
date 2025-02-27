@@ -77,6 +77,12 @@ class Barcode(models.Model):
         barcode_x = (label_width - barcode_width) // 2
         barcode_y = 150  # Смещение штрих-кода от верхнего края
 
+        def split_text(text, length=25):
+            """Разделяет текст на строки длиной не более `length` символов."""
+            return '\&'.join(text[i:i + length] for i in range(0, len(text), length))
+
+        title_wrapped = split_text(title)  # Разбиваем текст
+
         zpl_code = f"""
         ^XA^CI28
         ^PW530
@@ -88,10 +94,11 @@ class Barcode(models.Model):
         ^BEN,100,Y,N
         ^FD{barcode_data}^FS
 
-        ^FO100,220^A0,30,30
-        ^FO{(530 - len(title) * 24) // 2},250^A0,40,40
-        ^FD{title}^FS
-        ^XZ"""
+        ^FO30,260^A0,25,25  ; <-- Смещение для центрирования
+        ^FB470,3,0,C,0  ; <-- 470px ширина, 3 строки, центрирование
+        ^FD{title_wrapped}^FS  ; <-- Текст автоматически переносится
+        ^XZ
+        """
 
         self.zpl_barcode = zpl_code
         self.save()
