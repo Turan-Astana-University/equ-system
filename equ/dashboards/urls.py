@@ -1,8 +1,8 @@
 from django.urls import path, include
 from django.urls import path
-from . import views
+from .views import DashboardView
 
 urlpatterns = [
     path('django_plotly_dash/', include('django_plotly_dash.urls')),
-    path('dashboard/', views.dashboard_view, name='dashboard'),
+    path('dashboard/', DashboardView.as_view(), name='dashboard'),
 ]
