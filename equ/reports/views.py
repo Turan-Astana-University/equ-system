@@ -14,6 +14,7 @@ import pandas as pd
 from django.conf import settings
 from equipments.models import CartridgeTypes
 import requests
+from inventory.mixins import AccountingRequiredMixin
 
 
 def get_client_ip(request):
@@ -50,7 +51,7 @@ def send_print_request(request, zpl_code):
     return JsonResponse({"error": "Используйте POST-запрос"}, status=405)
 
 
-class EquipmentDetailView(LoginRequiredMixin, DetailView):
+class EquipmentDetailView(AccountingRequiredMixin, DetailView):
     model = Equipment
     template_name = 'reports/equipment_detail.html'
     context_object_name = 'object'
@@ -80,7 +81,7 @@ class EquipmentDetailView(LoginRequiredMixin, DetailView):
             return HttpResponse(f"Ошибка печати: {e}", status=500)
 
 
-class EquipmentReportView(LoginRequiredMixin, AccountingUserRequiredMixin, ListView):
+class EquipmentReportView(AccountingRequiredMixin, ListView):
     model = Equipment
     template_name = 'reports/report_equipments.html'
     context_object_name = 'objects'  # Соответствует вашему шаблону
@@ -99,14 +100,14 @@ class EquipmentReportView(LoginRequiredMixin, AccountingUserRequiredMixin, ListV
 
 
 # Класс для списка принтеров
-class PrinterReportView(LoginRequiredMixin, AccountingUserRequiredMixin, ListView):
+class PrinterReportView(AccountingRequiredMixin, ListView):
     model = Printer
     template_name = 'reports/report_printers.html'
     context_object_name = 'objects'
 
 
 # Класс для списка инвентарей
-class InventoryReportView(LoginRequiredMixin, AccountingUserRequiredMixin, ListView):
+class InventoryReportView(AccountingRequiredMixin, ListView):
     model = Inventory
     template_name = 'reports/report_inventorys.html'
     context_object_name = 'objects'
@@ -129,7 +130,7 @@ class InventoryReportView(LoginRequiredMixin, AccountingUserRequiredMixin, ListV
         return render(request, self.template_name, context)
 
 
-class InventoryDetailView(LoginRequiredMixin, AccountingUserRequiredMixin, DetailView):
+class InventoryDetailView(AccountingRequiredMixin, DetailView):
     model = Inventory
     template_name = 'reports/inventory_detail.html'
     context_object_name = 'object'
@@ -155,7 +156,7 @@ class InventoryDetailView(LoginRequiredMixin, AccountingUserRequiredMixin, Detai
         return context
 
 
-class CartridgeReportView(LoginRequiredMixin, AccountingUserRequiredMixin, ListView):
+class CartridgeReportView(AccountingRequiredMixin, ListView):
     model = CartridgeTypes
     template_name = 'reports/cartridge_types.html'
     context_object_name = 'objects'
