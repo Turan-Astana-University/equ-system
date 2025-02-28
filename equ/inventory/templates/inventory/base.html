@@ -128,11 +128,9 @@
               <div class="u-nav-popup">
                 <ul class="u-h-spacing-20 u-nav u-unstyled u-v-spacing-10 u-nav-2">
 
-                  {% if user.is_superuser %}
                   <li class="u-nav-item">
                     <a href="{% url 'report_printers' %}" class="u-button-style u-nav-link u-white">Отчет по принтерам</a>
                   </li>
-                  {% endif %}
                   <li class="u-nav-item">
                     <a href="{% url 'report_equipments' %}" class="u-button-style u-nav-link u-white">Отчет по оборудованию</a>
                   </li>
