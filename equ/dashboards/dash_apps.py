@@ -4,19 +4,15 @@ import plotly.express as px
 from django_plotly_dash import DjangoDash
 import pandas as pd
 
-# Пример данных
 df = pd.DataFrame({
     "Category": ["A", "B", "C", "D"],
     "Values": [10, 20, 30, 40]
 })
 
-# Создаем приложение Dash
 app = DjangoDash('DashboardApp')  # Имя приложения
 
-# Построение графика
 fig = px.bar(df, x="Category", y="Values", title="Пример графика")
 
-# Определяем интерфейс Dash
 app.layout = html.Div([
     html.H1("Интерактивный дашборд", style={"textAlign": "center"}),
     dcc.Graph(id='example-graph', figure=fig),
@@ -29,7 +25,6 @@ app.layout = html.Div([
     dcc.Graph(id='filtered-graph')
 ])
 
-# Добавляем интерактивность
 @app.callback(
     dash.dependencies.Output('filtered-graph', 'figure'),
     [dash.dependencies.Input('category-dropdown', 'value')]

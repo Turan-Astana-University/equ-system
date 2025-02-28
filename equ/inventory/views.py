@@ -6,12 +6,13 @@ from equipments.models import Equipment
 from datetime import datetime
 from .models import Inventory
 from django.views import View
-from .mixins import SuperuserRequiredMixin
+from django.contrib import messages
+from .mixins import SuperuserRequiredMixin, AccountingRequiredMixin
 from .func import create_file
 # Create your views here.
 
 
-class LocationInventoryView(SuperuserRequiredMixin, View):
+class LocationInventoryView(AccountingRequiredMixin, View):
     template_name = 'inventory/locations_view.html'
 
     def get(self, request, *args, **kwargs):
@@ -30,7 +31,7 @@ class LocationInventoryView(SuperuserRequiredMixin, View):
         return render(request, self.template_name, context)
 
 
-class EndInventLocationView(SuperuserRequiredMixin, View):
+class EndInventLocationView(AccountingRequiredMixin, View):
     def get(self, request, pk, *args, **kwargs):
         location = get_object_or_404(Location, pk=pk)
         location.date_last_invent = datetime.now()
@@ -38,7 +39,7 @@ class EndInventLocationView(SuperuserRequiredMixin, View):
         return redirect('locations')
 
 
-class CreateInventView(SuperuserRequiredMixin, View):
+class CreateInventView(AccountingRequiredMixin, View):
     def get(self, request, *args, **kwargs):
         if request.user.is_superuser:
             new_inventory = Inventory(date_start=datetime.now())
@@ -46,10 +47,11 @@ class CreateInventView(SuperuserRequiredMixin, View):
             new_inventory.save()
             return redirect("locations")
         else:
-            return HttpResponse("НЕТ ДОСТУПА")
+            messages.error(request, "Доступ закрыт!")
+            return redirect("home")
 
 
-class EndInventView(SuperuserRequiredMixin, View):
+class EndInventView(AccountingRequiredMixin, View):
     def get(self, request, *args, **kwargs):
         inventory = Inventory.objects.last()
         if inventory.date_end:
@@ -66,7 +68,7 @@ class EndInventView(SuperuserRequiredMixin, View):
         return redirect('home')
 
 
-class IndexInventView(SuperuserRequiredMixin, View):
+class IndexInventView(AccountingRequiredMixin, View):
     template_name = "inventory/inventory.html"
 
     def get(self, request, *args, **kwargs):
@@ -75,7 +77,7 @@ class IndexInventView(SuperuserRequiredMixin, View):
         return render(request, self.template_name, context)
 
 
-class LocationDetailView(SuperuserRequiredMixin, View):
+class LocationDetailView(AccountingRequiredMixin, View):
     template_name = 'inventory/location_detail.html'
 
     def get(self, request, pk, *args, **kwargs):
