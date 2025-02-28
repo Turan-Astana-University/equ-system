@@ -20,9 +20,9 @@ from inventory.mixins import AccountingRequiredMixin
 def get_client_ip(request):
     x_forwarded_for = request.META.get('HTTP_X_FORWARDED_FOR')
     if x_forwarded_for:
-        ip = x_forwarded_for.split(',')[0]  # Берем первый IP в цепочке
+        ip = x_forwarded_for.split(',')[0]
     else:
-        ip = request.META.get('REMOTE_ADDR')  # Обычный IP, если прокси нет
+        ip = request.META.get('REMOTE_ADDR')
     return ip
 
 
@@ -34,7 +34,6 @@ def send_print_request(request, zpl_code):
         if not zpl_code:
             return JsonResponse({"error": "Не указан zpl_data"}, status=400)
 
-        # Формируем URL FastAPI сервера на клиентском IP
         fastapi_url = f"http://192.168.115.165:8563/print"
         print(fastapi_url)
 
@@ -51,7 +50,7 @@ def send_print_request(request, zpl_code):
     return JsonResponse({"error": "Используйте POST-запрос"}, status=405)
 
 
-class EquipmentDetailView(AccountingRequiredMixin, DetailView):
+class EquipmentDetailView(DetailView):
     model = Equipment
     template_name = 'reports/equipment_detail.html'
     context_object_name = 'object'
@@ -75,7 +74,6 @@ class EquipmentDetailView(AccountingRequiredMixin, DetailView):
             else:
                 messages.success(request, "Этикетка успешно отправлена на печать")
 
-            # Перенаправляем на предыдущую страницу
             return redirect("report_equipments")
         except Exception as e:
             return HttpResponse(f"Ошибка печати: {e}", status=500)
@@ -95,18 +93,15 @@ class EquipmentReportView(AccountingRequiredMixin, ListView):
         context = {
             'objects': page_obj
         }
-        client_ip = get_client_ip(request)
         return render(request, self.template_name, context)
 
 
-# Класс для списка принтеров
 class PrinterReportView(AccountingRequiredMixin, ListView):
     model = Printer
     template_name = 'reports/report_printers.html'
     context_object_name = 'objects'
 
 
-# Класс для списка инвентарей
 class InventoryReportView(AccountingRequiredMixin, ListView):
     model = Inventory
     template_name = 'reports/report_inventorys.html'
@@ -117,13 +112,10 @@ class InventoryReportView(AccountingRequiredMixin, ListView):
         inventorys = Inventory.objects.all()
         paginator = Paginator(inventorys, self.paginate_by)
 
-        # Получаем номер страницы из GET-параметров
         page_number = request.GET.get('page')
 
-        # Получаем текущую страницу с данными
         page_obj = paginator.get_page(page_number)
 
-        # Передаем контекст в шаблон
         context = {
             'objects': page_obj
         }
@@ -150,7 +142,7 @@ class InventoryDetailView(AccountingRequiredMixin, DetailView):
         fig.update_traces(textinfo='percent+label')
 
 
-        graph_json = fig.to_json()  # Конвертируем график в JSON
+        graph_json = fig.to_json()
 
         context['graph_json'] = graph_json
         return context
