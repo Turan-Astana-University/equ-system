@@ -11,9 +11,9 @@ from users.models import User, CategoryChoicesUser
 from operations.models import OperationCategoryChoices
 from operations.views import create_operation_log
 from django.db.models import Count
-from django.http import HttpResponse
 from django.contrib import messages
 from django.views.generic import ListView
+from inventory.mixins import AccountingRequiredMixin
 # Create your views here.
 
 
@@ -202,23 +202,19 @@ class CartridgeRelease(View):
         return redirect("home")
 
 
-class MovingEquipmentsView(View):
+class MovingEquipmentsView(AccountingRequiredMixin, View):
     template_name = "equipments/moving.html"
 
     def get(self, request):
-        if request.user.is_anonymous:
-            return redirect("login")
-        if request.user.staff == CategoryChoicesUser.ACCOUNTING:
-            result = Equipment.objects.all()
-            locations = Location.objects.all()
-            users = User.objects.all()
-            return render(request, self.template_name, context={
-                "equipments": result,
-                "locations": locations,
-                "users": users,
-            })
-        else:
-            return render(request, '404.html', {'error_message': "У вас нет доступа к этому ресурсу."})
+
+        result = Equipment.objects.all()
+        locations = Location.objects.all()
+        users = User.objects.all()
+        return render(request, self.template_name, context={
+            "equipments": result,
+            "locations": locations,
+            "users": users,
+        })
 
     def post(self, request):
         for i in range(len(request.POST.getlist("name[]"))):

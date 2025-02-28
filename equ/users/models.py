@@ -13,8 +13,8 @@ class CategoryChoicesUser(models.TextChoices):
 
 class User(AbstractUser):
     # email = models.EmailField(unique=True)
-    first_name = models.CharField(max_length=30, blank=True)
-    last_name = models.CharField(max_length=30, blank=True)
+    first_name = models.CharField(max_length=30)
+    last_name = models.CharField(max_length=30)
     is_staff = models.BooleanField(default=False)
     # is_active = models.BooleanField(default=True)
     # # date_joined = models.DateTimeField(auto_now_add=True)
@@ -26,4 +26,4 @@ class User(AbstractUser):
     # REQUIRED_FIELDS = []
 
     def __str__(self):
-        return f"{self.username} - {self.first_name} {self.last_name}"
+        return f"{self.first_name} {self.last_name} - {self.username}"

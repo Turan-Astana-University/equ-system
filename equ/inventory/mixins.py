@@ -14,9 +14,8 @@ class SuperuserRequiredMixin:
 
 class AccountingRequiredMixin:
     def dispatch(self, request, *args, **kwargs):
-        print(request.user.staff)
         if request.user.staff in [CategoryChoicesUser.ACCOUNTING, CategoryChoicesUser.ADMINISTRATION]:
             return super().dispatch(request, *args, **kwargs)
         else:
-            messages.error(request, "Доступ закрыт!")
+            messages.error(request, "У вас нет доступа к этому ресурсу!")
             return redirect("home")
