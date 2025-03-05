@@ -1,4 +1,7 @@
 from django.db import models
+from django.http import HttpResponse
+from django.shortcuts import redirect
+
 from users.models import User
 from django.core.files import File
 import barcode
@@ -6,6 +9,8 @@ from barcode.writer import ImageWriter
 from io import BytesIO
 from PIL import Image, ImageDraw, ImageFont
 from locations.models import Location
+from .functions import send_print_request
+from django.contrib import messages
 # Create your models here.
 
 
@@ -210,3 +215,18 @@ class Cartridge(models.Model):
             bc.generate_barcode(self.title)  # Генерируем штрих-код
             self.cartridge_barcode = bc  # Присваиваем штрих-код
         super().save(*args, **kwargs)  # Сохраняем объект Cartridge
+
+    def print_barcode(self, request):
+        cartridge = self
+        print(request)
+        zpl_data = self.cartridge_barcode.zpl_barcode
+        try:
+            response = send_print_request(request, zpl_data)
+            if response.status_code == 500:
+                messages.error(request, "Этикетка не отправлена на печать")
+            else:
+                messages.success(request, "Этикетка успешно отправлена на печать")
+
+            return redirect("admin:index")
+        except Exception as e:
+            return HttpResponse(f"Ошибка печати: {e}", status=500)
