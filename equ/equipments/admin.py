@@ -25,7 +25,7 @@ class CartridgeAdmin(admin.ModelAdmin):
 
     def print_barcode_button(self, obj):
         return format_html('<a class="button" href="{}">Напечатать штрих-код</a>',
-                           f"/admin/cartridge/{obj.id}/print-barcode/")
+                           f"/admin/equipments/cartridge/{obj.id}/print-barcode/")
 
     print_barcode_button.short_description = "Печать"
 
