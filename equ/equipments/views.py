@@ -19,6 +19,7 @@ from inventory.mixins import AccountingRequiredMixin
 
 @method_decorator(csrf_exempt, name='dispatch')
 class QRCodeView(View):
+
     def equipment_release_qr_scan(self, request, *args, **kwargs):
         try:
             data = json.loads(request.body)
@@ -45,7 +46,8 @@ class QRCodeView(View):
             code = data.get('code', '')
             barcode_id = int(code[:-1])
 
-            cart = get_object_or_404(Cartridge, cartridge_barcode=get_object_or_404(Barcode, pk=barcode_id))
+            barcode = get_object_or_404(Barcode, pk=barcode_id)
+            cart = get_object_or_404(Cartridge, cartridge_barcode=barcode)
             return JsonResponse({
                 'id': cart.id,
                 'name': cart.title,
@@ -54,10 +56,17 @@ class QRCodeView(View):
                 'location_correct': 1,
             })
         except json.JSONDecodeError:
-            return JsonResponse({'error': 'Неверный формат JSON'}, status=400)
-
-        except KeyError:
-            return JsonResponse({'error': 'Location header отсутствует'}, status=400)
+            messages.error(request, "Ошибка декодирования")
+            return redirect("home")
+        except Cartridge.DoesNotExist:
+            messages.error(request, "Картридж не существует")
+            return redirect("home")
+        except Barcode.DoesNotExist:
+            messages.error(request, "Неправильный или не существует штрихкод")
+            return redirect("home")
+        except Exception as e:
+            messages.error(request, "Возникла ошибка")
+            return redirect("home")
 
     def equipment_inventory_qr_scan(self, request, *args, **kwargs):
         try:
