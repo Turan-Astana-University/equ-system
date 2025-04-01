@@ -343,7 +343,7 @@ body { font-family: Arial, sans-serif;
         <div class="filter-input">
             <label for="location">Местоположение</label>
             <select id="location" name="location" class="filter-select">
-                <option value="">Выберите местоположение</option>
+                <option value="">Выберите мес тоположение</option>
                 {% for obj in objects %}
                     <option value="{{ obj.location.id }}">{{ obj.location.title }}</option>
                 {% endfor %}
