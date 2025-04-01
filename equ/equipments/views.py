@@ -193,7 +193,7 @@ class CartridgeRelease(View):
 
             user_cartridge_new = request.user
             print(user_cartridge_new)
-            location_cartridge_new = Location.objects.get(pk=user_cartridge_new.location.pk)
+            location_cartridge_new = Location.objects.get(pk=user_cartridge_new.pk)
 
             cartridge_old = Cartridge.objects.get(pk=request.POST.getlist("cartridge_old[]")[i])
             status_cartridge_old = request.POST.getlist("status[]")[i]
