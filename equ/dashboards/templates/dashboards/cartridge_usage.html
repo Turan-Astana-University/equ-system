@@ -1,0 +1,105 @@
+{% extends 'inventory/base.html' %}
+{% block continue %}
+<!DOCTYPE html>
+<html lang="ru">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Аналитика расхода картриджей</title>
+    <script src="https://cdn.jsdelivr.net/npm/chart.js"></script>
+    <style>
+        body {
+            font-family: Arial, sans-serif;
+            text-align: center;
+            background-color: #f4f4f4;
+        }
+        h2 {
+            color: #333;
+        }
+        table {
+            width: 50%;
+            margin: 20px auto;
+            border-collapse: collapse;
+            background: white;
+            box-shadow: 0 0 10px rgba(0, 0, 0, 0.1);
+        }
+        th, td {
+            border: 1px solid #ddd;
+            padding: 10px;
+            text-align: center;
+        }
+        th {
+            background: #007bff;
+            color: white;
+        }
+        canvas {
+            margin-top: 20px;
+        }
+    </style>
+</head>
+<body>
+
+    <h2>Аналитика расхода картриджей по департаментам</h2>
+
+    <table>
+        <thead>
+            <tr>
+                <th>Департамент</th>
+                <th>Количество картриджей</th>
+            </tr>
+        </thead>
+        <tbody>
+            {% for item in cartridge_usage %}
+            <tr>
+                <td>{{ item.responsible_new__department__title }}</td>
+                <td>{{ item.usage_count }}</td>
+            </tr>
+            {% endfor %}
+        </tbody>
+    </table>
+
+    <canvas id="cartridgeChart" width="400" height="200"></canvas>
+
+    <script>
+        document.addEventListener("DOMContentLoaded", function () {
+            var ctx = document.getElementById('cartridgeChart').getContext('2d');
+
+            var departments = [
+                {% for item in cartridge_usage %}
+                    "{{ item.responsible_new__department__title }}",
+                {% endfor %}
+            ];
+
+            var counts = [
+                {% for item in cartridge_usage %}
+                    {{ item.usage_count }},
+                {% endfor %}
+            ];
+
+            new Chart(ctx, {
+                type: 'bar',
+                data: {
+                    labels: departments,
+                    datasets: [{
+                        label: 'Количество картриджей',
+                        data: counts,
+                        backgroundColor: 'rgba(54, 162, 235, 0.6)',
+                        borderColor: 'rgba(54, 162, 235, 1)',
+                        borderWidth: 1
+                    }]
+                },
+                options: {
+                    responsive: true,
+                    scales: {
+                        y: {
+                            beginAtZero: true
+                        }
+                    }
+                }
+            });
+        });
+    </script>
+
+</body>
+</html>
+{% endblock %}

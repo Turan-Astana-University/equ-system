@@ -5,6 +5,8 @@ import pandas as pd
 from equipments.models import Equipment, EquipmentType
 from inventory.mixins import SuperuserRequiredMixin, AccountingRequiredMixin
 from django.views import View
+from django.db.models import Count
+from operations.models import Operation, OperationCategoryChoices
 
 
 class DashboardView(AccountingRequiredMixin, View):
@@ -24,3 +26,14 @@ class DashboardView(AccountingRequiredMixin, View):
         graph_json = fig.to_json()
 
         return render(request, self.template_name, {'graph_json': graph_json})
+
+
+def cartridge_usage_by_department(request):
+    cartridge_usage = (
+        Operation.objects.filter(operation_type=OperationCategoryChoices.RELEASE_CARTRIDGE)
+        .values("responsible_new__department__title")
+        .annotate(usage_count=Count("cartridge"))
+        .order_by("-usage_count")
+    )
+
+    return render(request, "dashboards/cartridge_usage.html", {"cartridge_usage": cartridge_usage})
