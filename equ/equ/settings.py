@@ -26,7 +26,6 @@ SECRET_KEY = 'django-insecure-1)ss!ih*sgr=reu2+2^@d!m!oyias+wgjtrhm^%(7chppfgrl8
 
 # SECURITY WARNING: don't run with debug turned on in production!
 DEBUG = env("DEBUG")
-print(env("SECRET_KEY"), DEBUG)
 ALLOWED_HOSTS = ["*"]
 
 
@@ -161,6 +160,7 @@ DEFAULT_AUTO_FIELD = 'django.db.models.BigAutoField'
 
 AUTH_USER_MODEL = "users.User"
 
+SITE_URL = "https://equipment-system.tau-edu.kz/"
 
 EMAIL_BACKEND = 'django.core.mail.backends.smtp.EmailBackend'
 
