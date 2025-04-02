@@ -14,7 +14,7 @@ class SuperuserRequiredMixin:
 
 class AccountingRequiredMixin:
     def dispatch(self, request, *args, **kwargs):
-        if request.user.user.is_anonymous:
+        if request.user.is_anonymous:
             return redirect("login")
         if request.user.staff in [CategoryChoicesUser.ACCOUNTING, CategoryChoicesUser.ADMINISTRATION]:
             return super().dispatch(request, *args, **kwargs)
