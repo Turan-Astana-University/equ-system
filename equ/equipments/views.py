@@ -14,6 +14,7 @@ from django.db.models import Count
 from django.contrib import messages
 from django.views.generic import ListView
 from inventory.mixins import AccountingRequiredMixin
+from django.contrib.auth.mixins import PermissionRequiredMixin
 # Create your views here.
 
 
@@ -119,8 +120,14 @@ class QRCodeView(View):
             return self.equipment_inventory_qr_scan(request, *args, **kwargs)
 
 
-class ReleaseEquipmentsView(View):
+class ReleaseEquipmentsView(PermissionRequiredMixin, View):
     template_name = "equipments/release.html"
+    permission_required = "equipments.change_equipment"
+    raise_exception = False  # Отключаем исключение 403 Forbidden
+
+    def handle_no_permission(self):
+        messages.error(self.request, "У вас нет прав для выполнения этого действия.")
+        return redirect("home")  # Перенаправляем на страницу без доступа
 
     def get(self, request):
         if request.user.is_anonymous:
@@ -152,8 +159,14 @@ class ReleaseEquipmentsView(View):
         return redirect("home")
 
 
-class CartridgeRelease(View):
+class CartridgeRelease(PermissionRequiredMixin, View):
     template_name = "equipments/cartridge_release.html"
+    permission_required = "equipments.change_cartridge"
+    raise_exception = False  # Отключаем исключение 403 Forbidden
+
+    def handle_no_permission(self):
+        messages.error(self.request, "У вас нет прав для выполнения этого действия.")
+        return redirect("home")  # Перенаправляем на страницу без доступа
 
     def get(self, request):
         if request.user.is_anonymous:
@@ -212,8 +225,19 @@ class CartridgeRelease(View):
         return redirect("home")
 
 
-class MovingEquipmentsView(AccountingRequiredMixin, View):
+class MovingEquipmentsView(PermissionRequiredMixin, View):
     template_name = "equipments/moving.html"
+    permission_required = (
+        "equipments.add_equipment"
+        "equipments.change_equipment",
+        "equipments.delete_equipment",
+        "equipments.view_equipment"
+    )
+    raise_exception = False  # Отключаем исключение 403 Forbidden
+
+    def handle_no_permission(self):
+        messages.error(self.request, "У вас нет прав для выполнения этого действия.")
+        return redirect("home")  # Перенаправляем на страницу без доступа
 
     def get(self, request):
 
