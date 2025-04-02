@@ -161,7 +161,9 @@ DEFAULT_AUTO_FIELD = 'django.db.models.BigAutoField'
 AUTH_USER_MODEL = "users.User"
 
 SITE_URL = "https://equipment-system.tau-edu.kz/"
-
+CSRF_TRUSTED_ORIGINS = [
+    "https://equipment-system.tau-edu.kz",
+]
 EMAIL_BACKEND = 'django.core.mail.backends.smtp.EmailBackend'
 
 EMAIL_HOST = 'smtp.yandex.ru'
