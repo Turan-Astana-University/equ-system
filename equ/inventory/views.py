@@ -9,11 +9,24 @@ from django.views import View
 from django.contrib import messages
 from .mixins import SuperuserRequiredMixin, AccountingRequiredMixin
 from .func import create_file
+
+from django.contrib.auth.mixins import PermissionRequiredMixin
 # Create your views here.
 
 
-class LocationInventoryView(AccountingRequiredMixin, View):
+class LocationInventoryView(PermissionRequiredMixin, View):
     template_name = 'inventory/locations_view.html'
+    permission_required = (
+        "inventory.add_inventory"
+        "equipments.change_inventory",
+        "equipments.delete_inventory",
+        "equipments.view_inventory"
+    )
+    raise_exception = False
+
+    def handle_no_permission(self):
+        messages.error(self.request, "У вас нет прав для выполнения этого действия.")
+        return redirect("home")  # Перенаправляем на страницу без доступа
 
     def get(self, request, *args, **kwargs):
         inventory = Inventory.objects.last()
@@ -39,7 +52,19 @@ class EndInventLocationView(AccountingRequiredMixin, View):
         return redirect('locations')
 
 
-class CreateInventView(AccountingRequiredMixin, View):
+class CreateInventView(PermissionRequiredMixin, View):
+    permission_required = (
+        "inventory.add_inventory"
+        "equipments.change_inventory",
+        "equipments.delete_inventory",
+        "equipments.view_inventory"
+    )
+    raise_exception = False
+
+    def handle_no_permission(self):
+        messages.error(self.request, "У вас нет прав для выполнения этого действия.")
+        return redirect("home")  # Перенаправляем на страницу без доступа
+
     def get(self, request, *args, **kwargs):
         if request.user.is_superuser:
             new_inventory = Inventory(date_start=datetime.now())
@@ -68,8 +93,18 @@ class EndInventView(AccountingRequiredMixin, View):
         return redirect('home')
 
 
-class IndexInventView(AccountingRequiredMixin, View):
+class IndexInventView(PermissionRequiredMixin, View):
     template_name = "inventory/inventory.html"
+    permission_required = (
+        "inventory.add_inventory"
+        "equipments.change_inventory",
+        "equipments.delete_inventory",
+        "equipments.view_inventory"
+    )
+    raise_exception = False
+    def handle_no_permission(self):
+        messages.error(self.request, "У вас нет прав для выполнения этого действия.")
+        return redirect("home")  # Перенаправляем на страницу без доступа
 
     def get(self, request, *args, **kwargs):
         inventory = Inventory.objects.last()

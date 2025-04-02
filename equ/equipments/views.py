@@ -240,7 +240,6 @@ class MovingEquipmentsView(PermissionRequiredMixin, View):
         return redirect("home")  # Перенаправляем на страницу без доступа
 
     def get(self, request):
-
         result = Equipment.objects.all()
         locations = Location.objects.all()
         users = User.objects.all()
