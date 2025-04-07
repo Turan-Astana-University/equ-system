@@ -2,11 +2,14 @@ import os
 from django.http import HttpResponse, JsonResponse
 from django.shortcuts import render, redirect
 import plotly.express as px
-from equipments.models import Equipment, Printer
+from equipments.models import Equipment, Printer, EquipmentType
 from django.core.paginator import Paginator
 from django.contrib import messages
 from inventory.models import Inventory
 from django.contrib.auth.mixins import LoginRequiredMixin
+
+from locations.models import Location
+from users.models import User
 from .mixin import AccountingUserRequiredMixin
 from django.views.generic import ListView, DetailView
 from operations.models import Operation
@@ -15,6 +18,7 @@ from django.conf import settings
 from equipments.models import CartridgeTypes
 import requests
 from inventory.mixins import AccountingRequiredMixin
+from .forms import EquipmentFilterForm
 
 
 def get_client_ip(request):
@@ -90,10 +94,44 @@ class EquipmentReportView(AccountingRequiredMixin, ListView):
         paginator = Paginator(equipments, self.paginate_by)
         page_number = request.GET.get('page')
         page_obj = paginator.get_page(page_number)
+
+        category_ids = equipments.values_list('category_id', flat=True).distinct()
+
+        form = EquipmentFilterForm(request.POST or None)
+
+        # Логика фильтрации
+
         context = {
-            'objects': page_obj
+            'form': form,
+            'equipments': equipments,  # Здесь можно передать отфильтрованные объекты
+            'objects': page_obj,
         }
         return render(request, self.template_name, context)
+
+    def post(self, request, *args, **kwargs):
+        form = EquipmentFilterForm(request.POST or None)
+        equipments = Equipment.objects.all()
+
+        if form.is_valid():
+            category = form.cleaned_data.get('category')
+            location = form.cleaned_data.get('location')
+            responsible = form.cleaned_data.get('responsible')
+
+            if category:
+                equipments = equipments.filter(category=category)
+            if location:
+                equipments = equipments.filter(location=location)
+            if responsible:
+                equipments = equipments.filter(responsible=responsible)
+
+        paginator = Paginator(equipments, self.paginate_by)
+        page_number = request.GET.get('page')
+        page_obj = paginator.get_page(page_number)
+        context = {
+            'form': form,
+            "objects": page_obj
+        }
+        return render(request, self.template_name, context=context)
 
 
 class PrinterReportView(AccountingRequiredMixin, ListView):

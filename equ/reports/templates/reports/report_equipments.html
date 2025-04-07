@@ -1,5 +1,4 @@
 {% extends 'inventory/base.html' %}
-
 {% block continue %}
 <!DOCTYPE html>
 <html lang="en">
@@ -328,36 +327,41 @@ body { font-family: Arial, sans-serif;
     <section class="u-align-center u-clearfix u-grey-10 u-section-1" id="sec-c79d">
         <div class="u-clearfix u-sheet u-sheet-1">
             <h1 class="u-text-center">Отчет по оборудованию</h1>
-<form id="filter-form" class="filter-form">
+<form method="POST" action="{% url 'report_equipments' %} "id="filter-form" class="filter-form">
+{% csrf_token %}
     <div class="filter-container">
         <div class="filter-input">
             <label for="category">Категория</label>
-            <select id="category" name="category" class="filter-select">
-                <option value="">Выберите категорию</option>
-                {% for obj in objects %}
-                    <option value="{{ obj.category.id }}">{{ obj.category.title }}</option>
-                {% endfor %}
-            </select>
+            {{ form.category }}
+<!--            <select id="category" name="category" class="filter-select">-->
+<!--                <option value="">Выберите категорию</option>-->
+<!--                {% for obj in categories %}-->
+<!--                    <option value="{{ obj.category.id }}">{{ obj.title }}</option>-->
+<!--                {% endfor %}-->
+<!--            </select>-->
         </div>
 
         <div class="filter-input">
             <label for="location">Местоположение</label>
-            <select id="location" name="location" class="filter-select">
-                <option value="">Выберите мес тоположение</option>
-                {% for obj in objects %}
-                    <option value="{{ obj.location.id }}">{{ obj.location.title }}</option>
-                {% endfor %}
-            </select>
+            {{ form.location }}
+<!--            <select id="location" name="location" class="filter-select">-->
+<!--                <option value="">Выберите местоположение</option>-->
+<!--                {% for obj in locations %}-->
+<!--                    <option value="{{ obj.id }}">{{ obj.title }}</option>-->
+<!--                {% endfor %}-->
+<!--            </select>-->
         </div>
 
         <div class="filter-input">
             <label for="responsible">Ответственный</label>
-            <select id="responsible" name="responsible" class="filter-select">
-                <option value="">Выберите сотрудника</option>
-                {% for obj in objects %}
-                    <option value="{{ obj.responsible.id }}">{{ obj.responsible.first_name }} {{ obj.responsible.last_name }}</option>
-                {% endfor %}
-            </select>
+            {{ form.responsible }}
+<!--            <select id="responsible" name="responsible" class="filter-select">-->
+<!--                <option value="">Выберите сотрудника</option>-->
+<!--                -->
+<!--                {% for obj in responsibles %}-->
+<!--                    <option value="{{ obj.id }}">{{ obj.first_name }} {{ obj.last_name }}</option>-->
+<!--                {% endfor %}-->
+<!--            </select>-->
         </div>
     </div>
 
