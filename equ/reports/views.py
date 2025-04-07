@@ -92,7 +92,7 @@ class EquipmentReportView(AccountingRequiredMixin, ListView):
     def get(self, request, *args, **kwargs):
         equipments = Equipment.objects.all()
 
-        form = EquipmentFilterForm(request.POST or None)
+        form = EquipmentFilterForm(request.GET or None)
         if form.is_valid():
             category = form.cleaned_data.get('category')
             location = form.cleaned_data.get('location')
