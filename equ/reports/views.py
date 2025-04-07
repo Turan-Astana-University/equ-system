@@ -91,15 +91,22 @@ class EquipmentReportView(AccountingRequiredMixin, ListView):
 
     def get(self, request, *args, **kwargs):
         equipments = Equipment.objects.all()
+
+        form = EquipmentFilterForm(request.POST or None)
+        if form.is_valid():
+            category = form.cleaned_data.get('category')
+            location = form.cleaned_data.get('location')
+            responsible = form.cleaned_data.get('responsible')
+
+            if category:
+                equipments = equipments.filter(category=category)
+            if location:
+                equipments = equipments.filter(location=location)
+            if responsible:
+                equipments = equipments.filter(responsible=responsible)
         paginator = Paginator(equipments, self.paginate_by)
         page_number = request.GET.get('page')
         page_obj = paginator.get_page(page_number)
-
-        category_ids = equipments.values_list('category_id', flat=True).distinct()
-
-        form = EquipmentFilterForm(request.POST or None)
-
-        # Логика фильтрации
 
         context = {
             'form': form,
