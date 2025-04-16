@@ -86,12 +86,12 @@ class EquipmentDetailView(DetailView):
 class EquipmentReportView(AccountingRequiredMixin, ListView):
     model = Equipment
     template_name = 'reports/report_equipments.html'
-    context_object_name = 'objects'  # Соответствует вашему шаблону
-    paginate_by = 10  # Количество объектов на странице
+    context_object_name = 'objects'
+    paginate_by = 10
 
     def get(self, request, *args, **kwargs):
         equipments = Equipment.objects.all()
-
+        print("POST:", request)
         form = EquipmentFilterForm(request.GET or None)
         if form.is_valid():
             category = form.cleaned_data.get('category')
@@ -104,13 +104,13 @@ class EquipmentReportView(AccountingRequiredMixin, ListView):
                 equipments = equipments.filter(location=location)
             if responsible:
                 equipments = equipments.filter(responsible=responsible)
+
         paginator = Paginator(equipments, self.paginate_by)
         page_number = request.GET.get('page')
         page_obj = paginator.get_page(page_number)
 
         context = {
             'form': form,
-            'equipments': equipments,  # Здесь можно передать отфильтрованные объекты
             'objects': page_obj,
         }
         return render(request, self.template_name, context)
@@ -118,6 +118,7 @@ class EquipmentReportView(AccountingRequiredMixin, ListView):
     def post(self, request, *args, **kwargs):
         form = EquipmentFilterForm(request.POST or None)
         equipments = Equipment.objects.all()
+        action = request.POST.get("action")
 
         if form.is_valid():
             category = form.cleaned_data.get('category')
@@ -138,6 +139,11 @@ class EquipmentReportView(AccountingRequiredMixin, ListView):
             'form': form,
             "objects": page_obj
         }
+        if action == "print":
+            for equipment in equipments:
+                zpl_data = equipment.equipment_barcode.zpl_barcode
+                send_print_request(request, zpl_data)
+            return render(request, self.template_name, context=context)
         return render(request, self.template_name, context=context)
 
 
@@ -197,3 +203,9 @@ class CartridgeReportView(AccountingRequiredMixin, ListView):
     model = CartridgeTypes
     template_name = 'reports/cartridge_types.html'
     context_object_name = 'objects'
+
+
+class PackagePrint(ListView):
+    model = Location
+    template_name = "reports/package_print.html"
+
