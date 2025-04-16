@@ -91,7 +91,6 @@ class EquipmentReportView(AccountingRequiredMixin, ListView):
 
     def get(self, request, *args, **kwargs):
         equipments = Equipment.objects.all()
-        print("POST:", request)
         form = EquipmentFilterForm(request.GET or None)
         if form.is_valid():
             category = form.cleaned_data.get('category')
@@ -113,10 +112,11 @@ class EquipmentReportView(AccountingRequiredMixin, ListView):
             'form': form,
             'objects': page_obj,
         }
-        return render(request, self.template_name, context)
+        return render(request, self.template_name, context=context)
 
     def post(self, request, *args, **kwargs):
         form = EquipmentFilterForm(request.POST or None)
+
         equipments = Equipment.objects.all()
         action = request.POST.get("action")
 
@@ -137,7 +137,7 @@ class EquipmentReportView(AccountingRequiredMixin, ListView):
         page_obj = paginator.get_page(page_number)
         context = {
             'form': form,
-            "objects": page_obj
+            "objects": equipments
         }
         if action == "print":
             for equipment in equipments:

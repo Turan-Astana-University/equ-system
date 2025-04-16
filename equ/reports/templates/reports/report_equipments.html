@@ -327,7 +327,7 @@ body { font-family: Arial, sans-serif;
     <section class="u-align-center u-clearfix u-grey-10 u-section-1" id="sec-c79d">
         <div class="u-clearfix u-sheet u-sheet-1">
             <h1 class="u-text-center">Отчет по оборудованию</h1>
-            <form method="POST" action="{% url 'report_equipments' %} "id="filter-form" class="filter-form">
+            <form method="POST" action="{% url 'report_equipments' %}" id="filter-form" class="filter-form">
             {% csrf_token %}
                 <div class="filter-container">
                     <div class="filter-input">
@@ -381,53 +381,35 @@ body { font-family: Arial, sans-serif;
         </div>
 
 
-        <div class="pagination">
-            {% if objects.has_previous %}
-                <a href="?page=1{% if request.GET.category %}&category={{ request.GET.category }}{% endif %}{% if request.GET.location %}&location={{ request.GET.location }}{% endif %}{% if request.GET.responsible %}&responsible={{ request.GET.responsible }}{% endif %}" class="pagination-link" aria-label="Первая страница">Первая</a>
-                <a href="?page={{ objects.previous_page_number }}{% if request.GET.category %}&category={{ request.GET.category }}{% endif %}{% if request.GET.location %}&location={{ request.GET.location }}{% endif %}{% if request.GET.responsible %}&responsible={{ request.GET.responsible }}{% endif %}">&laquo;</a>
-            {% endif %}
+{% with query_params=request.GET.urlencode|cut:'page='|cut:'&' %}
+<div class="pagination">
+    {% if objects.has_previous %}
+        <a href="?page=1&{{ query_params }}" class="pagination-link">Первая</a>
+        <a href="?page={{ objects.previous_page_number }}&{{ query_params }}">&laquo;</a>
+    {% endif %}
 
-            {% for page_num in objects.paginator.page_range %}
-                {% if page_num == objects.number %}
-                    <strong class="current-page">{{ page_num }}</strong>
-                {% else %}
-                    <a href="?page={{ page_num }}{% if request.GET.category %}&category={{ request.GET.category }}{% endif %}{% if request.GET.location %}&location={{ request.GET.location }}{% endif %}{% if request.GET.responsible %}&responsible={{ request.GET.responsible }}{% endif %}" class="pagination" aria-label="Страница {{ page_num }}">{{ page_num }}</a>
-                {% endif %}
-            {% endfor %}
+    {% for page_num in objects.paginator.page_range %}
+        {% if page_num == objects.number %}
+            <strong class="current-page">{{ page_num }}</strong>
+        {% else %}
+            <a href="?page={{ page_num }}&{{ query_params }}" class="pagination" aria-label="Страница {{ page_num }}">{{ page_num }}</a>
+        {% endif %}
+    {% endfor %}
 
-            {% if objects.has_next %}
-                <a href="?page={{ objects.next_page_number }}{% if request.GET.category %}&category={{ request.GET.category }}{% endif %}{% if request.GET.location %}&location={{ request.GET.location }}{% endif %}{% if request.GET.responsible %}&responsible={{ request.GET.responsible }}{% endif %}">&raquo;</a>
-                <a href="?page={{ objects.paginator.num_pages }}{% if request.GET.category %}&category={{ request.GET.category }}{% endif %}{% if request.GET.location %}&location={{ request.GET.location }}{% endif %}{% if request.GET.responsible %}&responsible={{ request.GET.responsible }}{% endif %}">Последняя</a>
-            {% endif %}
-        </div>
+    {% if objects.has_next %}
+        <a href="?page={{ objects.next_page_number }}&{{ query_params }}">&raquo;</a>
+        <a href="?page={{ objects.paginator.num_pages }}&{{ query_params }}">Последняя</a>
+    {% endif %}
+</div>
+{% endwith %}
+
 
     </div>
 </section>
     <script src="https://code.jquery.com/jquery-3.6.0.min.js"></script>
     <script src="https://cdn.jsdelivr.net/npm/select2@4.0.13/dist/js/select2.min.js"></script>
     <script>
-        $(document).ready(function() {
-            // Убираем дубликаты из списка select
-            $('#select-title, #select-location, #select-responsible').each(function() {
-                var seen = {};
-                $(this).find('option').each(function() {
-                    var value = $(this).val();
-                    if (seen[value]) {
-                        $(this).remove();
-                    } else {
-                        seen[value] = true;
-                    }
-                });
-            });
 
-            $(".filter-select").select2({
-                placeholder: "Выберите опции",
-                allowClear: true
-            });
-
-
-
-        });
         </script>
 </body>
 </html>
