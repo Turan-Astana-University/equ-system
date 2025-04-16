@@ -337,6 +337,7 @@ h1.u-text-center {
       <main>
           <div id="reader" style="display: none;"></div>
           <div id="result"></div>
+          <select id="camera-select"></select>
           <a href="#" id="start-scan-btn" class="u-btn">
               Сканировать штрих-код
           </a>
@@ -483,7 +484,7 @@ h1.u-text-center {
 </section>
 
 <script>
-
+    const cameraSelect = document.getElementById("camera-select");
 // Старт сканера
 document.getElementById('start-scan-btn').addEventListener('click', function(e) {
     e.preventDefault();
@@ -498,20 +499,45 @@ document.getElementById('start-scan-btn').addEventListener('click', function(e) 
     // Запрашиваем камеры устройства
     Html5Qrcode.getCameras().then(devices => {
         if (devices && devices.length) {
-            const backCamera = devices.find(device => device.label.toLowerCase().includes('back'));
-            const cameraId = backCamera ? backCamera.id : devices[0].id;
+            // Заполняем select списком камер
+            devices.forEach((device, index) => {
+                const option = document.createElement("option");
+                option.value = device.id;
+                option.text = device.label || `Камера ${index + 1}`;
+                cameraSelect.appendChild(option);
+            });
 
-            // Запускаем сканирование с выбранной камеры и передаем функцию success для обработки декодированного текста
+            // Определяем заднюю камеру (если есть) и выбираем её по умолчанию
+            const backCamera = devices.find(device => device.label.toLowerCase().includes('back'));
+            const defaultCameraId = backCamera ? backCamera.id : devices[0].id;
+            cameraSelect.value = defaultCameraId;
+
+            // Запускаем сканирование с выбранной камеры
             html5QrCode.start(
-                cameraId,
+                defaultCameraId,
                 {
                     fps: 10,
                     qrbox: { width: 250, height: 250 }
                 },
-                success // Передаем функцию success
-            ).catch(err => console.log(`Error: ${err}`));
+                success
+            ).catch(err => console.log(`Ошибка запуска камеры: ${err}`));
         }
-    }).catch(err => console.log(`Error fetching cameras: ${err}`));
+    }).catch(err => console.log(`Ошибка получения камер: ${err}`));
+
+    // Обработчик смены камеры
+    cameraSelect.addEventListener("change", () => {
+        const selectedCameraId = cameraSelect.value;
+        html5QrCode.stop().then(() => {
+            html5QrCode.start(
+                selectedCameraId,
+                {
+                    fps: 10,
+                    qrbox: { width: 250, height: 250 }
+                },
+                success
+            ).catch(err => console.log("Ошибка при запуске сканера с новой камерой:", err));
+        }).catch(err => console.log("Ошибка при остановке текущей камеры:", err));
+    });
 
     // Сохраняем html5QrCode в глобальной переменной для доступа из кнопки остановки
     window.html5QrCode = html5QrCode;
