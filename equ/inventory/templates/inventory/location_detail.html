@@ -337,11 +337,9 @@ h1.u-text-center {
       <main>
           <div id="reader" style="display: none;"></div>
           <div id="result"></div>
-    <select id="camera-select" style="display: none;"></select>
-    <a href="#" id="start-scan-btn" class="u-btn">Сканировать штрих-код</a>
-    <a href="#" id="stop-scan-btn" class="u-btn" style="display: none;">Остановить</a>
-    <div id="reader" style="width: 300px; display: none;"></div>
-
+          <a href="#" id="start-scan-btn" class="u-btn">
+              Сканировать штрих-код
+          </a>
          
           <a href="#" id="stop-scan-btn"  class="u-btn1" style="display:none;">
             Остановить сканер
@@ -485,65 +483,51 @@ h1.u-text-center {
 </section>
 
 <script>
-    let html5QrCode;
 
-document.getElementById('start-scan-btn').addEventListener('click', function (e) {
+// Старт сканера
+document.getElementById('start-scan-btn').addEventListener('click', function(e) {
     e.preventDefault();
 
+    // Показываем элемент с id "reader", где будет отображаться сканер
     document.getElementById('reader').style.display = 'block';
-    document.getElementById('stop-scan-btn').style.display = 'inline-block';
-    document.getElementById('camera-select').style.display = 'inline-block';
+    document.getElementById('stop-scan-btn').style.display = 'inline-block'; // Показываем кнопку остановки
 
-    html5QrCode = new Html5QrCode("reader");
+    // Инициализируем сканер
+    const html5QrCode = new Html5Qrcode("reader");
 
-    Html5QrCode.getCameras().then(devices => {
-        const select = document.getElementById('camera-select');
-        select.innerHTML = ''; // очистим на случай повторного открытия
+    // Запрашиваем камеры устройства
+    Html5Qrcode.getCameras().then(devices => {
+        if (devices && devices.length) {
+            const backCamera = devices.find(device => device.label.toLowerCase().includes('back'));
+            const cameraId = backCamera ? backCamera.id : devices[0].id;
 
-        devices.forEach(device => {
-            const option = document.createElement('option');
-            option.value = device.id;
-            option.text = device.label || `Камера ${select.length + 1}`;
-            select.appendChild(option);
-        });
+            // Запускаем сканирование с выбранной камеры и передаем функцию success для обработки декодированного текста
+            html5QrCode.start(
+                cameraId,
+                {
+                    fps: 10,
+                    qrbox: { width: 250, height: 250 }
+                },
+                success // Передаем функцию success
+            ).catch(err => console.log(`Error: ${err}`));
+        }
+    }).catch(err => console.log(`Error fetching cameras: ${err}`));
 
-        // Автостарт по первой камере
-        startSelectedCamera();
-    }).catch(err => console.log(`Ошибка получения камер: ${err}`));
+    // Сохраняем html5QrCode в глобальной переменной для доступа из кнопки остановки
+    window.html5QrCode = html5QrCode;
 });
-
-document.getElementById('camera-select').addEventListener('change', function () {
-    // При смене камеры – перезапуск сканера
-    stopScanner().then(() => startSelectedCamera());
-});
-
-function startSelectedCamera() {
-    const cameraId = document.getElementById('camera-select').value;
-    html5QrCode.start(
-        cameraId,
-        { fps: 10, qrbox: { width: 250, height: 250 } },
-        success
-    ).catch(err => console.log(`Ошибка запуска сканера: ${err}`));
-}
-
-function stopScanner() {
-    if (html5QrCode && html5QrCode._isScanning) {
-        return html5QrCode.stop().then(() => {
-            console.log("Сканер остановлен");
-        }).catch(err => console.error("Ошибка остановки:", err));
-    }
-    return Promise.resolve();
-}
-
-document.getElementById('stop-scan-btn').addEventListener('click', function (e) {
+// Остановка сканера
+document.getElementById('stop-scan-btn').addEventListener('click', function(e) {
     e.preventDefault();
-    stopScanner().then(() => {
-        document.getElementById('reader').style.display = 'none';
-        document.getElementById('stop-scan-btn').style.display = 'none';
-        document.getElementById('camera-select').style.display = 'none';
-    });
-});
 
+    if (window.html5QrCode) {
+        window.html5QrCode.stop().then(() => {
+            console.log('Сканер остановлен');
+            document.getElementById('reader').style.display = 'none';
+            document.getElementById('stop-scan-btn').style.display = 'none';
+        }).catch(err => console.log(`Error stopping scanner: ${err}`));
+    }
+});
 
 const qrCodeUrl = "{% url 'qr_code_view' %}";
 function success(decodedText, decodedResult) {
