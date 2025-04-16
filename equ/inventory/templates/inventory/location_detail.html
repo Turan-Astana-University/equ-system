@@ -495,23 +495,20 @@ document.getElementById('start-scan-btn').addEventListener('click', function(e) 
     // Инициализируем сканер
     const html5QrCode = new Html5Qrcode("reader");
 
-    // Запрашиваем камеры устройства
-    Html5Qrcode.getCameras().then(devices => {
-        if (devices && devices.length) {
-            const backCamera = devices.find(device => device.label.toLowerCase().includes('back'));
-            const cameraId = backCamera ? backCamera.id : devices[0].id;
+    const html5QrCode = new Html5Qrcode("reader");
 
-            // Запускаем сканирование с выбранной камеры и передаем функцию success для обработки декодированного текста
-            html5QrCode.start(
-                cameraId,
-                {
-                    fps: 10,
-                    qrbox: { width: 250, height: 250 }
-                },
-                success // Передаем функцию success
-            ).catch(err => console.log(`Error: ${err}`));
-        }
-    }).catch(err => console.log(`Error fetching cameras: ${err}`));
+    Html5Qrcode.getCameras().then(devices => {
+        const select = document.getElementById('camera-select');
+
+        devices.forEach(device => {
+            const option = document.createElement('option');
+            option.value = device.id;
+            option.text = device.label || `Camera ${select.length + 1}`;
+            select.appendChild(option);
+        });
+
+    }).catch(err => console.error("Ошибка получения камер:", err));
+
 
     // Сохраняем html5QrCode в глобальной переменной для доступа из кнопки остановки
     window.html5QrCode = html5QrCode;
