@@ -6,19 +6,16 @@ from equipments.models import Equipment, Printer, EquipmentType
 from django.core.paginator import Paginator
 from django.contrib import messages
 from inventory.models import Inventory
-from django.contrib.auth.mixins import LoginRequiredMixin
 
-from locations.models import Location
-from users.models import User
-from .mixin import AccountingUserRequiredMixin
-from django.views.generic import ListView, DetailView
+from django.views.generic import ListView, DetailView, FormView
 from operations.models import Operation
 import pandas as pd
 from django.conf import settings
 from equipments.models import CartridgeTypes
 import requests
 from inventory.mixins import AccountingRequiredMixin
-from .forms import EquipmentFilterForm
+from .forms import EquipmentFilterForm, EquipmentsUploadForm
+from .components.upload_equipments_excel import upload_excel_view
 
 
 def get_client_ip(request):
@@ -192,7 +189,6 @@ class InventoryDetailView(AccountingRequiredMixin, DetailView):
         )
         fig.update_traces(textinfo='percent+label')
 
-
         graph_json = fig.to_json()
 
         context['graph_json'] = graph_json
@@ -205,7 +201,14 @@ class CartridgeReportView(AccountingRequiredMixin, ListView):
     context_object_name = 'objects'
 
 
-class PackagePrint(ListView):
-    model = Location
-    template_name = "reports/package_print.html"
+class UploadEquipmentsExcel(FormView):
+    form_class = EquipmentsUploadForm
+    template_name = "reports/equipments_upload_form.html"
+    success_url = "home"
+
+    def post(self, request, *args, **kwargs):
+        upload_excel_view(request)
+        return redirect("report_equipments")
+
+
 

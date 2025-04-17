@@ -23,3 +23,14 @@ class EquipmentFilterForm(forms.Form):
         empty_label="Все сотрудники",
         widget=forms.Select(attrs={'class': 'filter-select'})
     )
+
+
+class EquipmentsUploadForm(forms.Form):
+    file = forms.FileField(
+        required=True,  # Обязательно или нет
+        label='Загрузите csv файл',
+        help_text='Поддерживаются только .csv',
+        widget=forms.ClearableFileInput(attrs={
+            'accept': '.csv'  # Ограничение на типы файлов в диалоге выбора
+        })
+    )

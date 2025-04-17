@@ -45,6 +45,7 @@ class Barcode(models.Model):
         new_image.paste(barcode_image, (0, 0))
 
         if title:
+            title=str(title)
             draw = ImageDraw.Draw(new_image)
             try:
                 font = ImageFont.truetype("arial.ttf", size=24)
@@ -52,7 +53,7 @@ class Barcode(models.Model):
                 font = ImageFont.load_default()
 
             max_length = 20
-            lines = [title[i:i + max_length] for i in range(0, len(title), max_length)]
+            lines = [title[i:i + max_length] for i in range(0, len(str(title)), max_length)]
             line_height = draw.textbbox((0, 0), "A", font=font)[3]
             y_start = barcode_height + padding
 
