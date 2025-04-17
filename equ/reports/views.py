@@ -201,7 +201,7 @@ class CartridgeReportView(AccountingRequiredMixin, ListView):
     context_object_name = 'objects'
 
 
-class UploadEquipmentsExcel(FormView):
+class UploadEquipmentsExcel(AccountingRequiredMixin, FormView):
     form_class = EquipmentsUploadForm
     template_name = "reports/equipments_upload_form.html"
     success_url = "home"
