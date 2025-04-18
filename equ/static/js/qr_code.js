@@ -63,14 +63,14 @@ document.getElementById('stop-scan-btn').addEventListener('click', function(e) {
     }
 });
 
-const qrCodeUrl = "{% url 'qr_code_view' %}";
+//const qrCodeUrl = "{% url 'qr_code_view' %}";
 function success(decodedText, decodedResult) {
     fetch(qrCodeUrl, {
         method: 'POST',
         headers: {
             'Content-Type': 'application/json',
             'equipment-type': scanType,
-            'location': "{{ location.id }}",
+            'location': location_id,
             'X-CSRFToken': getCookie('csrftoken'),  // Если CSRF защита включена
         },
         body: JSON.stringify({ code: decodedText })

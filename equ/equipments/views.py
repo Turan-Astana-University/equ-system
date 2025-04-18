@@ -113,6 +113,7 @@ class QRCodeView(View):
             return JsonResponse({'error': 'Location header отсутствует'}, status=400)
 
     def post(self, request, *args, **kwargs):
+        print(request.headers.get('equipment-type'))
         if request.headers.get('equipment-type') == "release":
             return self.equipment_release_qr_scan(request, *args, **kwargs)
         elif request.headers.get('equipment-type') == "release_cartridge":
