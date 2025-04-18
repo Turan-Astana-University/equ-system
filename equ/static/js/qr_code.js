@@ -1,4 +1,4 @@
-const cameraSelect = document.getElementById("camera-select");
+
 const scanType = document.getElementById('scanType').value;
 console.log(scanType);
 
