@@ -487,6 +487,9 @@ h1.u-text-center {
 
     const location_id = "{{ location.id }}"
 </script>
+<script>
+        const qrCodeUrl = "{% url 'qr_code_view' %}";
+</script>
 <script class="u-script" type="text/javascript" src="{% static 'js/qr_code.js' %}" defer=""></script>
 <script>
 
