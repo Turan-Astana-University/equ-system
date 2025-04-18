@@ -1,0 +1,382 @@
+{% extends 'inventory/base.html' %} {% load static %} {% block css %}
+    <script src="{% static 'node_modules/html5-qrcode/html5-qrcode.min.js' %}"></script>
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <meta charset="utf-8">
+    <meta name="keywords" content="">
+    <meta name="description" content="">
+    <title>Страница 1</title>
+    <link rel="stylesheet" href="{% static 'css/nicepage.css' %}" media="screen">
+    <link rel="stylesheet" href="{% static 'css/Страница-1.css' %}" media="screen">
+
+    <meta name="generator" content="Nicepage 6.15.2, nicepage.com">
+    <link id="u-theme-google-font" rel="stylesheet" href="https://fonts.googleapis.com/css?family=Roboto:100,100i,300,300i,400,400i,500,500i,700,700i,900,900i|Open+Sans:300,300i,400,400i,500,500i,600,600i,700,700i,800,800i">
+    <link id="u-page-google-font" rel="stylesheet" href="https://fonts.googleapis.com/css?family=Roboto+Slab:100,200,300,400,500,600,700,800,900">
+
+
+<style>
+   body {
+        font-family: 'Roboto', Arial, sans-serif;
+        line-height: 1.6;
+        margin: 0;
+        padding: 0;
+        background-color: #f9f9f9;
+        display: flex;
+        flex-direction: column;
+        min-height: 100vh;
+    }
+
+    section {
+        padding: 50px;
+        flex-grow: 1;
+    }
+
+    footer {
+        background-color: #333;
+        color: white;
+        text-align: center;
+        padding: 10px;
+        position: relative;
+        bottom: 0;
+        width: 100%;
+        margin-top: auto;
+    }
+
+    h1.u-text-center {
+        font-size: 2.5rem;
+        text-align: center;
+        color: #6e1e38;
+        margin-bottom: 20px;
+        position: relative;
+        animation: fadeInDown 1s ease-in-out;
+    }
+
+    h1.u-text-center::after {
+        content: '';
+        display: block;
+        width: 60px;
+        height: 4px;
+        background-color: #6e1e38;
+        margin: 10px auto 0;
+        animation: slideIn 1.5s ease-in-out;
+    }
+
+    .tabs {
+        display: flex;
+        justify-content: space-between;
+        margin-bottom: 30px;
+    }
+
+    .tab-list {
+        display: flex;
+        list-style: none;
+        padding: 0;
+        margin: 0;
+    }
+
+    .tab-item {
+        margin-right: 20px;
+    }
+
+    .tab-link {
+        font-size: 16px;
+        color: #333;
+        text-decoration: none;
+        padding: 10px;
+        display: block;
+        transition: background-color 0.3s ease, color 0.3s ease;
+    }
+
+    .tab-link.active {
+        background-color: #6e1e38;
+        color: white;
+        border-radius: 5px;
+    }
+
+    .tab-link:hover {
+        background-color: #ddd;
+    }
+
+    .table-container {
+        overflow-x: auto;
+        margin-top: 30px;
+    }
+    #nonfound {
+        border-radius: 8px; /* Adjust the value as needed */
+        overflow: hidden; /* Ensures the rounded corners apply correctly */
+    }
+    .u-table {
+        width: 100%;
+        border-collapse: collapse;
+        margin: 20px 0;
+        background: white;
+        box-shadow: 0 4px 8px rgba(0, 0, 0, 0.1);
+        border-radius: 8px;
+        animation: fadeInUp 1s ease-in-out;
+    }
+
+    .u-table thead {
+        background-color: #6e1e38;
+        color: white;
+    }
+    .u-table th {
+        padding: 15px;
+        text-transform: uppercase !important;
+        text-align: center;
+        font-size: 16px;
+    
+    }
+    .u-table td {
+        padding: 15px;
+        text-transform: uppercase !important;
+        text-align: center;
+        font-size: 14px;
+        border-bottom: 1px solid #ddd;
+    }
+
+    .u-table td {
+        background-color: #fafafa;
+        transition: background-color 0.3s ease;
+    }
+
+    .u-table tr:hover td {
+        background-color: #ffecec;
+    }
+
+    .u-table tr:nth-child(even) td {
+        background-color: #f3f3f3;
+    }
+
+    .pagination {
+        display: flex;
+        justify-content: center;
+        align-items: center;
+        margin-top: 20px;
+        font-size: 14px;
+    }
+
+    .pagination a,
+    .pagination strong {
+        margin: 0 5px;
+        padding: 5px 10px;
+        text-decoration: none;
+        color: #007BFF;
+        border-radius: 5px;
+        transition: background-color 0.3s ease;
+    }
+
+    .pagination a:hover {
+        background-color: #0056b3;
+        color: white;
+    }
+
+    .pagination .current-page {
+        background-color: #007BFF;
+        color: white;
+    }
+
+    .pagination span {
+        padding: 5px 10px;
+        color: #555;
+    }
+
+    .btn-primary {
+        background-color: #6e1e38;
+        color: white;
+        padding: 10px 20px;
+        border: none;
+        border-radius: 5px;
+        text-decoration: none;
+        font-size: 16px;
+        transition: background-color 0.3s ease;
+    }
+
+    .btn-primary:hover {
+        background-color: #5b1832;
+    }
+
+    @keyframes fadeInDown {
+        from {
+            opacity: 0;
+            transform: translateY(-20px);
+        }
+        to {
+            opacity: 1;
+            transform: translateY(0);
+        }
+    }
+
+    @keyframes slideIn {
+        from {
+            width: 0;
+            opacity: 0;
+        }
+        to {
+            width: 60px;
+            opacity: 1;
+        }
+    }
+
+    @keyframes fadeInUp {
+        from {
+            opacity: 0;
+            transform: translateY(20px);
+        }
+        to {
+            opacity: 1;
+            transform: translateY(0);
+        }
+    }
+
+    @media (max-width: 768px) {
+        h1.u-text-center {
+            font-size: 2rem;
+        }
+
+        .tab-link {
+            font-size: 14px;
+            padding: 8px;
+        }
+
+        .u-table th,
+        .u-table td {
+            font-size: 12px;
+            padding: 10px;
+        }
+
+        .pagination a,
+        .pagination strong {
+            font-size: 12px;
+            padding: 3px 7px;
+        }
+
+        .btn-primary {
+            font-size: 14px;
+            padding: 8px 16px;
+        }
+    }
+    .u-btn {
+    display: inline-block !important;
+    padding: 12px 30px !important;
+    font-size: 1.2rem !important;
+    font-weight: bold !important;
+    color: #fff !important;
+    text-decoration: none !important;
+    border-radius: 50px !important;
+    background: #721438 !important;
+    border: 2px solid #721438 !important;
+    transition: all 0.3s ease !important;
+}
+.u-btn1 {
+ 
+    padding: 12px 30px !important;
+    font-size: 1.2rem !important;
+    font-weight: bold !important;
+    color: #fff !important;
+    text-decoration: none !important;
+    border-radius: 50px !important;
+    background: #721438 !important;
+    border: 2px solid #721438 !important;
+    transition: all 0.3s ease !important;
+}
+.u-btn:hover {
+    background: #fff !important;
+    color: #721438 !important;
+    border-color: #721438 !important;
+}
+
+.u-btn:focus {
+    outline: none !important;
+    box-shadow: 0 0 8px rgba(114, 20, 56, 0.5) !important;
+}
+
+h1.u-text-center {
+            font-size: 2.5rem;
+            text-align: center;
+            color: rgba(114, 20, 56, 0.941);
+            margin-bottom: 20px;
+            position: relative;
+            animation: fadeInDown 1s ease-in-out;
+        }
+
+        h1.u-text-center::after {
+            content: '';
+            display: block;
+            width: 60px;
+            height: 4px;
+            background-color: rgba(114, 20, 56, 0.941);
+            margin: 10px auto 0;
+            animation: slideIn 1.5s ease-in-out;
+        }
+        .status-passed {
+    background-color: #d4edda; /* Light green background */
+    color: green; /* Dark green text */
+    font-weight: bold; /* Optional: make text bold for emphasis */
+}
+.status-not-passed {
+    background-color: #f8d7da; /* Light red background */
+    color: red;
+}
+</style>
+    <script type="application/ld+json">{
+		"@context": "http://schema.org",
+		"@type": "Organization",
+		"name": "",
+		"logo": "images/image1.png"
+}</script>
+    <meta name="theme-color" content="#478ac9">
+    <meta property="og:title" content="Страница 1">
+    <meta property="og:type" content="website">
+  <meta data-intl-tel-input-cdn-path="intlTelInput/">
+
+
+{% endblock %}
+
+{% block continue %}
+<section class="u-align-center u-clearfix u-grey-10 u-section-1" id="sec-c79d">
+  <div class="u-clearfix u-sheet u-sheet-1">
+      <main>
+          <div id="reader" style="display: none;"></div>
+          <div id="result"></div>
+          <select id="camera-select"></select>
+          <a href="#" id="start-scan-btn" class="u-btn">
+              Сканировать штрих-код
+          </a>
+         
+          <a href="#" id="stop-scan-btn"  class="u-btn1" style="display:none;">
+            Остановить сканер
+        </a>
+
+      </main>
+
+      <div class="u-expanded-width u-tabs u-tabs-1">
+
+      </div>
+  </div>
+</section>
+<script class="u-script" type="text/javascript" src="{% static 'js/qr_code.js' %}" defer=""></script>
+<script>
+
+
+function getCookie(name) {
+    let cookieValue = null;
+    if (document.cookie && document.cookie !== '') {
+        const cookies = document.cookie.split(';');
+        for (let i = 0; i < cookies.length; i++) {
+            const cookie = cookies[i].trim();
+            if (cookie.startsWith(name + '=')) {
+                cookieValue = decodeURIComponent(cookie.substring(name.length + 1));
+                break;
+            }
+        }
+    }
+    return cookieValue;
+}
+
+function error(err) {
+    console.error(err);
+}
+
+
+
+</script>
+{% endblock %}

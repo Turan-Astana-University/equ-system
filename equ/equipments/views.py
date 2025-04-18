@@ -12,7 +12,7 @@ from operations.models import OperationCategoryChoices
 from operations.views import create_operation_log
 from django.db.models import Count
 from django.contrib import messages
-from django.views.generic import ListView
+from django.views.generic import ListView, DetailView
 from inventory.mixins import AccountingRequiredMixin
 from django.contrib.auth.mixins import PermissionRequiredMixin
 # Create your views here.
@@ -71,6 +71,7 @@ class QRCodeView(View):
 
     def equipment_inventory_qr_scan(self, request, *args, **kwargs):
         try:
+            print("INVENTORY TRUE")
             location = get_object_or_404(Location, pk=request.headers.get('Location'))
             data = json.loads(request.body)
             code = data.get('code', '')
@@ -291,3 +292,15 @@ def get_cartridges(request, *args, **kwargs):
             'cartridges': list(cartridges)
         }
     )
+
+
+class EquipmentUpdateView(ListView):
+    model = Equipment
+    template_name = "equipments/update_equipments.html"
+
+    def get_context_data(self, *, object_list=None, **kwargs):
+        context = super().get_context_data(object_list=object_list, **kwargs)
+        context["scan-type"] = "UpdateEquipment"
+        return context
+
+

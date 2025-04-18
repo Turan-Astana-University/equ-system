@@ -211,4 +211,3 @@ class UploadEquipmentsExcel(AccountingRequiredMixin, FormView):
         return redirect("report_equipments")
 
 
-

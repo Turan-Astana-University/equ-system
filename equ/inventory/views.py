@@ -131,7 +131,8 @@ class LocationDetailView(AccountingRequiredMixin, View):
             'location': location,
             'equipments_non_found': equipments_non_found,
             'equipments_found': equipments_found,
-            'equipments_false': equipments_false
+            'equipments_false': equipments_false,
+            "scan_type": "inventory",
         }
 
         return render(request, self.template_name, context)

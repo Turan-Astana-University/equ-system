@@ -1,4 +1,7 @@
 const cameraSelect = document.getElementById("camera-select");
+const scanType = document.getElementById('scanType').value;
+console.log(scanType);
+
 document.getElementById('start-scan-btn').addEventListener('click', function(e) {
     e.preventDefault();
 
@@ -19,6 +22,7 @@ document.getElementById('start-scan-btn').addEventListener('click', function(e) 
             const backCamera = devices.find(device => device.label.toLowerCase().includes('back'));
             const defaultCameraId = backCamera ? backCamera.id : devices[0].id;
             cameraSelect.value = defaultCameraId;
+            console.log(scanType);
 
             html5QrCode.start(
                 defaultCameraId,
@@ -65,7 +69,7 @@ function success(decodedText, decodedResult) {
         method: 'POST',
         headers: {
             'Content-Type': 'application/json',
-            'equipment-type': "inventory",
+            'equipment-type': scanType,
             'location': "{{ location.id }}",
             'X-CSRFToken': getCookie('csrftoken'),  // Если CSRF защита включена
         },
