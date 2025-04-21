@@ -8,6 +8,27 @@ from operations.models import OperationCategoryChoices
 from django.http import JsonResponse
 
 
+def find_equipment(request, *args, **kwargs):
+    from equipments.models import Equipment, Barcode, Cartridge
+    try:
+        data = json.loads(request.body)
+        code = data.get('code', '')
+        barcode_id = int(code[:-1])
+
+        equipment = get_object_or_404(Equipment, equipment_barcode=get_object_or_404(Barcode, pk=barcode_id))
+        return JsonResponse({
+            'id': equipment.id,
+            'name': equipment.title,
+            'user': equipment.responsible.first_name,
+            'message': 'Equipment found',
+        })
+    except json.JSONDecodeError:
+        return JsonResponse({'error': 'Неверный формат JSON'}, status=400)
+
+    except KeyError:
+        return JsonResponse({'error': 'Location header отсутствует'}, status=400)
+
+
 def update_equipment(request, *args, **kwargs):
     from equipments.models import Equipment, Barcode, Cartridge
     try:

@@ -29,7 +29,7 @@ document.getElementById('start-scan-btn').addEventListener('click', function(e) 
                 defaultCameraId,
                 {
                     fps: 10,
-                    qrbox: { width: 250, height: 250 }
+                    qrbox: { width: 600, height: 600 }
                 },
                 success
             ).catch(err => console.log(`Ошибка запуска камеры: ${err}`));
@@ -43,7 +43,7 @@ document.getElementById('start-scan-btn').addEventListener('click', function(e) 
                 selectedCameraId,
                 {
                     fps: 10,
-                    qrbox: { width: 250, height: 250 }
+                    qrbox: { width: 600, height: 600 }
                 },
                 success
             ).catch(err => console.log("Ошибка при запуске сканера с новой камерой:", err));
@@ -66,7 +66,43 @@ document.getElementById('stop-scan-btn').addEventListener('click', function(e) {
 
 //const qrCodeUrl = "{% url 'qr_code_view' %}";
 function success(decodedText, decodedResult) {
-    fetch(qrCodeUrl, {
+    if (scanType === 'FindEquipment') {
+        console.log("SDD");
+        console.log(qrCodeUrl);
+        fetch(qrCodeUrl, {
+        method: 'POST',
+        headers: {
+            'Content-Type': 'application/json',
+            'equipment-type': scanType,
+            'X-CSRFToken': getCookie('csrftoken'),  // Если CSRF защита включена
+        },
+        body: JSON.stringify({ code: decodedText })
+        })
+        .then(response => response.json())
+        .then(data => {
+            console.log('Ответ от сервера:', data);
+            console.log(data.message);
+            equipmentId = data.id;
+            const redirectUrl = update.replace('1', equipmentId);
+            window.location.href = redirectUrl;
+            setTimeout(() => {
+                window.location.reload();
+            }, 2000);
+        })
+        .catch(error => {
+            console.error('Ошибка при отправке данных на сервер:', error);
+        });
+
+        html5QrCode.stop().then(() => {
+            document.getElementById('reader').style.display = 'none';
+        }).catch(err => {
+            console.error(`Ошибка при остановке сканера: ${err}`);
+        });
+        }
+    }
+    if (scanType === 'inventory') {
+    console.log("SDD");
+        fetch(qrCodeUrl, {
         method: 'POST',
         headers: {
             'Content-Type': 'application/json',
@@ -107,4 +143,5 @@ function success(decodedText, decodedResult) {
     }).catch(err => {
         console.error(`Ошибка при остановке сканера: ${err}`);
     });
-}
+    }
+

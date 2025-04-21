@@ -1,19 +1,12 @@
 {% extends 'inventory/base.html' %}
 {% load static %}
-{% block continue %}
-<!DOCTYPE html>
-<html lang="en">
 
-<head>
-    <meta charset="UTF-8">
-    <link rel="icon" href="/equ-system/equ/static/images/icon.png" type="image/x-icon">
-    <link rel="shortcut icon" href="/equ-system/equ/static/images/icon.png" type="image/x-icon">
+{% block css %}
+    <script src="{% static 'node_modules/html5-qrcode/html5-qrcode.min.js' %}"></script>
     <link href="https://cdnjs.cloudflare.com/ajax/libs/select2/4.0.13/css/select2.min.css" rel="stylesheet" />
     <script src="https://cdnjs.cloudflare.com/ajax/libs/jquery/3.6.0/jquery.min.js"></script>
     <script src="https://cdnjs.cloudflare.com/ajax/libs/select2/4.0.13/js/select2.min.js"></script>
-    <script src="{% static 'node_modules/html5-qrcode/html5-qrcode.min.js' %}"></script>
-    
-    <title>Equipment List</title>
+
 <style>
 .filter-form {
     margin: 30px auto;
@@ -321,16 +314,20 @@ body { font-family: Arial, sans-serif;
             h1.u-text-center {
                 font-size: 2rem;
             }
-        }</style>
-</head>
+        }
+</style>
+{% endblock %}
 
-<body>
-<input type="hidden" id="scanType" value="{{ scan_type }}">
+{% block continue %}
 
 
     <section class="u-align-center u-clearfix u-grey-10 u-section-1" id="sec-c79d">
+        <input type="hidden" id="scanType" value="{{ scan_type }}">
+
         <div class="u-clearfix u-sheet u-sheet-1">
             <h1 class="u-text-center">Отчет по оборудованию</h1>
+              <main>
+
               <div id="reader" style="display: none;"></div>
               <div id="result"></div>
               <select id="camera-select"></select>
@@ -340,6 +337,8 @@ body { font-family: Arial, sans-serif;
                 <a href="#" id="stop-scan-btn"  class="filter-button" style="display:none;">
                     Остановить сканер
                 </a>
+              </main>
+
             <form method="POST" action="{% url 'report_equipments' %}" id="filter-form" class="filter-form">
             {% csrf_token %}
                 <div class="filter-container">
@@ -430,31 +429,14 @@ body { font-family: Arial, sans-serif;
 
     </div>
 </section>
+
 <script>
         const qrCodeUrl = "{% url 'qr_code_view' %}";
-
-
-function addRowToTable(tableId, data) {
-    const tableBody = document.querySelector(`#${tableId}`);
-
-    // Создаем новую строку и заполняем её данными
-    const newRow = document.createElement('tr');
-    newRow.style.height = '52px';
-    newRow.innerHTML = `
-        <td class="u-align-left u-border-2 u-border-grey-70 u-custom-font u-first-column u-font-roboto-slab u-table-cell">${data.id}</td>
-        <td class="u-align-left u-border-2 u-border-grey-70 u-custom-font u-font-roboto-slab u-table-cell">${data.name}</td>
-        <td class="u-align-left u-border-2 u-border-grey-70 u-custom-font u-font-roboto-slab u-table-cell">${data.user}</td>
-        <td class="u-align-left u-border-2 u-border-grey-70 u-custom-font u-font-roboto-slab u-table-cell">Оборудование</td>
-        <td class="u-align-left u-border-2 u-border-grey-70 u-custom-color-7 u-custom-font u-font-roboto-slab u-table-cell u-table-cell-10">
-            ${data.location_correct ? "Найдено" : "Не на месте"}
-        </td>
-    `;
-
-    // Добавляем новую строку в тело таблицы
-    tableBody.appendChild(newRow);
-}
-
-function getCookie(name) {
+        const update = "{% url 'update_equipment' 1 %}";
+</script>
+    <script class="u-script" type="text/javascript" src="{% static 'js/qr_code.js' %}" defer=""></script>
+<script>
+    function getCookie(name) {
     let cookieValue = null;
     if (document.cookie && document.cookie !== '') {
         const cookies = document.cookie.split(';');
@@ -468,45 +450,8 @@ function getCookie(name) {
     }
     return cookieValue;
 }
-
-function error(err) {
-    console.error(err);
-}
-
-function scanQRCode() {
-    // Пример функции, которая выполняет запрос на бэкенд
-    fetch('/your-endpoint', {
-        method: 'POST',
-        headers: {
-            'Content-Type': 'application/json'
-        },
-        body: JSON.stringify({ qr_code: 'scanned_code_data' }) // Данные сканированного кода
-    })
-    .then(response => response.json())
-    .then(data => {
-        console.log(data); // Выводим ответ от бэкенда в консоль
-        document.getElementById('doresult').innerHTML = `
-    <h2>Успешно!</h2>
-    <p><a href="${decodedText}">${decodedText}</a></p>
-    `;
-        // Здесь можно добавить логику обновления таблиц
-        if (data.message === "Equipment found") {
-            // Логика для обновления таблицы с найденным оборудованием
-        } else if (!data.location_correct) {
-            // Логика для обновления таблицы с оборудованием, которое найдено не на месте
-        } else {
-            // Логика для обновления таблицы с не найденным оборудованием
-        }
-    })
-    .catch(error => {
-        console.error('Error:', error);
-    });
-}
-
 </script>
-    <script src="https://code.jquery.com/jquery-3.6.0.min.js"></script>
-    <script src="https://cdn.jsdelivr.net/npm/select2@4.0.13/dist/js/select2.min.js"></script>
-    <script class="u-script" type="text/javascript" src="{% static 'js/qr_code.js' %}" defer=""></script>
+
 
 </body>
 </html>

@@ -18,7 +18,7 @@ from django.db.models import Count
 from django.contrib import messages
 from django.views.generic import ListView, DetailView, FormView, UpdateView
 from inventory.mixins import AccountingRequiredMixin
-from .components.scan_code import inventory_scan, qr_cartridge_release, equipment_release_qr_scan, update_equipment
+from .components.scan_code import inventory_scan, qr_cartridge_release, equipment_release_qr_scan, update_equipment, find_equipment
 from django.contrib.auth.mixins import PermissionRequiredMixin
 # Create your views here.
 
@@ -35,9 +35,10 @@ class QRCodeView(View):
             return inventory_scan(request, *args, **kwargs)
         elif request.headers.get('equipment-type') == "UpdateEquipment":
             return update_equipment(request, *args, **kwargs)
-        elif request.headers.get('equipment-type') == "FindEquipment":
-            print("FIND")
-            return redirect("home")
+        else:
+            equipment = find_equipment(request, *args, **kwargs)
+
+            return equipment
 
 
 class ReleaseEquipmentsView(PermissionRequiredMixin, View):

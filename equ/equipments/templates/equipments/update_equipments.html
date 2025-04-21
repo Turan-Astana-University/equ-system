@@ -1,5 +1,4 @@
 {% extends 'inventory/base.html' %} {% load static %} {% block css %}
-    <script src="{% static 'node_modules/html5-qrcode/html5-qrcode.min.js' %}"></script>
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <meta charset="utf-8">
     <meta name="keywords" content="">
@@ -336,19 +335,7 @@ h1.u-text-center {
 
 <section class="u-align-center u-clearfix u-grey-10 u-section-1" id="sec-c79d">
   <div class="u-clearfix u-sheet u-sheet-1">
-      <main>
-          <div id="reader" style="display: none;"></div>
-          <div id="result"></div>
-          <select id="camera-select"></select>
-          <a href="#" id="start-scan-btn" class="u-btn">
-              Сканировать штрих-код
-          </a>
-         
-          <a href="#" id="stop-scan-btn"  class="u-btn1" style="display:none;">
-            Остановить сканер
-        </a>
 
-      </main>
 
       <div class="u-expanded-width u-tabs u-tabs-1">
           <form method="post" enctype="multipart/form-data">
@@ -359,7 +346,7 @@ h1.u-text-center {
       </div>
   </div>
 </section>
-<script class="u-script" type="text/javascript" src="{% static 'js/qr_code.js' %}" defer=""></script>
+
 <script>
 
 
