@@ -65,7 +65,14 @@ class EquipmentDetailView(DetailView):
         return context
 
     def post(self, request, *args, **kwargs):
+
+        equipments = Equipment.objects.all()
+
         equipment = self.get_object()
+        action = request.POST.get("action")
+        if action == "change":
+            return redirect("update_equipment", pk=equipment.pk)
+
         zpl_data = equipment.equipment_barcode.zpl_barcode
         try:
             response = send_print_request(request, zpl_data)

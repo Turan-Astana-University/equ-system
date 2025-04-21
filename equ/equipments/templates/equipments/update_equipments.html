@@ -351,8 +351,11 @@ h1.u-text-center {
       </main>
 
       <div class="u-expanded-width u-tabs u-tabs-1">
-        {% csrf_token %}
-        {{ form.as_p }}
+          <form method="post" enctype="multipart/form-data">
+            {% csrf_token %}
+            {{ form.as_p }}
+            <button type="submit" class="u-btn u-button-style">Отправить</button>
+          </form>
       </div>
   </div>
 </section>

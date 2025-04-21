@@ -326,12 +326,46 @@ body { font-family: Arial, sans-serif;
 
 
     <section class="u-align-center u-clearfix u-grey-10 u-section-1" id="sec-c79d">
+
         <div class="u-clearfix u-sheet u-sheet-1">
             <h1 class="u-text-center">{{ object.title }}</h1>
-            <h4>{{ object.description }}</h4>
+            <div class="table-container">
+                <table id="nonfound" class="u-table">
+                    <thead>
+                        <tr>
+                            <th>Описание</th>
+                            <th>Категория</th>
+                            <th>Местоположение</th>
+                            <th>Отвественный сотрудник:</th>
+                            <th>Дата последней инвентразиации:</th>
+                            <th>Дата последней проверки:</th>
+                            <th>Статус:</th>
+                        </tr>
+                    </thead>
+                    <tbody class="u-table-body">
+                        <tr class="table-row">
+                            <td>{{ object.description }}</td>
+                            <td>{{ object.category }}</td>
+                            <td> {{ object.location }}</td>
+                            <td> {{ object.responsible }}</td>
+                            <td> {{ object.date_last_invent }}</td>
+                            <td> {{ object.date_last_check }}</td>
+                            <td>  {{ object.status }}</td>
+                        </tr>
+                    </tbody>
+                </table>
+                {% if object.image %}
+                     <img src="{{ object.image.url }}" alt="Image">
+                {% endif %}
+            </div>
             <form method="POST" action="{% url 'equipment_detail' object.pk %}">
                 {% csrf_token %}
-                <button type="submit">Распечатать штрих-код</button>
+                {% if perms.equipments.view_barcode %}
+                    <button type="submit" name="action" value="print" class="filter-button">Распечатать штрих-код</button>
+                {% endif %}
+                {% if perms.equipments.change_equipment %}
+                    <button type="submit" name="action" value="change" class="filter-button">Изменить</button>
+                {% endif %}
             </form>
             <h1 class="u-text-center">История оборудования</h1>
             <div class="table-container">

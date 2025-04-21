@@ -2,7 +2,7 @@ from django import forms
 from django.shortcuts import render, redirect
 from django.urls import path
 from django.contrib import admin
-from .models import Cartridge, CartridgeTypes, CategoryChoices, CategoryStatusChoices
+from .models import Cartridge, CartridgeTypes, CategoryChoices, CategoryStatusChoices, EquipmentType
 from users.models import User
 from locations.models import Location
 from .models import Equipment
@@ -21,7 +21,7 @@ class BulkCreateCartridgeForm(forms.Form):
 class UpdateEquipment(forms.ModelForm):
     class Meta:
         model = Equipment
-        fields = ['title', 'description', 'category', 'location', 'image']
+        fields = ['title', 'description', 'category', 'location', 'image', 'status']
 
     title = forms.CharField(
         widget=forms.TextInput(attrs={
@@ -39,17 +39,18 @@ class UpdateEquipment(forms.ModelForm):
         })
     )
 
-    category = forms.CharField(
-        widget=forms.TextInput(attrs={
+    category = forms.ModelChoiceField(
+        queryset=EquipmentType.objects.all(),
+        empty_label="Выберите категорию",
+        widget=forms.Select(attrs={
             'class': 'u-custom-font u-font-roboto-slab u-input u-input-rectangle',
-            'placeholder': 'Категория',
-            'id': 'category'
+            'id': 'location'
         })
     )
 
     location = forms.ModelChoiceField(
         queryset=Location.objects.all(),
-        empty_label="Выберите категорию",
+        empty_label="Выберите местоположение",
         widget=forms.Select(attrs={
             'class': 'u-custom-font u-font-roboto-slab u-input u-input-rectangle',
             'id': 'location'
@@ -60,7 +61,7 @@ class UpdateEquipment(forms.ModelForm):
         required=False,
         widget=forms.ClearableFileInput(attrs={
             'class': 'u-input u-input-rectangle',
-            'id': 'image-upload'
+            'id': 'image'
         })
     )
     status = forms.ChoiceField(

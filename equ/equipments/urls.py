@@ -8,5 +8,5 @@ urlpatterns = [
     path('moving_equipments/', MovingEquipmentsView.as_view(), name='moving_equipments'),
     path('my_equipments/', MyEquipments.as_view(), name='my_equipments'),
     path('get_cartridges/', get_cartridges, name='get_cartridges'),
-    path('update_equipment/', EquipmentUpdateView.as_view(), name='update_equipment'),
+    path('update_equipment/<int:pk>', EquipmentUpdateView.as_view(), name='update_equipment'),
 ]

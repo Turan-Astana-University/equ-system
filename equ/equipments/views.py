@@ -1,4 +1,6 @@
 import datetime
+
+from django.urls import reverse_lazy
 from django.views import View
 from django.views.decorators.csrf import csrf_exempt
 import json
@@ -14,7 +16,7 @@ from operations.models import OperationCategoryChoices
 from operations.views import create_operation_log
 from django.db.models import Count
 from django.contrib import messages
-from django.views.generic import ListView, DetailView, FormView
+from django.views.generic import ListView, DetailView, FormView, UpdateView
 from inventory.mixins import AccountingRequiredMixin
 from .components.scan_code import inventory_scan, qr_cartridge_release, equipment_release_qr_scan, update_equipment
 from django.contrib.auth.mixins import PermissionRequiredMixin
@@ -208,10 +210,14 @@ def get_cartridges(request, *args, **kwargs):
     )
 
 
-class EquipmentUpdateView(FormView):
+class EquipmentUpdateView(UpdateView):
     model = Equipment
     template_name = "equipments/update_equipments.html"
     form_class = UpdateEquipment
+    success_url = ""
+
+    def get_success_url(self):
+        return reverse_lazy('equipment_detail', kwargs={'pk': self.object.pk})
 
     def get_context_data(self, *, object_list=None, **kwargs):
         context = super().get_context_data(object_list=object_list, **kwargs)
