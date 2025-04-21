@@ -380,7 +380,6 @@ body { font-family: Arial, sans-serif;
             </div>
         </div>
 
-
 {% with query_params=request.GET.urlencode|cut:'page='|cut:'&' %}
 <div class="pagination">
     {% if objects.has_previous %}
@@ -389,10 +388,20 @@ body { font-family: Arial, sans-serif;
     {% endif %}
 
     {% for page_num in objects.paginator.page_range %}
-        {% if page_num == objects.number %}
-            <strong class="current-page">{{ page_num }}</strong>
-        {% else %}
-            <a href="?page={{ page_num }}&{{ query_params }}" class="pagination" aria-label="Страница {{ page_num }}">{{ page_num }}</a>
+        {% if page_num == 1 or page_num == objects.paginator.num_pages %}
+            {% if page_num == objects.number %}
+                <strong class="current-page">{{ page_num }}</strong>
+            {% else %}
+                <a href="?page={{ page_num }}&{{ query_params }}">{{ page_num }}</a>
+            {% endif %}
+        {% elif page_num >= objects.number|add:"-4" and page_num <= objects.number|add:"4" %}
+            {% if page_num == objects.number %}
+                <strong class="current-page">{{ page_num }}</strong>
+            {% else %}
+                <a href="?page={{ page_num }}&{{ query_params }}">{{ page_num }}</a>
+            {% endif %}
+        {% elif page_num == objects.number|add:"-5" or page_num == objects.number|add:"5" %}
+            <span class="pagination-dots">...</span>
         {% endif %}
     {% endfor %}
 
@@ -402,6 +411,7 @@ body { font-family: Arial, sans-serif;
     {% endif %}
 </div>
 {% endwith %}
+
 
 
     </div>

@@ -5,6 +5,8 @@ import json
 from django.utils.decorators import method_decorator
 from django.shortcuts import get_object_or_404, render, redirect
 from django.http import JsonResponse
+
+from .forms import UpdateEquipment
 from .models import Equipment, Cartridge, Barcode, CategoryChoices
 from locations.models import Location
 from users.models import User, CategoryChoicesUser
@@ -12,9 +14,9 @@ from operations.models import OperationCategoryChoices
 from operations.views import create_operation_log
 from django.db.models import Count
 from django.contrib import messages
-from django.views.generic import ListView, DetailView
+from django.views.generic import ListView, DetailView, FormView
 from inventory.mixins import AccountingRequiredMixin
-from .components.scan_code import inventory_scan
+from .components.scan_code import inventory_scan, qr_cartridge_release, equipment_release_qr_scan, update_equipment
 from django.contrib.auth.mixins import PermissionRequiredMixin
 # Create your views here.
 
@@ -22,62 +24,15 @@ from django.contrib.auth.mixins import PermissionRequiredMixin
 @method_decorator(csrf_exempt, name='dispatch')
 class QRCodeView(View):
 
-    def equipment_release_qr_scan(self, request, *args, **kwargs):
-        try:
-            data = json.loads(request.body)
-            code = data.get('code', '')
-            barcode_id = int(code[:-1])
-
-            equipment = get_object_or_404(Equipment, equipment_barcode=get_object_or_404(Barcode, pk=barcode_id))
-            return JsonResponse({
-                'id': equipment.id,
-                'name': equipment.title,
-                'user': equipment.responsible.first_name,
-                'message': 'Equipment found',
-                'location_correct': 1,
-            })
-        except json.JSONDecodeError:
-            return JsonResponse({'error': 'Неверный формат JSON'}, status=400)
-
-        except KeyError:
-            return JsonResponse({'error': 'Location header отсутствует'}, status=400)
-
-    def qr_cartridge_release(self, request, *args, **kwargs):
-        try:
-            data = json.loads(request.body)
-            code = data.get('code', '')
-            barcode_id = int(code[:-1])
-
-            barcode = get_object_or_404(Barcode, pk=barcode_id)
-            cart = get_object_or_404(Cartridge, cartridge_barcode=barcode)
-            return JsonResponse({
-                'id': cart.id,
-                'name': cart.title,
-                'user': cart.responsible.first_name,
-                'message': 'Equipment found',
-                'location_correct': 1,
-            })
-        except json.JSONDecodeError:
-            messages.error(request, "Ошибка декодирования")
-            return redirect("home")
-        except Cartridge.DoesNotExist:
-            messages.error(request, "Картридж не существует")
-            return redirect("home")
-        except Barcode.DoesNotExist:
-            messages.error(request, "Неправильный или не существует штрихкод")
-            return redirect("home")
-        except Exception as e:
-            messages.error(request, "Возникла ошибка")
-            return redirect("home")
-
     def post(self, request, *args, **kwargs):
-        print(request.headers.get('equipment-type'))
         if request.headers.get('equipment-type') == "release":
-            return self.equipment_release_qr_scan(request, *args, **kwargs)
+            return equipment_release_qr_scan(request, *args, **kwargs)
         elif request.headers.get('equipment-type') == "release_cartridge":
-            return self.qr_cartridge_release(request, *args, **kwargs)
-        else:
+            return qr_cartridge_release(request, *args, **kwargs)
+        elif request.headers.get('equipment-type') == "inventory":
             return inventory_scan(request, *args, **kwargs)
+        elif request.headers.get('equipment-type') == "UpdateEquipment":
+            return update_equipment(request, *args, **kwargs)
 
 
 class ReleaseEquipmentsView(PermissionRequiredMixin, View):
@@ -253,9 +208,10 @@ def get_cartridges(request, *args, **kwargs):
     )
 
 
-class EquipmentUpdateView(ListView):
+class EquipmentUpdateView(FormView):
     model = Equipment
     template_name = "equipments/update_equipments.html"
+    form_class = UpdateEquipment
 
     def get_context_data(self, *, object_list=None, **kwargs):
         context = super().get_context_data(object_list=object_list, **kwargs)

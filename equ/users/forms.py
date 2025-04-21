@@ -1,5 +1,6 @@
 from django import forms
 
+
 class CustomLoginForm(forms.Form):
     username = forms.CharField(
         widget=forms.TextInput(attrs={

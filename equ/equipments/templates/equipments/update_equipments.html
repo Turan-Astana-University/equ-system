@@ -351,7 +351,8 @@ h1.u-text-center {
       </main>
 
       <div class="u-expanded-width u-tabs u-tabs-1">
-
+        {% csrf_token %}
+        {{ form.as_p }}
       </div>
   </div>
 </section>
