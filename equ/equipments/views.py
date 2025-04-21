@@ -35,6 +35,9 @@ class QRCodeView(View):
             return inventory_scan(request, *args, **kwargs)
         elif request.headers.get('equipment-type') == "UpdateEquipment":
             return update_equipment(request, *args, **kwargs)
+        elif request.headers.get('equipment-type') == "FindEquipment":
+            print("FIND")
+            return redirect("home")
 
 
 class ReleaseEquipmentsView(PermissionRequiredMixin, View):

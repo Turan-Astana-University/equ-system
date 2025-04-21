@@ -115,6 +115,7 @@ class EquipmentReportView(AccountingRequiredMixin, ListView):
         context = {
             'form': form,
             'objects': page_obj,
+            "scanType": "FindEquipment",
         }
         return render(request, self.template_name, context=context)
 
