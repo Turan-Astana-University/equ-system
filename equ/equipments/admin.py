@@ -9,7 +9,9 @@ from django.contrib import messages
 
 
 class EquipmentAdmin(admin.ModelAdmin):
-    list_display = ['title']
+    list_display = ['title', 'category', 'location', 'responsible']
+    search_fields = ['title']
+    list_filter = ['category', 'location', 'date_last_check']
     readonly_fields = ('equipment_barcode', 'date_last_check', 'date_last_invent')
 
 
