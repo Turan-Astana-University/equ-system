@@ -228,4 +228,10 @@ class EquipmentUpdateView(UpdateView):
         context["scan_type"] = "UpdateEquipment"
         return context
 
-
+    def post(self, request, *args, **kwargs):
+        action = request.POST.get("action")
+        if action == "generate_barcode":
+            obj = self.get_object()
+            bc = obj.generate_barcode()
+            print(bc, obj)
+        return super().post(request, *args, **kwargs)

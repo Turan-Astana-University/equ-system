@@ -144,6 +144,14 @@ class Equipment(models.Model):
             self.equipment_barcode = bc  # Присваиваем штрих-код
         super().save(*args, **kwargs)  # Сохраняем объект Equipment
 
+    def generate_barcode(self, *args, **kwargs):
+        bc = Barcode.objects.create()
+        bc.generate_barcode(self.title)
+        bc.save()
+        self.equipment_barcode = bc
+        self.save()
+        return bc
+
 
 class CartridgeTypes(models.Model):
     title = models.CharField(max_length=255, null=True, blank=True)
