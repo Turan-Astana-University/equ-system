@@ -330,10 +330,7 @@ body { font-family: Arial, sans-serif;
 
               <div id="reader" style="display: none;"></div>
               <div id="result"></div>
-              <select id="camera-select"></select>
-                <a href="#" id="start-scan-btn" class="filter-button">
-                  Сканировать штрих-код
-                </a>
+
                 <a href="#" id="stop-scan-btn"  class="filter-button" style="display:none;">
                     Остановить сканер
                 </a>
@@ -428,13 +425,29 @@ body { font-family: Arial, sans-serif;
 
 
     </div>
+<input type="text" id="scanner-input" autofocus style="opacity:0; position:absolute;" />
+
 </section>
 
 <script>
         const qrCodeUrl = "{% url 'qr_code_view' %}";
         const update = "{% url 'update_equipment' 1 %}";
 </script>
-    <script class="u-script" type="text/javascript" src="{% static 'js/qr_code.js' %}" defer=""></script>
+<!--<script>-->
+<!--        const input = document.getElementById('scanner-input');-->
+
+<!--        input.addEventListener('change', () => {-->
+<!--            const scannedValue = input.value;-->
+<!--            console.log("Сканировано:", scannedValue);-->
+
+<!--            // Очистить поле для следующего скана-->
+<!--            input.value = '';-->
+<!--        });-->
+
+<!--        // Автофокус на поле при загрузке-->
+<!--        window.onload = () => input.focus();-->
+<!--    </script>-->
+<script class="u-script" type="text/javascript" src="{% static 'js/qr_code.js' %}" defer=""></script>
 <script>
     function getCookie(name) {
     let cookieValue = null;
