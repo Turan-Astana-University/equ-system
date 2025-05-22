@@ -114,6 +114,7 @@ class CategoryStatusChoices(models.TextChoices):
     BROKEN = 'неисправен', ('Неисправен')
     NEW = 'Новое', ('новое')
     RENOVATED = 'отремонтировано', ('Отремонтировано')
+    write_off = 'Списано', ('Списано')
 
 
 class Equipment(models.Model):
