@@ -35,7 +35,7 @@ def send_print_request(request, zpl_code):
         if not zpl_code:
             return JsonResponse({"error": "Не указан zpl_data"}, status=400)
 
-        fastapi_url = f"http://192.168.115.165:8563/print"
+        fastapi_url = f"http://192.168.112.169:8563/print"
         print(fastapi_url)
 
         try:
