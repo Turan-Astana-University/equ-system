@@ -1,6 +1,4 @@
-version: '3.8'
-
-services:
+﻿services:
   web:
     build: .
     container_name: django_app
@@ -9,10 +7,32 @@ services:
       - .:/app
     ports:
       - "8000:8000"
-    env_file:
-      - .env
     depends_on:
       - db
+    environment:
+      DEBUG: ${DEBUG:-1}
+      SECRET_KEY: ${SECRET_KEY:-change-me}
+      ALLOWED_HOSTS: ${ALLOWED_HOSTS:-localhost,127.0.0.1}
+      POSTGRES_DB: ${POSTGRES_DB:-equipment-system}
+      POSTGRES_USER: ${POSTGRES_USER:-equipment-user}
+      POSTGRES_PASSWORD: ${POSTGRES_PASSWORD:-Turan2023!!!@@}
+      POSTGRES_HOST: ${POSTGRES_HOST:-db}
+      POSTGRES_PORT: ${POSTGRES_PORT:-5432}
+
+  print:
+    build: .
+    container_name: print_service
+    command: uvicorn print:app --host 0.0.0.0 --port 8001
+    volumes:
+      - .:/app
+    ports:
+      - "8001:8001"
+    environment:
+      PRINTER_BACKEND: ${PRINTER_BACKEND:-tcp}
+      PRINTER_HOST: ${PRINTER_HOST:-}
+      PRINTER_PORT: ${PRINTER_PORT:-9100}
+      PRINTER_NAME: ${PRINTER_NAME:-ZDesigner ZD220-203dpi ZPL}
+      PRINTER_TIMEOUT: ${PRINTER_TIMEOUT:-5}
 
   db:
     image: postgres:15
@@ -21,9 +41,9 @@ services:
     volumes:
       - pgdata:/var/lib/postgresql/data
     environment:
-      POSTGRES_DB: equipment-system
-      POSTGRES_USER: equipment-user
-      POSTGRES_PASSWORD: Turan2023!!!@@
+      POSTGRES_DB: ${POSTGRES_DB:-equipment-system}
+      POSTGRES_USER: ${POSTGRES_USER:-equipment-user}
+      POSTGRES_PASSWORD: ${POSTGRES_PASSWORD:-Turan2023!!!@@}
 
 volumes:
   pgdata:
