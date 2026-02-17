@@ -69,3 +69,4 @@ zebra==0.1.0
 zipp==3.21.0
 zpl==0.1.11
 zplgen==0.0.6
+pywin32==306; platform_system=="Windows"

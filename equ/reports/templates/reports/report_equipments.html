@@ -357,6 +357,10 @@ body { font-family: Arial, sans-serif;
 
                 <button type="submit" name="action" value="filter" class="filter-button">Фильтровать</button>
                 <button type="submit" name="action" value="print" class="filter-button">Пакетная печать</button>
+                <div style="margin-top: 15px; display: flex; gap: 12px; flex-wrap: wrap;">
+                    <a class="filter-button" href="{% url 'export_equipments' %}?format=csv">Выгрузить CSV (вся база)</a>
+                    <a class="filter-button" href="{% url 'export_equipments' %}?format=xlsx">Выгрузить Excel (вся база)</a>
+                </div>
             </form>
 
             <div class="table-container">

@@ -94,15 +94,15 @@ class Barcode(models.Model):
         ^PW530
         ^LL400
 
-        ^FO100,50^A0,30,30^FDTuran-Astana University^FS  ; <-- Добавлен текст над штрих-кодом
+        ^FO100,50^A0,30,30^FDTuran-Astana University^FS  
 
         ^FO100,100^BY3
         ^BEN,100,Y,N
         ^FD{barcode_data}^FS
 
-        ^FO30,260^A0,25,25  ; <-- Смещение для центрирования
-        ^FB470,3,0,C,0  ; <-- 470px ширина, 3 строки, центрирование
-        ^FD{title_wrapped}^FS  ; <-- Текст автоматически переносится
+        ^FO30,260^A0,25,25  
+        ^FB470,3,0,C,0  
+        ^FD{title_wrapped}^FS  
         ^XZ
         """
 

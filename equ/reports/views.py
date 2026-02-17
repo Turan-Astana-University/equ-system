@@ -1,4 +1,6 @@
 import os
+from io import BytesIO, StringIO
+
 from django.http import HttpResponse, JsonResponse
 from django.shortcuts import render, redirect
 import plotly.express as px
@@ -7,10 +9,12 @@ from django.core.paginator import Paginator
 from django.contrib import messages
 from inventory.models import Inventory
 
+from django.views import View
 from django.views.generic import ListView, DetailView, FormView
 from operations.models import Operation
 import pandas as pd
 from django.conf import settings
+from django.utils import timezone
 from equipments.models import CartridgeTypes
 import requests
 from inventory.mixins import AccountingRequiredMixin
@@ -35,11 +39,15 @@ def send_print_request(request, zpl_code):
         if not zpl_code:
             return JsonResponse({"error": "Не указан zpl_data"}, status=400)
 
-        fastapi_url = f"http://192.168.112.169:8001/print"
+        fastapi_url = getattr(settings, "PRINT_SERVICE_URL", "http://192.168.112.169:8001/print")
         print(fastapi_url)
 
         try:
-            response = requests.post(fastapi_url, json={"zpl_data": zpl_code})
+            response = requests.post(
+                fastapi_url,
+                json={"zpl_data": zpl_code},
+                timeout=getattr(settings, "PRINT_SERVICE_TIMEOUT", 10),
+            )
             if response:
                 print("YES")
             else:
@@ -150,6 +158,61 @@ class EquipmentReportView(AccountingRequiredMixin, ListView):
                 send_print_request(request, zpl_data)
             return render(request, self.template_name, context=context)
         return render(request, self.template_name, context=context)
+
+
+class EquipmentsExportView(AccountingRequiredMixin, View):
+    def get(self, request, *args, **kwargs):
+        export_format = (request.GET.get("format") or "csv").lower()
+
+        equipments = (
+            Equipment.objects.select_related("category", "location", "responsible")
+            .all()
+            .order_by("id")
+        )
+
+        rows = []
+        for equipment in equipments:
+            barcode_id = equipment.equipment_barcode_id
+            rows.append(
+                {
+                    "id": equipment.id,
+                    "title": equipment.title,
+                    "description": equipment.description,
+                    "category": equipment.category.title if equipment.category else "",
+                    "location": equipment.location.title if equipment.location else "",
+                    "responsible_username": equipment.responsible.username if equipment.responsible else "",
+                    "responsible_first_name": equipment.responsible.first_name if equipment.responsible else "",
+                    "responsible_last_name": equipment.responsible.last_name if equipment.responsible else "",
+                    "status": equipment.status,
+                    "date_last_invent": equipment.date_last_invent.isoformat() if equipment.date_last_invent else "",
+                    "date_last_check": equipment.date_last_check.isoformat() if equipment.date_last_check else "",
+                    "barcode_id": barcode_id or "",
+                    "barcode_data_12": f"{barcode_id:012}" if barcode_id else "",
+                }
+            )
+
+        df = pd.DataFrame(rows)
+        timestamp = timezone.now().strftime("%Y-%m-%d_%H-%M-%S")
+
+        if export_format in {"xlsx", "excel"}:
+            buffer = BytesIO()
+            with pd.ExcelWriter(buffer, engine="openpyxl") as writer:
+                df.to_excel(writer, index=False, sheet_name="equipments")
+            buffer.seek(0)
+
+            response = HttpResponse(
+                buffer.getvalue(),
+                content_type="application/vnd.openxmlformats-officedocument.spreadsheetml.sheet",
+            )
+            response["Content-Disposition"] = f'attachment; filename="equipments_full_{timestamp}.xlsx"'
+            return response
+
+        csv_buffer = StringIO()
+        df.to_csv(csv_buffer, index=False, sep=";")
+        csv_bytes = csv_buffer.getvalue().encode("utf-8-sig")
+        response = HttpResponse(csv_bytes, content_type="text/csv; charset=utf-8")
+        response["Content-Disposition"] = f'attachment; filename="equipments_full_{timestamp}.csv"'
+        return response
 
 
 class PrinterReportView(AccountingRequiredMixin, ListView):

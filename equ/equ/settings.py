@@ -18,6 +18,9 @@ BASE_DIR = Path(__file__).resolve().parent.parent
 
 env = environ.Env()
 environ.Env.read_env(BASE_DIR / ".env")
+
+PRINT_SERVICE_URL = env("PRINT_SERVICE_URL", default="http://print:8001/print")
+PRINT_SERVICE_TIMEOUT = env.float("PRINT_SERVICE_TIMEOUT", default=10.0)
 # Quick-start development settings - unsuitable for production
 # See https://docs.djangoproject.com/en/5.0/howto/deployment/checklist/
 
